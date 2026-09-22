@@ -1,6 +1,6 @@
 /**
  * Generates Open Graph images (1200×630) for every page plus the app icons.
- * Run with: FONTCONFIG_FILE=<conf pointing at Marcellus + static Source Sans 3 TTFs named EqxSans> npm run og
+ * Run with: FONTCONFIG_FILE=<conf pointing at Sorts Mill Goudy + static Source Sans 3 TTFs named EqxSans> npm run og
  * Output is committed to /public so builds do not depend on fonts being installed.
  */
 import sharp from 'sharp';
@@ -21,24 +21,38 @@ function wrap(text, max) {
   return lines;
 }
 
+// Brand geometry is read from the components so OG images always match the site.
+const sunMoon = readFileSync(new URL('../src/components/SunMoon.astro', import.meta.url), 'utf8');
+const [light, dark, disc, rim] = [...sunMoon.matchAll(/ d="([^"]+)"/g)].map((m) => m[1]);
+const wordPath = readFileSync(new URL('../src/components/Wordmark.astro', import.meta.url), 'utf8').match(/ d="([^"]+)"/)[1];
+
 function ogSvg(title, sub) {
-  const lines = wrap(title, 20);
-  const size = lines.length > 3 ? 58 : 66;
-  const startY = 300 - ((lines.length - 1) * size * 1.12) / 2;
-  const tspans = lines.map((l, i) => `<tspan x="80" y="${startY + i * size * 1.12}">${esc(l)}</tspan>`).join('');
+  const lines = wrap(title, 21);
+  const size = lines.length > 3 ? 60 : 68;
+  const startY = 318 - ((lines.length - 1) * size * 1.1) / 2;
+  const tspans = lines.map((l, i) => `<tspan x="80" y="${startY + i * size * 1.1}">${esc(l)}</tspan>`).join('');
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <defs><radialGradient id="lit" cx="35%" cy="35%" r="75%"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E6E3D6"/></radialGradient></defs>
-  <rect width="1200" height="630" fill="#F5F6F3"/>
-  <rect x="780" width="420" height="630" fill="#1E2240"/>
-  <rect x="779" width="3" height="630" fill="#D9A55B"/>
-  <circle cx="990" cy="315" r="150" fill="#343A6B"/>
-  <path d="M990 165a150 150 0 0 0 0 300Z" fill="url(#lit)"/>
-  <line x1="990" y1="150" x2="990" y2="480" stroke="#D9A55B" stroke-width="3"/>
-  <text font-family="Marcellus" font-size="${size}" fill="#23273F">${tspans}</text>
-  <text x="80" y="92" font-family="Marcellus" font-size="34" fill="#23273F" letter-spacing="1">Equinox</text>
-  <text x="80" y="124" font-family="EqxSans" font-size="22" fill="#595D74">Aesthetic &amp; Wellness Centre</text>
-  <text x="80" y="548" font-family="EqxSans" font-weight="600" font-size="26" fill="#23273F">${esc(sub)}</text>
-  <text x="80" y="584" font-family="EqxSans" font-size="24" fill="#595D74">Open 11am to 8pm, closed on Fridays</text>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6D27A"/><stop offset=".45" stop-color="#E2A843"/><stop offset="1" stop-color="#B07620"/></linearGradient>
+    <linearGradient id="l" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F8DC92"/><stop offset="1" stop-color="#DA9E38"/></linearGradient>
+    <linearGradient id="d" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C98A26"/><stop offset="1" stop-color="#86560C"/></linearGradient>
+    <linearGradient id="t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#B7802A"/><stop offset="1" stop-color="#7E520F"/></linearGradient>
+    <linearGradient id="v" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2C766"/><stop offset="1" stop-color="#C8912F"/></linearGradient>
+    <radialGradient id="glow"><stop offset="0" stop-color="#F2C766" stop-opacity=".2"/><stop offset="1" stop-color="#F2C766" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#FBF6EF"/>
+  <rect x="780" width="420" height="630" fill="#441F51"/>
+  <rect x="778" width="4" height="630" fill="url(#v)"/>
+  <circle cx="990" cy="315" r="200" fill="url(#glow)"/>
+  <g transform="translate(990 315) scale(0.72) translate(-214 -206)">
+    <path fill="url(#l)" d="${light}"/><path fill="url(#d)" d="${dark}"/><path fill="url(#g)" d="${disc}"/>
+    <path d="${rim}" fill="none" stroke="#FCE3A2" stroke-opacity=".55" stroke-width="3"/>
+  </g>
+  <g transform="translate(80 62) scale(${250 / 2249})"><path fill="url(#t)" d="${wordPath}"/></g>
+  <text x="80" y="128" font-family="Sorts Mill Goudy" font-size="25" fill="#8A5A12">Aesthetic and Wellness Centre</text>
+  <text font-family="Sorts Mill Goudy" font-size="${size}" fill="#3A1D45">${tspans}</text>
+  <text x="80" y="548" font-family="EqxSans" font-weight="600" font-size="26" fill="#3A1D45">${esc(sub)}</text>
+  <text x="80" y="584" font-family="EqxSans" font-size="24" fill="#66586A">Open 11am to 8pm, closed on Fridays</text>
 </svg>`;
 }
 
@@ -52,7 +66,7 @@ for (const p of pages) {
 const mark = readFileSync(new URL('../public/favicon.svg', import.meta.url));
 async function icon(size, pad, file) {
   const inner = await sharp(mark, { density: 800 }).resize(size - pad * 2, size - pad * 2).png().toBuffer();
-  await sharp({ create: { width: size, height: size, channels: 4, background: '#F5F6F3' } })
+  await sharp({ create: { width: size, height: size, channels: 4, background: '#FBF6EF' } })
     .composite([{ input: inner, top: pad, left: pad }]).png().toFile(new URL(`../public/${file}`, import.meta.url).pathname);
 }
 await icon(180, 18, 'apple-touch-icon.png');

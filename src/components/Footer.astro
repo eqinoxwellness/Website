@@ -7,7 +7,8 @@ const year = new Date().getFullYear();
   <div class="container">
     <div class="footer-grid">
       <div>
-        <h2>{site.name}</h2>
+        <img class="footer-logo" src="/brand/equinox-logo.svg" alt="Equinox Aesthetic and Wellness Centre" width="1130" height="679" loading="lazy" decoding="async" />
+        <h2 class="visually-hidden">{site.name}</h2>
         <p>{site.address.street}<br />{site.address.locality}, {site.address.city} {site.address.postalCode}<br />{site.address.landmark}</p>
         <p><a href={telLink}>{site.phoneDisplay}</a><br /><a href={waLink('Hi, I have a question for Equinox. #EQ-FT')} data-cta="footer" rel="noopener">WhatsApp</a>{site.email && <><br /><a href={`mailto:${site.email}`}>{site.email}</a></>}</p>
         <p>Open {site.hours.openLabel}, Saturday to Thursday.<br />Closed on Fridays.</p>

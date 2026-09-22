@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ActionBar from '../components/ActionBar.astro';
 import Consent from '../components/Consent.astro';
+import BrandDefs from '../components/BrandDefs.astro';
 import { site, tracking } from '../config/site';
 import { clinicNode, websiteNode } from '../lib/schema';
 
@@ -42,9 +43,9 @@ const publicTracking = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex, follow" />}
-    <meta name="theme-color" content="#1E2240" />
+    <meta name="theme-color" content="#441F51" />
     <meta name="format-detection" content="telephone=no" />
-    <link rel="preload" href="/fonts/marcellus-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/goudy-400.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/source-sans-3-var.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
@@ -79,6 +80,7 @@ const publicTracking = {
     <script id="eqx-config" type="application/json" set:html={JSON.stringify(publicTracking)} />
   </head>
   <body data-page-type={pageType}>
+    <BrandDefs />
     <a class="skip-link" href="#main">Skip to content</a>
     <Header />
     <main id="main">

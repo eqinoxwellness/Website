@@ -101,7 +101,11 @@ Visitors stay anonymous unless they submit the form. Nothing optional loads befo
 
 ## Editing content
 
-All clinic facts live in `src/config/site.ts`; all service copy, FAQs and WhatsApp messages live in `src/data/services.ts`; home FAQs in `src/data/faqs.ts`. Every page, the structured data, `llms.txt` and the Open Graph images read from these files. After changing a service name, regenerate social images with `npm run og` (needs the Marcellus and Source Sans 3 TTF fonts available to fontconfig).
+All clinic facts live in `src/config/site.ts`; all service copy, FAQs and WhatsApp messages live in `src/data/services.ts`; home FAQs in `src/data/faqs.ts`. Every page, the structured data, `llms.txt` and the Open Graph images read from these files. After changing a service name, regenerate social images with `npm run og` (needs Sorts Mill Goudy and a static Source Sans 3 named `EqxSans` available to fontconfig).
+
+## Brand assets
+
+`public/brand/equinox-logo.svg` is the full stacked logo as a vector (mark rebuilt from the artwork's geometry, type traced from it). The header uses `src/components/Mark.astro` and `Wordmark.astro`; the hero uses the faceted `SunMoon.astro`. Colours are defined once in `src/styles/global.css` and `src/components/BrandDefs.astro`. When Equinox shares the original logo files (AI, SVG or PDF), swap them in for the traced paths.
 
 ## Re-running Lighthouse
 

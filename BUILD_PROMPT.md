@@ -37,11 +37,12 @@ Service pages are generated from a single data file so every page follows the sa
 
 ## Design direction
 
-The name is the idea: an equinox is the moment day and night are equal. The site is literally half light, half dusk.
+Follow the clinic's own identity (gold logo on ivory, plum and gold Instagram feed). The logo already carries the idea: half a sun, half a moon, day and night in balance. The site is ivory "day" and plum "dusk" with a gold line where they meet.
 
-- Palette: Porcelain `#F5F6F3` (day), Dusk `#1E2240` (night), Twilight `#5B5F8A`, Horizon brass `#D9A55B` (the equinox line, used sparingly), Ink text `#2C3048`, WhatsApp green `#1D6B52` (functional only)
-- Type: Marcellus (inscriptional serif, display only) + Source Sans 3 (body). Sentence case everywhere. No all-caps labels, no arrows appended to links, no middle-dot meta strings
-- Hero: split field — day side carries the headline and CTAs, dusk side carries a half-lit disc and the clinic's facts. One orchestrated motion: the disc's terminator line settles into balance on load; disabled under reduced motion
+- Palette, sampled from the logo and Instagram: Ivory `#FBF6EF` (day), Ivory tint `#F4E8DA`, Plum `#441F51` (dusk), Deep plum `#2E1437` (footer), Gold `#C8912F` with highlight `#F2C766` (decorative only on ivory), text-safe gold `#8A5A12`, plum ink `#3A1D45` for headings, WhatsApp green `#1D6B52` (functional only)
+- Logo: the mark rebuilt as clean vector geometry measured from the artwork (seven rays of a twelve-point sun at 30° steps, valleys at 0.62 of the ray length, a half disc beyond a narrow gap); "EQUINOX" and the subline traced from the artwork. Faceted gold for large sizes, flat gold for small ones
+- Type: Sorts Mill Goudy for headings (closest free match to the logo's subline) + Source Sans 3 for body. Sentence case everywhere. No all-caps labels, no arrows appended to links, no middle-dot meta strings
+- Hero: split field — ivory side carries the headline and CTAs, plum side carries the faceted sun-and-moon mark and the clinic's facts. One orchestrated motion: the sun and moon halves drift together and settle at the equinox gap; disabled under reduced motion
 - Services shown as a typographic index grouped by category, not a grid of identical cards
 - Mobile first; sticky WhatsApp + Call bar on small screens
 

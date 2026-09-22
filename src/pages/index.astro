@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import Disc from '../components/Disc.astro';
+import SunMoon from '../components/SunMoon.astro';
 import Icon from '../components/Icon.astro';
 import CtaButtons from '../components/CtaButtons.astro';
 import DoctorBlock from '../components/DoctorBlock.astro';
@@ -42,7 +42,7 @@ const schema = [pageNode(origin, `${origin}/`, title, description), faqNode(`${o
       <CtaButtons waText={waText} location="hero" />
     </div>
     <div class="hero__dusk">
-      <Disc />
+      <SunMoon />
       <div class="hero__facts">
         <p class="place">Satya Nagar, Bhubaneswar</p>
         <p>{site.address.landmark}, Kali Mandir Road</p>

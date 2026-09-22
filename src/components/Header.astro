@@ -1,5 +1,6 @@
 ---
 import Mark from './Mark.astro';
+import Wordmark from './Wordmark.astro';
 import Icon from './Icon.astro';
 import { services, categories } from '../data/services';
 import { waLink } from '../config/site';
@@ -7,8 +8,8 @@ import { waLink } from '../config/site';
 <header class="site-header">
   <div class="container">
     <a class="brand" href="/" aria-label="Equinox Aesthetic and Wellness Centre, home">
-      <Mark size={34} />
-      <span><span class="brand__name">Equinox</span><span class="brand__sub">Aesthetic &amp; Wellness Centre</span></span>
+      <Mark size={44} />
+      <span class="brand__type"><Wordmark width={138} /><span class="brand__sub">Aesthetic and Wellness Centre</span></span>
     </a>
     <div class="header-actions">
       <a class="btn btn--wa header-wa" href={waLink('Hi, I would like to book a consultation at Equinox. #EQ-WEB')} data-cta="header" rel="noopener"><Icon name="whatsapp" />WhatsApp</a>
