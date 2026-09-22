@@ -1,0 +1,116 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import CtaButtons from '../components/CtaButtons.astro';
+import DoctorBlock from '../components/DoctorBlock.astro';
+import Faq from '../components/Faq.astro';
+import Location from '../components/Location.astro';
+import LeadForm from '../components/LeadForm';
+import { services, bySlug, firstVisitSteps, type Service } from '../data/services';
+import { waLink, feeLine } from '../config/site';
+import { pageNode, faqNode, breadcrumbNode, serviceNode } from '../lib/schema';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { service: s.slug }, props: { s } }));
+}
+interface Props { s: Service; }
+const { s } = Astro.props;
+const origin = Astro.site?.origin ?? 'http://localhost:4321';
+const url = `${origin}/${s.slug}`;
+const related = s.related.map(bySlug).filter(Boolean) as Service[];
+const schema = [
+  pageNode(origin, url, s.title, s.description, 'MedicalWebPage'),
+  serviceNode(origin, url, s),
+  faqNode(url, s.faqs),
+  breadcrumbNode(url, [{ name: 'Home', url: `${origin}/` }, { name: s.navName, url }]),
+];
+---
+<Base title={s.title} description={s.description} ogImage={`/og/${s.slug}.png`} schema={schema} pageType={`service:${s.slug}`} waText={s.waText}>
+  <section class="page-hero" data-section="intro">
+    <div class="container">
+      <Crumbs items={[{ name: 'Home', href: '/' }, { name: s.navName }]} />
+      <h1>{s.h1}</h1>
+      <p class="lede lede--wide">{s.intro}</p>
+      <CtaButtons waText={s.waText} location="service-hero" />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="covers-h" data-section="covers">
+    <div class="container split split--wide-left">
+      <div>
+        <h2 id="covers-h">What the consultation covers</h2>
+        <ul class="covers">{s.covers.map((c) => <li>{c}</li>)}</ul>
+      </div>
+      <div>
+        <h3>Useful to bring</h3>
+        <ul>{s.bring.map((b) => <li>{b}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  {s.extra && (
+    <section class="section" aria-labelledby="extra-h" data-section="extra">
+      <div class="container">
+        <h2 id="extra-h">{s.extra.heading}</h2>
+        <p class="lede lede--wide">{s.extra.body[0]}</p>
+        {s.extra.body.slice(1).map((p) => <div class="alert"><p style="margin:0">{p}</p></div>)}
+      </div>
+    </section>
+  )}
+
+  <DoctorBlock />
+
+  <section class="section section--tint" aria-labelledby="cost-h" data-section="cost">
+    <div class="container split">
+      <div>
+        <h2 id="cost-h">What it costs</h2>
+        <p class="lede lede--wide">{feeLine()}</p>
+        <p>If you go ahead with anything after the assessment, you are told the cost of each option and the usual number of visits first.</p>
+      </div>
+      <div>
+        <h2>What to expect, honestly</h2>
+        <div class="note"><p>{s.expectations}</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="next-h" data-section="next-steps">
+    <div class="container">
+      <h2 id="next-h">What happens next</h2>
+      <ol class="steps">{firstVisitSteps.map((st) => <li><h3>{st.title}</h3><p>{st.body}</p></li>)}</ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="faq-h">
+    <div class="container">
+      <h2 id="faq-h">Common questions about the {s.name.toLowerCase()}</h2>
+      <Faq items={s.faqs} />
+    </div>
+  </section>
+
+  <section class="section section--tint" aria-labelledby="form-h" data-section="form">
+    <div class="container split">
+      <div>
+        <h2 id="form-h">Ask for a call back</h2>
+        <p class="lede lede--wide">Leave your number and we will call during clinic hours. WhatsApp is usually quicker.</p>
+        <CtaButtons waText={s.waText} location="service-form" showCall={false} />
+      </div>
+      <LeadForm client:visible services={services.map((x) => ({ slug: x.slug, name: x.name }))} defaultService={s.slug} whatsappHref={waLink(s.waText)} />
+    </div>
+  </section>
+
+  {related.length > 0 && (
+    <section class="section" aria-labelledby="rel-h">
+      <div class="container">
+        <h2 id="rel-h">Related consultations</h2>
+        <ul class="related">
+          {related.map((r) => (
+            <li><a class="svc-link" href={`/${r.slug}`}><span class="svc-link__name">{r.navName}</span><span class="svc-link__line">{r.indexLine}</span></a></li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <Location waText={s.waText} />
+</Base>

@@ -1,0 +1,17 @@
+---
+/* Hero disc. The shadow ellipse starts wide (a gibbous moon) and settles to zero width:
+   day and night become equal. Transform-only animation, disabled for reduced motion. */
+---
+<svg class="disc" viewBox="0 0 240 240" aria-hidden="true">
+  <defs>
+    <radialGradient id="lit" cx="35%" cy="35%" r="75%">
+      <stop offset="0" stop-color="#FFFFFF" />
+      <stop offset="1" stop-color="#E6E3D6" />
+    </radialGradient>
+  </defs>
+  <circle cx="120" cy="120" r="118" fill="none" stroke="#D9A55B" stroke-opacity="0.25" />
+  <circle cx="120" cy="120" r="100" fill="#343A6B" />
+  <path d="M120 20a100 100 0 0 0 0 200Z" fill="url(#lit)" />
+  <ellipse class="disc__shadow" cx="120" cy="120" rx="100" ry="100" fill="url(#lit)" />
+  <line class="disc__line" x1="120" y1="12" x2="120" y2="228" stroke="#D9A55B" stroke-width="2" />
+</svg>

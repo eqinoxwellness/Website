@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import { site } from '../config/site';
+---
+<Base title="Terms of use | Equinox Aesthetic & Wellness Centre" description="Terms for using the Equinox Aesthetic & Wellness Centre website." pageType="legal">
+  <section class="page-hero">
+    <div class="container">
+      <Crumbs items={[{ name: 'Home', href: '/' }, { name: 'Terms of use' }]} />
+      <h1>Terms of use</h1>
+      <p class="muted">Last updated {site.policyUpdated}</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container prose">
+      <h2>General information only</h2>
+      <p>Everything on this website is general information about the clinic and how consultations work. It is not medical advice and does not replace a consultation. Outcomes vary from person to person, and no specific result is promised.</p>
+      <h2>Emergencies</h2>
+      <p>This clinic is not an emergency service. In an emergency call 112. For immediate mental health support call the Tele-MANAS helpline on 14416.</p>
+      <h2>Booking and fees</h2>
+      <p>Appointments are confirmed on WhatsApp or by phone. Fees are told to you before you book and before any treatment starts.</p>
+      <h2>Website content</h2>
+      <p>The text, design and images on this website belong to {site.legalName} and may not be copied for commercial use without permission.</p>
+      <h2>Governing law</h2>
+      <p>These terms are governed by the laws of India, and the courts at Bhubaneswar have jurisdiction.</p>
+    </div>
+  </section>
+</Base>

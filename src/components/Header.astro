@@ -1,0 +1,37 @@
+---
+import Mark from './Mark.astro';
+import Icon from './Icon.astro';
+import { services, categories } from '../data/services';
+import { waLink } from '../config/site';
+---
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="/" aria-label="Equinox Aesthetic and Wellness Centre, home">
+      <Mark size={34} />
+      <span><span class="brand__name">Equinox</span><span class="brand__sub">Aesthetic &amp; Wellness Centre</span></span>
+    </a>
+    <div class="header-actions">
+      <a class="btn btn--wa header-wa" href={waLink('Hi, I would like to book a consultation at Equinox. #EQ-WEB')} data-cta="header" rel="noopener"><Icon name="whatsapp" />WhatsApp</a>
+      <button class="menu-btn" popovertarget="site-menu" aria-label="Open menu"><Icon name="menu" />Menu</button>
+    </div>
+  </div>
+  <nav id="site-menu" class="menu" popover aria-label="Site">
+    <div class="container menu__grid">
+      {categories.map((cat) => (
+        <div class="menu__group">
+          <h2>{cat}</h2>
+          <ul>{services.filter((s) => s.category === cat).map((s) => <li><a href={`/${s.slug}`}>{s.navName}</a></li>)}</ul>
+        </div>
+      ))}
+      <div class="menu__group">
+        <h2>The clinic</h2>
+        <ul>
+          <li><a href="/about-the-doctor">Our doctor</a></li>
+          <li><a href="/contact">Visit and contact</a></li>
+          <li><a href="/#first-visit">Your first visit</a></li>
+        </ul>
+      </div>
+      <button class="menu-btn menu__close" popovertarget="site-menu" popovertargetaction="hide"><Icon name="close" />Close menu</button>
+    </div>
+  </nav>
+</header>

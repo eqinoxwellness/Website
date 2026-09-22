@@ -1,0 +1,10 @@
+---
+import Icon from './Icon.astro';
+import { site, waLink, telLink } from '../config/site';
+interface Props { waText: string; location: string; showCall?: boolean; }
+const { waText, location, showCall = true } = Astro.props;
+---
+<div class="btn-row">
+  <a class="btn btn--wa" href={waLink(waText)} data-cta={location} rel="noopener"><Icon name="whatsapp" />Message us on WhatsApp</a>
+  {showCall && <a class="btn btn--line" href={telLink} data-cta={location}><Icon name="phone" />Call {site.phoneDisplay}</a>}
+</div>

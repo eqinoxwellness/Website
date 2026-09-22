@@ -1,0 +1,18 @@
+---
+/* DPDP-style consent: nothing optional runs until the visitor chooses. Wired in lib/analytics.ts. */
+---
+<div id="consent" class="consent" role="region" aria-label="Cookie and tracking choices">
+  <p>Optional analytics and ad measurement help us improve this site. Nothing optional runs unless you allow it. <a href="/privacy-policy">Details</a></p>
+  <details class="consent__more">
+    <summary>Choose what to allow</summary>
+    <div class="consent__choices">
+      <label><input type="checkbox" name="c-analytics" /> Analytics (Google Analytics, Microsoft Clarity)</label>
+      <label><input type="checkbox" name="c-marketing" /> Marketing (Google Ads, Meta)</label>
+      <button type="button" class="btn btn--line" data-consent-action="save">Save choices</button>
+    </div>
+  </details>
+  <div class="consent__actions">
+    <button type="button" class="btn btn--light" data-consent-action="all">Allow all</button>
+    <button type="button" class="btn btn--line" data-consent-action="none">Only necessary</button>
+  </div>
+</div>

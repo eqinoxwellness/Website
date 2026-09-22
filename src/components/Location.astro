@@ -1,0 +1,34 @@
+---
+import Icon from './Icon.astro';
+import { site, waLink, fullAddress } from '../config/site';
+interface Props { waText: string; heading?: string; }
+const { waText, heading = 'Visit the clinic' } = Astro.props;
+---
+<section class="section dusk" aria-labelledby="visit-h" data-section="location">
+  <div class="container split">
+    <div>
+      <h2 id="visit-h">{heading}</h2>
+      <address class="address">
+        {site.legalName}<br />
+        {site.address.street}<br />
+        {site.address.locality}, {site.address.city} {site.address.postalCode}<br />
+        <span class="muted">{site.address.landmark}</span>
+      </address>
+      <p class="muted">Easy to reach from Saheed Nagar, Kharavela Nagar, Vani Vihar, Rasulgarh and Jaydev Vihar.</p>
+      <div class="btn-row">
+        <a class="btn btn--line" href={site.mapsUrl} data-track="directions" data-cta="location" rel="noopener"><Icon name="pin" />Get directions</a>
+        <a class="btn btn--wa" href={waLink(waText)} data-cta="location" rel="noopener"><Icon name="whatsapp" />Message us</a>
+      </div>
+    </div>
+    <div>
+      <h3>Opening hours</h3>
+      <ul class="hours">
+        {['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'].map((d) => (
+          <li><span>{d}</span><span>{site.hours.openLabel}</span></li>
+        ))}
+        <li class="is-closed"><span>{site.hours.closedDay}</span><span>Closed</span></li>
+      </ul>
+      <p class="muted small">Messages sent on Fridays or after 8pm are answered from 11am on the next open day.</p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,36 @@
+---
+import { services } from '../data/services';
+import { site, telLink, waLink } from '../config/site';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h2>{site.name}</h2>
+        <p>{site.address.street}<br />{site.address.locality}, {site.address.city} {site.address.postalCode}<br />{site.address.landmark}</p>
+        <p><a href={telLink}>{site.phoneDisplay}</a><br /><a href={waLink('Hi, I have a question for Equinox. #EQ-FT')} data-cta="footer" rel="noopener">WhatsApp</a>{site.email && <><br /><a href={`mailto:${site.email}`}>{site.email}</a></>}</p>
+        <p>Open {site.hours.openLabel}, Saturday to Thursday.<br />Closed on Fridays.</p>
+      </div>
+      <div>
+        <h2>Consultations</h2>
+        <ul>{services.map((s) => <li><a href={`/${s.slug}`}>{s.navName}</a></li>)}</ul>
+      </div>
+      <div>
+        <h2>The clinic</h2>
+        <ul>
+          <li><a href="/about-the-doctor">Our doctor</a></li>
+          <li><a href="/contact">Visit and contact</a></li>
+          <li><a href="/privacy-policy">Privacy policy</a></li>
+          <li><a href="/terms">Terms of use</a></li>
+          <li><button class="linklike" type="button" data-consent-open>Cookie and tracking choices</button></li>
+          {site.instagramUrl && <li><a href={site.instagramUrl} rel="noopener">Instagram</a></li>}
+        </ul>
+      </div>
+    </div>
+    <div class="footer-legal">
+      <p>Information on this website is general and is not a substitute for a consultation. Outcomes vary from person to person. For a medical emergency call 112.</p>
+      <p>© {year} {site.legalName}, Bhubaneswar.</p>
+    </div>
+  </div>
+</footer>

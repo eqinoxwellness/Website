@@ -1,0 +1,67 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import { site, fullAddress } from '../config/site';
+const contact = site.email ? site.email : site.phoneDisplay;
+---
+<Base title="Privacy policy | Equinox Aesthetic & Wellness Centre" description="How Equinox Aesthetic & Wellness Centre collects, uses and protects your personal data, and how to exercise your rights." pageType="legal">
+  <section class="page-hero">
+    <div class="container">
+      <Crumbs items={[{ name: 'Home', href: '/' }, { name: 'Privacy policy' }]} />
+      <h1>Privacy policy</h1>
+      <p class="muted">Last updated {site.policyUpdated}</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container prose">
+      <p>This policy explains what personal data {site.legalName} ("Equinox", "we") collects through this website, why, and what you can do about it. It is written to meet the Digital Personal Data Protection Act, 2023.</p>
+
+      <h2>Who we are</h2>
+      <p>{site.legalName}, {fullAddress}. Contact for privacy questions: {contact}.</p>
+
+      <h2>What we collect</h2>
+      <h3>When you ask for a call back</h3>
+      <p>Your name, mobile number, the consultation you are interested in, and your preferred call time. With the same request we also keep how you found the website: the source and campaign (for example a Google search or an Instagram ad), the pages you viewed, how far you scrolled, which sections you spent time on, how long you spent before sending the request, and your device type. This lets us understand which information helped you.</p>
+      <p>We do not ask for medical history on this website. Please do not send it through the form.</p>
+      <h3>When you message or call us</h3>
+      <p>Your phone number and what you choose to tell us, handled on WhatsApp or by phone.</p>
+      <h3>If you allow optional cookies</h3>
+      <p>Analytics (Google Analytics and Microsoft Clarity) records how pages are used, including anonymised session recordings with every form field masked. Marketing tags (Google Ads and Meta) measure whether our ads led to a visit or a request. None of these run unless you allow them.</p>
+
+      <h2>Why we use it</h2>
+      <ul>
+        <li>To respond to your request and arrange a consultation, based on the consent you give on the form.</li>
+        <li>To improve the website and our advertising, only if you allow analytics or marketing cookies.</li>
+      </ul>
+
+      <h2>Who we share it with</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Provider</th><th scope="col">Purpose</th><th scope="col">When</th></tr></thead>
+          <tbody>
+            <tr><td>Vercel</td><td>Hosts this website and processes form requests</td><td>Always</td></tr>
+            <tr><td>Google Workspace</td><td>Stores call-back requests and emails them to the clinic</td><td>When you send the form</td></tr>
+            <tr><td>Google Analytics</td><td>Website usage statistics</td><td>Only with analytics consent</td></tr>
+            <tr><td>Microsoft Clarity</td><td>Heatmaps and masked session recordings</td><td>Only with analytics consent</td></tr>
+            <tr><td>Google Ads</td><td>Measuring ad results</td><td>Only with marketing consent</td></tr>
+            <tr><td>Meta</td><td>Measuring ad results; your mobile number is sent only in hashed (scrambled) form</td><td>Only with marketing consent</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>We never send the consultation you asked about, or anything you tell us about your health, to an advertising platform.</p>
+
+      <h2>How long we keep it</h2>
+      <p>Call-back requests are kept for {site.dataRetentionMonths} months and then deleted, unless you become a patient, in which case clinical records are kept as the law requires. Your cookie choice is kept on your device until you change it.</p>
+
+      <h2>Your rights</h2>
+      <p>You can ask to see the personal data we hold about you, correct it, have it erased, or withdraw your consent at any time. You can change cookie choices using the link in the footer of every page. Withdrawing consent does not affect anything we did before you withdrew it.</p>
+      <p>To exercise a right or raise a grievance, contact us at {contact}. We will respond within 30 days. If you are not satisfied, you can complain to the Data Protection Board of India.</p>
+
+      <h2>Children</h2>
+      <p>This website is meant for adults. If you are under 18, please ask a parent or guardian to contact us for you.</p>
+
+      <h2>Changes</h2>
+      <p>If we change this policy, we will update the date at the top of this page.</p>
+    </div>
+  </section>
+</Base>

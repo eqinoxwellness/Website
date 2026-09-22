@@ -1,0 +1,94 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ActionBar from '../components/ActionBar.astro';
+import Consent from '../components/Consent.astro';
+import { site, tracking } from '../config/site';
+import { clinicNode, websiteNode } from '../lib/schema';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  noindex?: boolean;
+  schema?: Record<string, unknown>[];
+  pageType?: string;
+  waText?: string;
+}
+const {
+  title, description, ogImage = '/og/home.png', noindex = false, schema = [],
+  pageType = 'page', waText = 'Hi, I would like to book a consultation at Equinox. #EQ-WEB',
+} = Astro.props;
+
+const origin = (Astro.site?.origin ?? 'http://localhost:4321');
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const canonical = origin + (path === '/' ? '/' : path);
+const ogUrl = new URL(ogImage, origin).href;
+
+const graph = { '@context': 'https://schema.org', '@graph': [clinicNode(origin), websiteNode(origin), ...schema] };
+const publicTracking = {
+  ga4: tracking.ga4, gadsId: tracking.gadsId, gadsLeadLabel: tracking.gadsLeadLabel,
+  gadsWhatsappLabel: tracking.gadsWhatsappLabel, gadsCallLabel: tracking.gadsCallLabel,
+  metaPixel: tracking.metaPixel, clarity: tracking.clarity, gtm: tracking.gtm,
+};
+---
+<!doctype html>
+<html lang="en-IN" data-consent="unset">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <meta name="theme-color" content="#1E2240" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="preload" href="/fonts/marcellus-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/source-sans-3-var.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-readable summary" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.name}, Satya Nagar, Bhubaneswar`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogUrl} />
+    <meta name="geo.region" content="IN-OR" />
+    <meta name="geo.placename" content="Bhubaneswar" />
+    <meta name="geo.position" content={`${site.geo.lat};${site.geo.lng}`} />
+    <meta name="ICBM" content={`${site.geo.lat}, ${site.geo.lng}`} />
+    {tracking.gscVerification && <meta name="google-site-verification" content={tracking.gscVerification} />}
+    {tracking.bingVerification && <meta name="msvalidate.01" content={tracking.bingVerification} />}
+
+    <script is:inline>try{document.documentElement.dataset.consent=localStorage.getItem('eqx_consent')?'set':'unset'}catch(e){}</script>
+    <script type="application/ld+json" set:html={JSON.stringify(graph)} />
+    <script id="eqx-config" type="application/json" set:html={JSON.stringify(publicTracking)} />
+  </head>
+  <body data-page-type={pageType}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <ActionBar waText={waText} />
+    <Consent />
+    <script>
+      import '../lib/analytics';
+    </script>
+  </body>
+</html>
