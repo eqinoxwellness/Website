@@ -6,36 +6,209 @@ const year = new Date().getFullYear();
 <footer class="site-footer">
   <div class="container">
     <div class="footer-grid">
-      <div>
-        <img class="footer-logo" src="/brand/equinox-logo.svg" alt="Equinox Aesthetic and Wellness Centre" width="1130" height="679" loading="lazy" decoding="async" />
+      <div class="footer-brand-col">
+        <a href="/" class="footer-logo-link" aria-label="Equinox Aesthetic & Wellness Centre home">
+          <img class="footer-logo" src="/brand/equinox-logo.svg" alt="Equinox Aesthetic and Wellness Centre" width="1130" height="679" loading="lazy" decoding="async" />
+        </a>
         <h2 class="visually-hidden">{site.name}</h2>
-        <p>{site.address.street}<br />{site.address.locality}, {site.address.city} {site.address.postalCode}<br />{site.address.landmark}</p>
-        <p><a href={telLink}>{site.phoneDisplay}</a><br /><a href={waLink('Hi, I have a question for Equinox. #EQ-FT')} data-cta="footer" rel="noopener">WhatsApp</a>{site.email && <><br /><a href={`mailto:${site.email}`}>{site.email}</a></>}</p>
-        <p>Open {site.hours.openLabel}, Saturday to Thursday.<br />Closed on Fridays.</p>
+        <address class="footer-address">
+          <strong>Plot No. 69, 1st Floor</strong><br />
+          Kali Mandir Road, Satya Nagar<br />
+          Bhubaneswar, Odisha 751007<br />
+          <span class="footer-landmark">Above Sweekruti Creations</span>
+        </address>
+        
+        <div class="footer-contacts">
+          <p><a class="footer-phone" href={telLink}>{site.phoneDisplay}</a></p>
+          <p><a class="footer-wa" href={waLink('Hi, I have a question for Equinox. #EQ-FT')} data-cta="footer" rel="noopener">Message us on WhatsApp →</a></p>
+          {site.email && <p><a href={`mailto:${site.email}`}>{site.email}</a></p>}
+        </div>
+
+        <div class="footer-hours-badge">
+          <strong>Clinic Hours:</strong>
+          <span>Sat – Thu: 11:00 AM – 8:00 PM</span>
+          <span class="footer-closed">Closed on Fridays</span>
+        </div>
       </div>
-      <div>
-        <h2>Consultations</h2>
+
+      <div class="footer-nav-col">
+        <h2>Consultations & Modalities</h2>
         <ul>
           {services.map((s) => <li><a href={`/${s.slug}`}>{s.navName}</a></li>)}
-          <li><a href="/treatments">All treatments</a></li>
+          <li><a href="/treatments" class="footer-highlight-link">All Treatment Modalities →</a></li>
         </ul>
       </div>
-      <div>
-        <h2>The clinic</h2>
+
+      <div class="footer-nav-col">
+        <h2>The Clinic & Care</h2>
         <ul>
-          <li><a href="/about-the-doctor">Our doctor</a></li>
-          <li><a href="/contact">Visit and contact</a></li>
-          <li><a href="/privacy-policy">Privacy policy</a></li>
-          <li><a href="/terms">Terms of use</a></li>
-          <li><button class="linklike" type="button" data-consent-open>Cookie and tracking choices</button></li>
+          <li><a href="/about-the-doctor">Our Consulting Doctor</a></li>
+          <li><a href="/contact">Visit & Contact Guide</a></li>
+          <li><a href="/#first-visit">First Visit Protocol</a></li>
+          <li><a href="/privacy-policy">Privacy Policy</a></li>
+          <li><a href="/terms">Terms of Use</a></li>
+          <li><button class="linklike" type="button" data-consent-open>Cookie & Tracking Choices</button></li>
           {site.instagramUrl && <li><a href={site.instagramUrl} rel="noopener">Instagram</a></li>}
           {site.facebookUrl && <li><a href={site.facebookUrl} rel="noopener">Facebook</a></li>}
         </ul>
       </div>
     </div>
+
     <div class="footer-legal">
-      <p>Information on this website is general and is not a substitute for a consultation. Outcomes vary from person to person. For a medical emergency call 112.</p>
-      <p>© {year} {site.legalName}, Bhubaneswar.</p>
+      <p class="footer-disclaimer">
+        Information on this website is provided for general awareness and is not a substitute for an in-person medical assessment. Treatment outcomes vary from person to person. For medical emergencies call 112.
+      </p>
+      <p class="footer-copyright">
+        © {year} {site.legalName}, Satya Nagar, Bhubaneswar.
+      </p>
     </div>
   </div>
 </footer>
+
+<style>
+  .site-footer {
+    background: radial-gradient(circle at 50% 0%, #3a1d45 0%, #1e0b25 99.9%);
+    color: var(--on-dusk-muted, #dcc8de);
+    padding-block: 4.5rem 3rem;
+    border-top: 3px solid var(--horizon, #c8912f);
+    position: relative;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 3rem 2.5rem;
+    margin-bottom: 3.5rem;
+  }
+  @media (min-width: 60em) {
+    .footer-grid {
+      grid-template-columns: 1.4fr 1fr 1fr;
+    }
+  }
+
+  .footer-logo-link {
+    display: inline-block;
+    margin-bottom: 1.25rem;
+  }
+  .footer-logo {
+    height: 3.8rem;
+    width: auto;
+    filter: drop-shadow(0 4px 16px rgba(200, 145, 47, 0.3));
+  }
+
+  .footer-address {
+    font-style: normal;
+    font-size: 0.98rem;
+    line-height: 1.55;
+    color: var(--on-dusk, #fbf1e6);
+    margin-bottom: 1.25rem;
+  }
+  .footer-landmark {
+    color: var(--gold-light, #f2c766);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .footer-contacts {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .footer-contacts p {
+    margin: 0;
+  }
+  .footer-phone {
+    font-family: var(--serif);
+    font-size: 1.35rem;
+    color: #ffffff !important;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .footer-wa {
+    color: var(--gold-light, #f2c766) !important;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .footer-hours-badge {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.85rem 1.1rem;
+    background: rgba(251, 241, 230, 0.08);
+    border: 1px solid rgba(242, 199, 102, 0.3);
+    border-radius: var(--radius, 0.5rem);
+    font-size: 0.88rem;
+    color: var(--on-dusk, #fbf1e6);
+  }
+  .footer-hours-badge strong {
+    color: var(--gold-light, #f2c766);
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+  }
+  .footer-closed {
+    color: #ff9e9e;
+    font-weight: 600;
+  }
+
+  .footer-nav-col h2 {
+    color: #ffffff;
+    font-family: var(--serif);
+    font-size: 1.35rem;
+    margin-bottom: 1.1rem;
+    border-bottom: 1px solid rgba(242, 199, 102, 0.25);
+    padding-bottom: 0.5rem;
+  }
+  .footer-nav-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .footer-nav-col li {
+    margin: 0;
+  }
+  .footer-nav-col a, .footer-nav-col .linklike {
+    color: var(--on-dusk-muted, #dcc8de);
+    text-decoration: none;
+    font-size: 0.96rem;
+    transition: color 0.2s ease;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  .footer-nav-col a:hover, .footer-nav-col .linklike:hover {
+    color: var(--gold-light, #f2c766);
+  }
+  .footer-highlight-link {
+    color: var(--gold-light, #f2c766) !important;
+    font-weight: 600;
+  }
+
+  .footer-legal {
+    border-top: 1px solid rgba(251, 241, 230, 0.15);
+    padding-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    font-size: 0.86rem;
+    line-height: 1.5;
+  }
+  .footer-disclaimer {
+    max-width: 50ch;
+    margin: 0;
+    color: #bfaabf;
+  }
+  .footer-copyright {
+    margin: 0;
+    color: var(--on-dusk, #fbf1e6);
+    font-weight: 600;
+  }
+</style>

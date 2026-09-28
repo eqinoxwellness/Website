@@ -3,20 +3,50 @@ import Mark from './Mark.astro';
 import Wordmark from './Wordmark.astro';
 import Icon from './Icon.astro';
 import { services, categories } from '../data/services';
-import { waLink } from '../config/site';
+import { site, waLink } from '../config/site';
 ---
 <header class="site-header">
   <div class="container">
     <a class="brand" href="/" aria-label="Equinox Aesthetic and Wellness Centre, home">
-      <Mark size={44} />
-      <span class="brand__type"><Wordmark width={138} /><span class="brand__sub">Aesthetic and Wellness Centre</span></span>
+      <Mark size={42} />
+      <span class="brand__type">
+        <Wordmark width={135} />
+        <span class="brand__sub">Aesthetic and Wellness Centre</span>
+      </span>
     </a>
+
+    <!-- Desktop Navigation Links -->
+    <nav class="desktop-nav" aria-label="Primary Navigation">
+      <ul class="nav-links">
+        <li><a href="/treatments">All Modalities</a></li>
+        <li><a href="/acne">Skin</a></li>
+        <li><a href="/hair">Hair & Scalp</a></li>
+        <li><a href="/womens-wellness">Women's Care</a></li>
+        <li><a href="/about-the-doctor">Our Doctor</a></li>
+        <li><a href="/contact">Visit & Contact</a></li>
+      </ul>
+    </nav>
+
     <div class="header-actions">
-      <a class="btn btn--wa header-wa" href={waLink('Hi, I would like to book a consultation at Equinox. #EQ-WEB')} data-cta="header" rel="noopener"><Icon name="whatsapp" />WhatsApp</a>
-      <button class="menu-btn" popovertarget="site-menu" aria-label="Open menu"><Icon name="menu" />Menu</button>
+      <div class="clinic-status-badge" aria-label="Clinic operating hours status">
+        <span class="status-pulse"></span>
+        <span class="status-text">Open 11am–8pm</span>
+      </div>
+
+      <a class="btn btn--wa header-wa" href={waLink('Hi, I would like to book a consultation at Equinox. #EQ-HDR')} data-cta="header" rel="noopener">
+        <Icon name="whatsapp" />
+        <span class="btn-text">WhatsApp</span>
+      </a>
+
+      <button class="menu-btn" popovertarget="site-menu" aria-label="Open navigation menu">
+        <Icon name="menu" />
+        <span>Menu</span>
+      </button>
     </div>
   </div>
-  <nav id="site-menu" class="menu" popover aria-label="Site">
+
+  <!-- Mobile & Extended Navigation Popover -->
+  <nav id="site-menu" class="menu" popover aria-label="Site Menu">
     <div class="container menu__grid">
       {categories.map((cat) => (
         <div class="menu__group">
@@ -25,15 +55,158 @@ import { waLink } from '../config/site';
         </div>
       ))}
       <div class="menu__group">
-        <h2>The clinic</h2>
+        <h2>The Clinic</h2>
         <ul>
-          <li><a href="/about-the-doctor">Our doctor</a></li>
-          <li><a href="/treatments">Treatments</a></li>
-          <li><a href="/contact">Visit and contact</a></li>
-          <li><a href="/#first-visit">Your first visit</a></li>
+          <li><a href="/about-the-doctor">Our Consulting Doctor</a></li>
+          <li><a href="/treatments">All Treatment Modalities</a></li>
+          <li><a href="/contact">Visit & Location Guide</a></li>
+          <li><a href="/#first-visit">First Visit Protocol</a></li>
         </ul>
       </div>
-      <button class="menu-btn menu__close" popovertarget="site-menu" popovertargetaction="hide"><Icon name="close" />Close menu</button>
+      <button class="menu-btn menu__close" popovertarget="site-menu" popovertargetaction="hide">
+        <Icon name="close" />
+        <span>Close menu</span>
+      </button>
     </div>
   </nav>
 </header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(251, 246, 239, 0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line, #E6D6C4);
+  }
+  .site-header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 4.8rem;
+    gap: 1.5rem;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .brand__type {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1.1;
+  }
+  .brand__sub {
+    font-size: 0.76rem;
+    letter-spacing: 0.04em;
+    color: var(--muted, #66586A);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 0.1rem;
+  }
+
+  .desktop-nav {
+    display: none;
+  }
+  @media (min-width: 62em) {
+    .desktop-nav {
+      display: block;
+    }
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav-links a {
+    color: var(--ink, #3A1D45);
+    font-size: 0.96rem;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 0.4rem 0.65rem;
+    border-radius: 0.4rem;
+    transition: all 0.2s ease;
+  }
+  .nav-links a:hover {
+    color: var(--gold-deep, #8A5A12);
+    background: rgba(200, 145, 47, 0.1);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  .clinic-status-badge {
+    display: none;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.75rem;
+    background: rgba(29, 107, 82, 0.1);
+    border: 1px solid rgba(29, 107, 82, 0.25);
+    border-radius: 2rem;
+    color: var(--wa, #1D6B52);
+    font-size: 0.8rem;
+    font-weight: 650;
+  }
+  @media (min-width: 48em) {
+    .clinic-status-badge {
+      display: flex;
+    }
+  }
+
+  .status-pulse {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--wa, #1D6B52);
+    box-shadow: 0 0 8px var(--wa, #1D6B52);
+  }
+
+  .header-wa {
+    padding: 0.55rem 1.1rem;
+    font-size: 0.92rem;
+  }
+  @media (max-width: 36em) {
+    .header-wa .btn-text {
+      display: none;
+    }
+  }
+
+  .menu-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.9rem;
+    background: #ffffff;
+    border: 1px solid var(--line, #E6D6C4);
+    border-radius: var(--radius, 0.375rem);
+    color: var(--ink, #3A1D45);
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .menu-btn:hover {
+    border-color: var(--horizon, #C8912F);
+    background: var(--day-2, #F4E8DA);
+  }
+  @media (min-width: 62em) {
+    .menu-btn {
+      display: none;
+    }
+  }
+</style>
