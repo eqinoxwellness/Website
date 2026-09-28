@@ -15,7 +15,7 @@ export const GET: APIRoute = ({ site: s }) => {
     `- Address: ${fullAddress} (${site.address.landmark})`,
     `- Phone and WhatsApp: ${site.phoneDisplay}`,
     `- Hours: ${site.hours.openLabel}, Saturday to Thursday. Closed on Fridays.`,
-    `- Consultations are with ${site.doctor.displayName}${site.doctor.qualification ? `, ${site.doctor.qualification}` : ''}.`,
+    `- Consultations are with ${site.doctor.displayName ?? 'our consulting doctor'}${site.doctor.qualification ? `, ${site.doctor.qualification}` : ''}.`,
     `- Serves: ${site.areaServed.join(', ')}.`,
     '- Approach: every consultation starts with history and examination, followed by a plain explanation of options, costs and realistic expectations. No specific outcome is promised.',
     '',

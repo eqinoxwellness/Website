@@ -70,7 +70,7 @@ export function serviceNode(origin: string, url: string, s: Service) {
 /** Emitted only once the doctor's qualification and registration are confirmed. */
 export function physicianNode(origin: string) {
   const d = site.doctor;
-  if (!d.qualification || !d.registration) return null;
+  if (!d.displayName || !d.qualification || !d.registration) return null;
   return {
     '@type': 'Physician', '@id': `${origin}/about-the-doctor#physician`, name: d.displayName,
     hasCredential: d.qualification, identifier: d.registration, worksFor: { '@id': clinicId(origin) },

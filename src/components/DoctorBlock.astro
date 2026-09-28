@@ -9,17 +9,17 @@ const d = site.doctor;
   <div class="container split split--wide-left">
     <div>
       <h2 id="doctor-h">Who you will see</h2>
-      <p class="lede lede--wide">Your consultation is with {d.displayName}, not a sales executive.</p>
+      <p class="lede lede--wide">Your consultation is directly with our consulting doctor, not a sales executive.</p>
       {d.focus && <p>{d.focus}</p>}
       <p>Every first visit follows the same order: listen, examine, explain, and only then talk about options. You are welcome to ask questions, take notes, or bring someone with you.</p>
-      {!compact && <p><a href="/about-the-doctor">More about the doctor and how consultations work</a></p>}
+      {!compact && <p><a href="/about-the-doctor">More about our doctor and how consultations work</a></p>}
     </div>
     {d.photo ? (
-      <img class="doctor-photo" src={d.photo} alt={`${d.displayName} at Equinox Aesthetic & Wellness Centre`} width="800" height="1000" loading="lazy" decoding="async" />
+      <img class="doctor-photo" src={d.photo} alt="Consulting Doctor at Equinox Aesthetic & Wellness Centre" width="800" height="1000" loading="lazy" decoding="async" />
     ) : (
       <div class="doctor-card">
         <Mark size={52} />
-        <p class="doctor-card__name">{d.displayName}</p>
+        <p class="doctor-card__name">Consulting Doctor</p>
         {d.qualification && <p>{d.qualification}</p>}
         {d.registration && <p>Registration {d.registration}</p>}
         <p>Consultations Saturday to Thursday, {site.hours.openLabel}</p>

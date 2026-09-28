@@ -42,7 +42,7 @@ export const site = {
     'Jaydev Vihar', 'Mancheswar', 'Nayapalli', 'Bhubaneswar',
   ],
   doctor: {
-    displayName: 'Dr Heena', // CONFIRM: full name as registered
+    displayName: null as string | null, // CONFIRM: full name as registered
     qualification: null as string | null, // CONFIRM: e.g. MBBS, MD (Dermatology) or BHMS
     registration: null as string | null, // CONFIRM: registration number and council
     focus: null as string | null, // CONFIRM: one sentence on clinical focus, in the doctor's own words
