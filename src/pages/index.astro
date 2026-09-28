@@ -8,6 +8,7 @@ import Faq from '../components/Faq.astro';
 import Location from '../components/Location.astro';
 import LeadForm from '../components/LeadForm';
 import ConcernFinder from '../components/ConcernFinder';
+import CostEstimator from '../components/CostEstimator';
 import DermalMatrix3D from '../components/DermalMatrix3D.astro';
 import { services, categories, firstVisitSteps } from '../data/services';
 import { homeFaqs } from '../data/faqs';
@@ -162,8 +163,15 @@ const schema = [pageNode(origin, `${origin}/`, title, description), faqNode(`${o
     </div>
   </section>
 
+  <!-- Dynamic Interactive Calculator -->
+  <section class="section" aria-labelledby="calc-h" data-section="calculator">
+    <div class="container">
+      <CostEstimator client:visible />
+    </div>
+  </section>
+
   <!-- Fee & Transparency -->
-  <section class="section" aria-labelledby="fee-h" data-section="fees">
+  <section class="section section--tint" aria-labelledby="fee-h" data-section="fees">
     <div class="container split">
       <div>
         <h2 id="fee-h">What a consultation costs</h2>
