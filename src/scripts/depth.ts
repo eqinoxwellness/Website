@@ -97,11 +97,21 @@
     if (!activeTiltEl) return;
     activeTiltEl.style.setProperty('--tilt-x', tiltX.toFixed(3));
     activeTiltEl.style.setProperty('--tilt-y', tiltY.toFixed(3));
+    activeTiltEl.style.setProperty('--pointer-pct-x', `${((tiltX + 1) * 50).toFixed(1)}%`);
+    activeTiltEl.style.setProperty('--pointer-pct-y', `${((tiltY + 1) * 50).toFixed(1)}%`);
   };
 
   const isTiltTarget = (el: HTMLElement | null): HTMLElement | null => {
     if (!el) return null;
-    return el.closest<HTMLElement>('.doctor-card, .finder__result, .note');
+    return el.closest<HTMLElement>('.doctor-card, .finder__result, .note, .treatment-card');
+  };
+
+  const clearTilt = (el: HTMLElement) => {
+    el.style.removeProperty('--tilt-x');
+    el.style.removeProperty('--tilt-y');
+    el.style.removeProperty('--pointer-pct-x');
+    el.style.removeProperty('--pointer-pct-y');
+    el.removeAttribute('data-tilting');
   };
 
   document.addEventListener(
@@ -110,9 +120,7 @@
       const target = isTiltTarget(e.target as HTMLElement);
       if (!target) {
         if (activeTiltEl) {
-          activeTiltEl.style.removeProperty('--tilt-x');
-          activeTiltEl.style.removeProperty('--tilt-y');
-          activeTiltEl.removeAttribute('data-tilting');
+          clearTilt(activeTiltEl);
           activeTiltEl = null;
         }
         return;
@@ -120,9 +128,7 @@
 
       if (activeTiltEl !== target) {
         if (activeTiltEl) {
-          activeTiltEl.style.removeProperty('--tilt-x');
-          activeTiltEl.style.removeProperty('--tilt-y');
-          activeTiltEl.removeAttribute('data-tilting');
+          clearTilt(activeTiltEl);
         }
         activeTiltEl = target;
         activeTiltEl.setAttribute('data-tilting', 'true');
@@ -146,9 +152,7 @@
     'pointerleave',
     () => {
       if (activeTiltEl) {
-        activeTiltEl.style.removeProperty('--tilt-x');
-        activeTiltEl.style.removeProperty('--tilt-y');
-        activeTiltEl.removeAttribute('data-tilting');
+        clearTilt(activeTiltEl);
         activeTiltEl = null;
       }
     },
