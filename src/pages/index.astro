@@ -8,6 +8,7 @@ import Faq from '../components/Faq.astro';
 import Location from '../components/Location.astro';
 import LeadForm from '../components/LeadForm';
 import ConcernFinder from '../components/ConcernFinder';
+import DermalMatrix3D from '../components/DermalMatrix3D.astro';
 import { services, categories, firstVisitSteps } from '../data/services';
 import { homeFaqs } from '../data/faqs';
 import { site, waLink, feeLine } from '../config/site';
@@ -110,7 +111,7 @@ const schema = [pageNode(origin, `${origin}/`, title, description), faqNode(`${o
       </div>
       <p style="margin-top:1.5rem"><a href="/treatments">See all treatment modalities the clinic offers</a></p>
 
-      <div class="clinical-feature split split--wide-left" style="margin-top: 3.5rem; margin-bottom: 1rem;">
+      <div class="clinical-feature split split--wide-left" style="margin-top: 3.5rem; margin-bottom: 2.5rem;">
         <div>
           <h2>A calm, clinical sanctuary in Satya Nagar</h2>
           <p class="lede">Designed for privacy, hygiene and thorough medical assessments. You are never hurried through a sales pitch; you sit with the doctor in an unhurried consultation suite.</p>
@@ -123,6 +124,8 @@ const schema = [pageNode(origin, `${origin}/`, title, description), faqNode(`${o
           <img src="/images/clinic-suite.webp" alt="Equinox Aesthetic and Wellness Centre treatment suite interior in Satya Nagar" width="800" height="450" loading="lazy" decoding="async" />
         </div>
       </div>
+
+      <DermalMatrix3D />
     </div>
   </section>
 
