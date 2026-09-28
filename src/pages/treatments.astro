@@ -19,31 +19,96 @@ const schema = [
 ---
 <Base title={title} description={description} schema={schema} pageType="treatments" waText={waText}>
   <section class="page-hero" data-section="intro">
+    <div class="container split split--wide-left">
+      <div>
+        <Crumbs items={[{ name: 'Home', href: '/' }, { name: 'Treatments' }]} />
+        <h1>Treatment modalities at Equinox</h1>
+        <p class="lede lede--wide">This is not a menu to order from. Every treatment begins with the doctor's assessment of your concern, your history and your skin or scalp. Only then does the doctor explain which options may suit you, what each involves and what it costs.</p>
+        <CtaButtons waText={waText} location="treatments-hero" />
+      </div>
+      <div class="luxury-image-frame">
+        <img src="/images/clinic-suite.webp" alt="Equinox Aesthetic and Wellness Centre treatment suite in Satya Nagar" width="800" height="450" loading="eager" decoding="async" />
+        <div class="luxury-image-badge">
+          <strong>Clinical Treatment Suite</strong>
+          Plot No. 69, 1st Floor, Kali Mandir Road, Satya Nagar
+        </div>
+      </div>
+    </div>
     <div class="container">
-      <Crumbs items={[{ name: 'Home', href: '/' }, { name: 'Treatments' }]} />
-      <h1>Treatment modalities at Equinox</h1>
-      <p class="lede lede--wide">This is not a menu to order from. Every treatment begins with the doctor's assessment of your concern, your history and your skin or scalp. Only then does the doctor explain which options may suit you, what each involves and what it costs.</p>
-      <CtaButtons waText={waText} location="treatments-hero" />
+      <div class="stats-strip">
+        <div class="stat-item">
+          <div class="stat-item__icon">✦</div>
+          <div class="stat-item__text">
+            <strong>14+ Years Experience</strong>
+            <span>Doctor-led homeopathy & aesthetics</span>
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-item__icon">✦</div>
+          <div class="stat-item__text">
+            <strong>Assessment First</strong>
+            <span>Detailed history & honest discussion</span>
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-item__icon">✦</div>
+          <div class="stat-item__text">
+            <strong>Medical Technologies</strong>
+            <span>Diode laser, Pico laser, MNRF, HydraFacial</span>
+          </div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-item__icon">✦</div>
+          <div class="stat-item__text">
+            <strong>Central Location</strong>
+            <span>Above Sweekruti Creations, Satya Nagar</span>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  {treatmentCategories.map((cat) => (
-    <section class="section" aria-labelledby={`tr-${cat.group.replace(/\s+/g, '-').toLowerCase()}`} data-section={`treatments-${cat.group.replace(/\s+/g, '-').toLowerCase()}`}>
-      <div class="container">
-        <h2 id={`tr-${cat.group.replace(/\s+/g, '-').toLowerCase()}`}>{cat.group}</h2>
-        <div class="treatment-list">
-          {cat.items.map((t) => (
-            <div class="treatment-card">
-              <h3>{t.name}</h3>
-              <p><strong>What it is:</strong> {t.what}</p>
-              <p><strong>Used for:</strong> {t.usedFor}</p>
-              {t.caution && <p class="treatment-caution"><strong>Note:</strong> {t.caution}</p>}
-            </div>
-          ))}
+  {treatmentCategories.map((cat, catIdx) => (
+    <>
+      <section class="section" aria-labelledby={`tr-${cat.group.replace(/\s+/g, '-').toLowerCase()}`} data-section={`treatments-${cat.group.replace(/\s+/g, '-').toLowerCase()}`}>
+        <div class="container">
+          <h2 id={`tr-${cat.group.replace(/\s+/g, '-').toLowerCase()}`}>{cat.group}</h2>
+          <div class="treatment-list">
+            {cat.items.map((t) => (
+              <div class="treatment-card">
+                <div class="treatment-card__top">
+                  <span class="treatment-card__badge">{cat.group}</span>
+                  <svg class="treatment-card__glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                    <circle cx="12" cy="12" r="9" stroke="currentColor" />
+                    <path d="M12 7v10M7 12h10" stroke="currentColor" stroke-linecap="round" />
+                  </svg>
+                </div>
+                <h3>{t.name}</h3>
+                <p><strong>What it is:</strong> {t.what}</p>
+                <p><strong>Used for:</strong> {t.usedFor}</p>
+                {t.caution && <p class="treatment-caution"><strong>Note:</strong> {t.caution}</p>}
+              </div>
+            ))}
+          </div>
+          <p class="treatment-footer">{cat.footer}</p>
         </div>
-        <p class="treatment-footer">{cat.footer}</p>
-      </div>
-    </section>
+      </section>
+
+      {catIdx === 0 && (
+        <div class="container">
+          <div class="clinical-feature split split--wide-left">
+            <div>
+              <h2>Care guided by diagnosis, not trends</h2>
+              <p class="lede">Every face and scalp responds differently. Having advanced modalities in the clinic gives our doctor options, but the treatment plan is shaped entirely by what is appropriate for your individual condition.</p>
+              <p>We explain expected timelines, session intervals and honest costs upfront so you can make an informed choice with zero pressure.</p>
+            </div>
+            <div class="luxury-image-frame" style="max-height: 22rem;">
+              <img src="/images/clinical-care.webp" alt="Doctor-led aesthetic consultation and gentle clinical treatment at Equinox" width="800" height="450" loading="lazy" decoding="async" />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   ))}
 
   <section class="section section--tint" aria-labelledby="cost-h" data-section="cost">

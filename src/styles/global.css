@@ -379,6 +379,136 @@ li { margin-bottom: 0.45em; }
   text-transform: uppercase;
 }
 
+/* ============ Luxury Visual Components ============ */
+.luxury-image-frame {
+  position: relative;
+  border-radius: calc(var(--radius) * 1.5);
+  overflow: hidden;
+  box-shadow: 0 20px 48px -12px rgb(46 20 55 / 0.22), 0 4px 16px -2px rgb(200 145 47 / 0.15);
+  border: 1px solid rgb(242 199 102 / 0.35);
+  background: var(--dusk-3);
+}
+.luxury-image-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.luxury-image-frame:hover img {
+  transform: scale(1.025);
+}
+.luxury-image-badge {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  right: 1.25rem;
+  padding: 0.75rem 1.1rem;
+  background: rgb(26 12 33 / 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgb(242 199 102 / 0.3);
+  border-radius: var(--radius);
+  color: var(--on-dusk);
+  font-size: 0.92rem;
+  line-height: 1.4;
+  box-shadow: 0 8px 24px -4px rgb(0 0 0 / 0.4);
+}
+.luxury-image-badge strong {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  color: var(--gold-light);
+  margin-bottom: 0.15rem;
+}
+
+.stats-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1.25rem;
+  margin-top: 2.25rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--line);
+}
+.stat-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+}
+.stat-item__icon {
+  flex: none;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background: rgb(242 199 102 / 0.15);
+  border: 1px solid rgb(200 145 47 / 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-deep);
+  font-size: 1rem;
+}
+.stat-item__text strong {
+  display: block;
+  font-size: 1rem;
+  color: var(--ink);
+  line-height: 1.25;
+  margin-bottom: 0.15rem;
+}
+.stat-item__text span {
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.treatment-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+.treatment-card__badge {
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  background: rgb(242 199 102 / 0.15);
+  border: 1px solid rgb(200 145 47 / 0.25);
+  border-radius: 2rem;
+  padding: 0.25rem 0.65rem;
+}
+.treatment-card__glyph {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--horizon);
+  opacity: 0.85;
+}
+
+.clinical-feature {
+  background: radial-gradient(circle at 75% 30%, #441F51 0%, #2A1133 60%, #17071C 100%);
+  color: var(--on-dusk);
+  border-radius: calc(var(--radius) * 1.5);
+  padding: clamp(2rem, 5vw, 3.5rem);
+  margin-block: var(--space-section);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 24px 60px -16px rgb(23 7 28 / 0.5), inset 0 1px 0 rgb(242 199 102 / 0.25);
+}
+.clinical-feature::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--gold-light), var(--horizon), transparent);
+}
+.clinical-feature h2 {
+  color: var(--on-dusk);
+  font-size: clamp(1.8rem, 1.4rem + 1.6vw, 2.5rem);
+}
+.clinical-feature .lede {
+  color: var(--on-dusk-muted);
+}
+
 .covers { list-style: none; padding: 0; margin: 1.25rem 0 0; }
 .covers li { position: relative; padding: 0.7rem 0 0.7rem 1.75rem; border-bottom: 1px solid var(--line); margin: 0; max-width: 60ch; }
 .covers li::before { content: ''; position: absolute; left: 0.2rem; top: 1.25rem; width: 0.7rem; height: 0.7rem; border-radius: 50%; background: linear-gradient(90deg, var(--gold-light) 50%, var(--dusk) 50%); box-shadow: 0 0 0 1.5px var(--horizon); }
