@@ -32,7 +32,8 @@ export function clinicNode(origin: string) {
     knowsLanguage: ['en', 'hi', 'or'],
   };
   if (site.email) node.email = site.email;
-  if (site.instagramUrl) node.sameAs = [site.instagramUrl];
+  const sameAs = [site.instagramUrl, site.facebookUrl].filter(Boolean);
+  if (sameAs.length) node.sameAs = sameAs;
   return node;
 }
 

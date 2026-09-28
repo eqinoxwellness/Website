@@ -17,6 +17,7 @@ export const site = {
   whatsappNumber: '916372528534',
   email: orNull(env.PUBLIC_CLINIC_EMAIL), // CONFIRM: clinic email for the privacy policy and footer
   instagramUrl: orNull(env.PUBLIC_INSTAGRAM_URL), // CONFIRM: Instagram profile URL
+  facebookUrl: orNull(env.PUBLIC_FACEBOOK_URL),
   address: {
     street: 'Plot No. 69, 1st Floor, Kali Mandir Road',
     locality: 'Satya Nagar',

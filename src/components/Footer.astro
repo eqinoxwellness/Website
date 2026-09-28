@@ -15,7 +15,10 @@ const year = new Date().getFullYear();
       </div>
       <div>
         <h2>Consultations</h2>
-        <ul>{services.map((s) => <li><a href={`/${s.slug}`}>{s.navName}</a></li>)}</ul>
+        <ul>
+          {services.map((s) => <li><a href={`/${s.slug}`}>{s.navName}</a></li>)}
+          <li><a href="/treatments">All treatments</a></li>
+        </ul>
       </div>
       <div>
         <h2>The clinic</h2>
@@ -26,6 +29,7 @@ const year = new Date().getFullYear();
           <li><a href="/terms">Terms of use</a></li>
           <li><button class="linklike" type="button" data-consent-open>Cookie and tracking choices</button></li>
           {site.instagramUrl && <li><a href={site.instagramUrl} rel="noopener">Instagram</a></li>}
+          {site.facebookUrl && <li><a href={site.facebookUrl} rel="noopener">Facebook</a></li>}
         </ul>
       </div>
     </div>

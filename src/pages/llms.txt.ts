@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { services, categories } from '../data/services';
+import { treatmentCategories } from '../data/treatments';
 import { site, fullAddress } from '../config/site';
 
 // llms.txt: a plain summary for AI assistants, generated from the same data as the pages
@@ -23,6 +24,14 @@ export const GET: APIRoute = ({ site: s }) => {
     lines.push(`## ${cat}`, '');
     for (const sv of services.filter((x) => x.category === cat)) {
       lines.push(`- [${sv.name}](${origin}/${sv.slug}): ${sv.intro}`);
+    }
+    lines.push('');
+  }
+  lines.push('## Treatment modalities', '', `- [All treatments](${origin}/treatments)`, '');
+  for (const cat of treatmentCategories) {
+    lines.push(`### ${cat.group}`);
+    for (const t of cat.items) {
+      lines.push(`- ${t.name}: ${t.what}`);
     }
     lines.push('');
   }

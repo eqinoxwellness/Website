@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import CtaButtons from '../components/CtaButtons.astro';
+import DoctorBlock from '../components/DoctorBlock.astro';
+import { treatmentCategories } from '../data/treatments';
+import { waLink, feeLine } from '../config/site';
+import { pageNode, breadcrumbNode } from '../lib/schema';
+
+const origin = Astro.site?.origin ?? 'http://localhost:4321';
+const url = `${origin}/treatments`;
+const title = 'Treatments and modalities | Equinox Aesthetic & Wellness Centre';
+const description = 'The treatment modalities available at Equinox once the doctor has assessed your concern: skin, hair and scalp, homeopathy and counselling.';
+const waText = 'Hi, I would like to know about the treatments at Equinox. #EQ-TR';
+const schema = [
+  pageNode(origin, url, title, description, 'MedicalWebPage'),
+  breadcrumbNode(url, [{ name: 'Home', url: `${origin}/` }, { name: 'Treatments', url }]),
+];
+---
+<Base title={title} description={description} schema={schema} pageType="treatments" waText={waText}>
+  <section class="page-hero" data-section="intro">
+    <div class="container">
+      <Crumbs items={[{ name: 'Home', href: '/' }, { name: 'Treatments' }]} />
+      <h1>Treatment modalities at Equinox</h1>
+      <p class="lede lede--wide">This is not a menu to order from. Every treatment begins with the doctor's assessment of your concern, your history and your skin or scalp. Only then does the doctor explain which options may suit you, what each involves and what it costs.</p>
+      <CtaButtons waText={waText} location="treatments-hero" />
+    </div>
+  </section>
+
+  {treatmentCategories.map((cat) => (
+    <section class="section" aria-labelledby={`tr-${cat.group.replace(/\s+/g, '-').toLowerCase()}`} data-section={`treatments-${cat.group.replace(/\s+/g, '-').toLowerCase()}`}>
+      <div class="container">
+        <h2 id={`tr-${cat.group.replace(/\s+/g, '-').toLowerCase()}`}>{cat.group}</h2>
+        <div class="treatment-list">
+          {cat.items.map((t) => (
+            <div class="treatment-card">
+              <h3>{t.name}</h3>
+              <p><strong>What it is:</strong> {t.what}</p>
+              <p><strong>Used for:</strong> {t.usedFor}</p>
+              {t.caution && <p class="treatment-caution"><strong>Note:</strong> {t.caution}</p>}
+            </div>
+          ))}
+        </div>
+        <p class="treatment-footer">{cat.footer}</p>
+      </div>
+    </section>
+  ))}
+
+  <section class="section section--tint" aria-labelledby="cost-h" data-section="cost">
+    <div class="container split">
+      <div>
+        <h2 id="cost-h">What a consultation costs</h2>
+        <p class="lede lede--wide">{feeLine()}</p>
+        <p>After the assessment, the doctor explains each option with its cost and the usual number of visits. You can take that home and decide later.</p>
+      </div>
+      <div>
+        <h2>What to expect, honestly</h2>
+        <div class="note">
+          <p>How skin and hair respond differs from person to person. We describe the process, the usual number of sessions and what most people notice, but we do not promise a specific outcome. The doctor will be honest about what is realistic for you.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <DoctorBlock />
+
+  <section class="section section--tint" aria-labelledby="form-h" data-section="form">
+    <div class="container split">
+      <div>
+        <h2 id="form-h">Have a question about a treatment?</h2>
+        <p class="lede lede--wide">Message us on WhatsApp and we will explain what is involved before you book anything.</p>
+        <CtaButtons waText={waText} location="treatments-form" />
+      </div>
+    </div>
+  </section>
+</Base>
