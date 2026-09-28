@@ -76,10 +76,10 @@ import { site, waLink } from '../config/site';
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(251, 246, 239, 0.94);
+    background: rgba(18, 7, 26, 0.94);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--line, #E6D6C4);
+    border-bottom: 1px solid rgba(242, 199, 102, 0.35);
   }
   .site-header .container {
     display: flex;
@@ -105,7 +105,7 @@ import { site, waLink } from '../config/site';
   .brand__sub {
     font-size: 0.76rem;
     letter-spacing: 0.04em;
-    color: var(--muted, #66586A);
+    color: #dcc8de;
     text-transform: uppercase;
     font-weight: 600;
     margin-top: 0.1rem;
@@ -129,7 +129,7 @@ import { site, waLink } from '../config/site';
     padding: 0;
   }
   .nav-links a {
-    color: var(--ink, #3A1D45);
+    color: #fbf1e6;
     font-size: 0.96rem;
     font-weight: 600;
     text-decoration: none;
@@ -138,8 +138,8 @@ import { site, waLink } from '../config/site';
     transition: all 0.2s ease;
   }
   .nav-links a:hover {
-    color: var(--gold-deep, #8A5A12);
-    background: rgba(200, 145, 47, 0.1);
+    color: #f2c766;
+    background: rgba(242, 199, 102, 0.15);
   }
 
   .header-actions {
@@ -154,10 +154,10 @@ import { site, waLink } from '../config/site';
     align-items: center;
     gap: 0.45rem;
     padding: 0.35rem 0.75rem;
-    background: rgba(29, 107, 82, 0.1);
-    border: 1px solid rgba(29, 107, 82, 0.25);
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.35);
     border-radius: 2rem;
-    color: var(--wa, #1D6B52);
+    color: #34d399;
     font-size: 0.8rem;
     font-weight: 650;
   }
@@ -171,8 +171,8 @@ import { site, waLink } from '../config/site';
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: var(--wa, #1D6B52);
-    box-shadow: 0 0 8px var(--wa, #1D6B52);
+    background: #34d399;
+    box-shadow: 0 0 8px #34d399;
   }
 
   .header-wa {
@@ -190,10 +190,10 @@ import { site, waLink } from '../config/site';
     align-items: center;
     gap: 0.4rem;
     padding: 0.55rem 0.9rem;
-    background: #ffffff;
-    border: 1px solid var(--line, #E6D6C4);
+    background: rgba(242, 199, 102, 0.1);
+    border: 1px solid rgba(242, 199, 102, 0.35);
     border-radius: var(--radius, 0.375rem);
-    color: var(--ink, #3A1D45);
+    color: #fbf1e6;
     font-family: var(--sans);
     font-size: 0.9rem;
     font-weight: 600;
@@ -201,8 +201,8 @@ import { site, waLink } from '../config/site';
     transition: all 0.2s ease;
   }
   .menu-btn:hover {
-    border-color: var(--horizon, #C8912F);
-    background: var(--day-2, #F4E8DA);
+    border-color: #f2c766;
+    background: rgba(242, 199, 102, 0.2);
   }
   @media (min-width: 62em) {
     .menu-btn {
