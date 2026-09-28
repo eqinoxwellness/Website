@@ -1,656 +1,306 @@
 ---
-// Interactive 3D Clinical Modality & Dermal Matrix Visualizer
-// 60FPS procedural 3D projection canvas with zero external bundle bloat (Lighthouse 100 preserved).
+// Interactive 3D Clinical Modality & Technology Suite
+// Breathtaking 3D depth cards with glowing gold highlights and interactive diagnostics.
 ---
 
-<div class="dermal-3d-container" id="dermal-3d-suite">
-  <div class="dermal-3d-header">
-    <div class="dermal-3d-tag">
-      <span class="dermal-3d-pulse"></span>
-      <span>Interactive 3D Anatomical & Clinical Modality Suite</span>
+<div class="luxury-3d-suite" id="dermal-3d-suite">
+  <div class="luxury-3d-header">
+    <div class="luxury-3d-tag">
+      <span class="luxury-3d-pulse"></span>
+      <span>3D Clinical Modality Visualizer</span>
     </div>
-    <h2 class="dermal-3d-title">Explore Clinical Action & Dermal Depth in Real-Time 3D</h2>
-    <p class="dermal-3d-desc">
-      Every aesthetic technology operates at a distinct physiological depth. Rotate the 3D anatomical strata or select a clinical modality below to visualize precision energy delivery and tissue response.
+    <h2 class="luxury-3d-title">Precision Energy Modalities & Biological Depths</h2>
+    <p class="luxury-3d-desc">
+      Every medical aesthetic technology targets a specific anatomical depth. Explore how each advanced clinical modality acts within the dermal structure.
     </p>
   </div>
 
-  <div class="dermal-3d-viewport-wrapper">
-    <div class="dermal-3d-canvas-box">
-      <canvas id="dermal3dCanvas" width="900" height="520" aria-label="Interactive 3D Dermal Depth and Modality Visualizer"></canvas>
-      
-      <div class="dermal-3d-overlay-hint">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"/>
-          <path d="M12 8v8M8 12h8"/>
-        </svg>
-        <span>Drag to rotate 3D view · Autopilot mode active</span>
+  <div class="luxury-3d-grid">
+    <!-- Pico Laser Card -->
+    <div class="modality-card is-active" data-depth="1.50 mm" data-layer="Reticular Dermis" data-target="Melanin clusters & pigmentation" data-down="12–24 hours (Mild flush)">
+      <div class="modality-card__glow"></div>
+      <div class="modality-card__badge">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07L19.07 4.93"/></svg>
+        <span>1.50 mm Depth</span>
       </div>
-
-      <div class="dermal-3d-hud" id="dermalHud">
-        <div class="hud-item">
-          <span class="hud-label">Active Modality</span>
-          <span class="hud-value" id="hudModality">Pico & Q-Switched Photonic</span>
-        </div>
-        <div class="hud-item">
-          <span class="hud-label">Physiological Depth</span>
-          <span class="hud-value hud-value--gold" id="hudDepth">1.50 mm (Reticular Dermis)</span>
-        </div>
-        <div class="hud-item">
-          <span class="hud-label">Primary Target</span>
-          <span class="hud-value" id="hudTarget">Melanin clusters & cellular turnover</span>
-        </div>
-        <div class="hud-item">
-          <span class="hud-label">Downtime Expectation</span>
-          <span class="hud-value" id="hudDowntime">Transient mild redness (12–24h)</span>
-        </div>
+      <h3>Pico & Q-Switched Laser</h3>
+      <p class="modality-card__tech">Photomechanical pulse technology</p>
+      <p class="modality-card__text">
+        Delivers ultra-short acoustic pulses to break down deep epidermal and dermal melanin clusters without thermal damage to surrounding skin tissue.
+      </p>
+      <div class="modality-card__specs">
+        <div><strong>Primary Target:</strong> Melasma, sun spots & acne marks</div>
+        <div><strong>Cadence:</strong> 3–4 weeks between sessions</div>
       </div>
     </div>
 
-    <div class="dermal-3d-controls" role="tablist" aria-label="Select Clinical Modality">
-      <button type="button" class="modality-btn is-active" data-modality="pico" role="tab" aria-selected="true">
-        <span class="btn-indicator"></span>
-        <div class="btn-content">
-          <strong>Pico & Q-Switched Laser</strong>
-          <small>Target Depth: 1.20 – 1.80 mm · Pigmentation & Melasma</small>
-        </div>
-      </button>
+    <!-- MNRF Card -->
+    <div class="modality-card" data-depth="2.80 mm" data-layer="Deep Collagen Matrix" data-target="Fibroblast stimulation & scar remodeling" data-down="2–3 days (Micro-crusting)">
+      <div class="modality-card__glow"></div>
+      <div class="modality-card__badge">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+        <span>2.80 mm Depth</span>
+      </div>
+      <h3>Micro-Needle RF (MNRF)</h3>
+      <p class="modality-card__tech">Fractional radiofrequency matrix</p>
+      <p class="modality-card__text">
+        Combines insulated micro-needles with thermal radiofrequency energy at controlled depths to induce neo-collagenesis and remodel deep acne scarring.
+      </p>
+      <div class="modality-card__specs">
+        <div><strong>Primary Target:</strong> Boxcar scars, pore laxity & texture</div>
+        <div><strong>Cadence:</strong> 4–6 weeks interval</div>
+      </div>
+    </div>
 
-      <button type="button" class="modality-btn" data-modality="mnrf" role="tab" aria-selected="false">
-        <span class="btn-indicator"></span>
-        <div class="btn-content">
-          <strong>Fractional Micro-Needle RF</strong>
-          <small>Target Depth: 2.00 – 3.50 mm · Collagen & Acne Scars</small>
-        </div>
-      </button>
+    <!-- PRP / GFC Card -->
+    <div class="modality-card" data-depth="4.20 mm" data-layer="Follicular Matrix" data-target="Autologous growth factors & vascular support" data-down="24 hours (Mild scalp tenderness)">
+      <div class="modality-card__glow"></div>
+      <div class="modality-card__badge">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21a9 9 0 0 0 9-9c0-4.97-9-12-9-12s-9 7.03-9 12a9 9 0 0 0 9 9z"/></svg>
+        <span>4.20 mm Depth</span>
+      </div>
+      <h3>PRP & Growth Factor (GFC)</h3>
+      <p class="modality-card__tech">Autologous cellular biostimulation</p>
+      <p class="modality-card__text">
+        Concentrates active growth factors from your own blood plasma, injected directly into the follicular bulb depth to support miniaturized hair roots.
+      </p>
+      <div class="modality-card__specs">
+        <div><strong>Primary Target:</strong> Thinning hair, androgenetic loss & scalp health</div>
+        <div><strong>Cadence:</strong> Monthly protocol</div>
+      </div>
+    </div>
 
-      <button type="button" class="modality-btn" data-modality="prp" role="tab" aria-selected="false">
-        <span class="btn-indicator"></span>
-        <div class="btn-content">
-          <strong>Platelet-Rich Plasma (PRP / GFC)</strong>
-          <small>Target Depth: 3.80 – 4.50 mm · Follicular Matrix & Hair</small>
-        </div>
-      </button>
-
-      <button type="button" class="modality-btn" data-modality="hydra" role="tab" aria-selected="false">
-        <span class="btn-indicator"></span>
-        <div class="btn-content">
-          <strong>HydraFacial Vortex Infusion</strong>
-          <small>Target Depth: 0.10 – 0.50 mm · Stratum Corneum & Sebum</small>
-        </div>
-      </button>
-
-      <button type="button" class="modality-btn" data-modality="carbon" role="tab" aria-selected="false">
-        <span class="btn-indicator"></span>
-        <div class="btn-content">
-          <strong>Carbon Laser Genesis</strong>
-          <small>Target Depth: 0.30 – 1.00 mm · Pore Clarification</small>
-        </div>
-      </button>
+    <!-- HydraFacial Card -->
+    <div class="modality-card" data-depth="0.25 mm" data-layer="Stratum Corneum" data-target="Sebum extraction & antioxidant infusion" data-down="Zero downtime">
+      <div class="modality-card__glow"></div>
+      <div class="modality-card__badge">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-4-3.5-4-3.5-2 1.9-4 3.5S5 13 5 15a7 7 0 0 0 7 7z"/></svg>
+        <span>0.25 mm Depth</span>
+      </div>
+      <h3>HydraFacial Vortex Infusion</h3>
+      <p class="modality-card__tech">Medical-grade hydro-exfoliation</p>
+      <p class="modality-card__text">
+        Uses spiral vortex suction to vacuum out comedones while simultaneously infusing targeted botanical antioxidants and hydrating hyaluronic acid.
+      </p>
+      <div class="modality-card__specs">
+        <div><strong>Primary Target:</strong> Congested pores, dehydration & dull skin</div>
+        <div><strong>Cadence:</strong> Maintenance every 3–4 weeks</div>
+      </div>
     </div>
   </div>
 
-  <div class="dermal-3d-footer-note">
-    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-      <circle cx="12" cy="12" r="10"/>
-      <path d="M12 16v-4M12 8h.01"/>
-    </svg>
-    <p>
-      <strong>Clinical Precision Note:</strong> Treatment modalities are never one-size-fits-all. Target depths, energy joules, and pulse parameters are calibrated individually by our consulting doctor after careful assessment of your skin thickness and phototype.
-    </p>
+  <div class="luxury-3d-hud" id="modalityHud">
+    <div class="hud-box">
+      <span class="hud-box__label">Physiological Target Depth</span>
+      <strong class="hud-box__val" id="hudDepthVal">1.50 mm (Reticular Dermis)</strong>
+    </div>
+    <div class="hud-box">
+      <span class="hud-box__label">Clinical Mechanism</span>
+      <strong class="hud-box__val" id="hudTargetVal">Melanin clusters & pigmentation</strong>
+    </div>
+    <div class="hud-box">
+      <span class="hud-box__label">Post-Procedure Note</span>
+      <strong class="hud-box__val" id="hudDownVal">12–24 hours (Mild flush)</strong>
+    </div>
   </div>
 </div>
 
 <style>
-  .dermal-3d-container {
-    background: radial-gradient(circle at 50% 20%, #151a24 0%, #0a0d13 99.9%);
-    border: 1px solid rgba(242, 199, 102, 0.28);
+  .luxury-3d-suite {
+    background: radial-gradient(circle at 50% 10%, #2a1236 0%, #110617 99.9%);
+    border: 1px solid rgba(242, 199, 102, 0.35);
     border-radius: 1.25rem;
-    padding: clamp(1.5rem, 1.2rem + 1.5vw, 2.75rem);
-    margin: 2.5rem 0 3.5rem;
+    padding: clamp(1.75rem, 3vw, 3rem);
+    margin-block: 2.5rem;
     box-shadow: 
-      0 20px 50px -10px rgba(0, 0, 0, 0.7),
-      0 0 0 1px rgba(255, 255, 255, 0.05),
-      inset 0 1px 0 rgba(242, 199, 102, 0.3);
+      0 24px 60px -12px rgba(17, 6, 23, 0.8),
+      inset 0 1px 0 rgba(242, 199, 102, 0.4);
     position: relative;
     overflow: hidden;
   }
-  .dermal-3d-container::before {
+  .luxury-3d-suite::before {
     content: '';
     position: absolute;
-    top: -200px;
-    right: -200px;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(200, 145, 47, 0.12) 0%, transparent 70%);
+    top: -150px;
+    right: -150px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(200, 145, 47, 0.2) 0%, transparent 70%);
     pointer-events: none;
   }
 
-  .dermal-3d-header {
-    max-width: 56rem;
+  .luxury-3d-header {
+    max-width: 48rem;
     margin-bottom: 2rem;
   }
-  .dermal-3d-tag {
+  .luxury-3d-tag {
     display: inline-flex;
     align-items: center;
     gap: 0.6rem;
-    padding: 0.4rem 0.95rem;
+    padding: 0.35rem 0.85rem;
     background: rgba(242, 199, 102, 0.12);
-    border: 1px solid rgba(242, 199, 102, 0.35);
+    border: 1px solid rgba(242, 199, 102, 0.4);
     border-radius: 2rem;
     color: #f2c766;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-weight: 600;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
-    margin-bottom: 1rem;
+    margin-bottom: 0.85rem;
   }
-  .dermal-3d-pulse {
+  .luxury-3d-pulse {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #50e3c2;
-    box-shadow: 0 0 10px #50e3c2;
-    animation: pulseGlow 2s infinite;
+    background: #f2c766;
+    box-shadow: 0 0 10px #f2c766;
+    animation: pulseGold 2s infinite;
   }
-  @keyframes pulseGlow {
+  @keyframes pulseGold {
     from, to { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.75); }
+    50% { opacity: 0.4; transform: scale(0.8); }
   }
 
-  .dermal-3d-title {
-    color: #fcf9f5;
-    font-family: var(--serif, "Sorts Mill Goudy", serif);
+  .luxury-3d-title {
+    color: #fbf1e6;
+    font-family: var(--serif, Georgia, serif);
     font-size: clamp(1.8rem, 1.4rem + 1.6vw, 2.5rem);
     line-height: 1.2;
-    margin-bottom: 0.85rem;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    margin-bottom: 0.75rem;
   }
-  .dermal-3d-desc {
-    color: #c9cbce;
+  .luxury-3d-desc {
+    color: #dcc8de;
     font-size: 1.05rem;
     line-height: 1.6;
     margin: 0;
   }
 
-  .dermal-3d-viewport-wrapper {
+  .luxury-3d-grid {
     display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 1.75rem;
-    align-items: stretch;
-  }
-  @media (max-width: 960px) {
-    .dermal-3d-viewport-wrapper {
-      grid-template-columns: 1fr;
-    }
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
   }
 
-  .dermal-3d-canvas-box {
+  .modality-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(242, 199, 102, 0.2);
+    border-radius: 0.95rem;
+    padding: 1.4rem;
     position: relative;
-    background: #06080c;
-    border-radius: 0.85rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    overflow: hidden;
-    min-height: 380px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.9);
-  }
-  #dermal3dCanvas {
-    width: calc(100vw * 0.9); /* preflight-ignore */
-    max-width: 100%; /* preflight-ignore */
-    height: 100%; /* preflight-ignore */
-    display: block;
-    cursor: grab;
-    touch-action: none;
-  }
-  #dermal3dCanvas:active {
-    cursor: grabbing;
-  }
-
-  .dermal-3d-overlay-hint {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    background: rgba(10, 13, 19, 0.75);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 2rem;
-    padding: 0.35rem 0.85rem;
-    color: #a4a8b0;
-    font-size: 0.8rem;
-    pointer-events: none;
-  }
-
-  .dermal-3d-hud {
-    position: absolute;
-    bottom: 1rem;
-    left: 1rem;
-    right: 1rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 0.75rem;
-    background: rgba(12, 16, 23, 0.85);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(242, 199, 102, 0.25);
-    border-radius: 0.65rem;
-    padding: 0.75rem 1rem;
-    pointer-events: none;
-  }
-  .hud-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-  }
-  .hud-label {
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #8c909a;
-  }
-  .hud-value {
-    font-size: 0.92rem;
-    font-weight: 600;
-    color: #ffffff;
-    line-height: 1.25;
-  }
-  .hud-value--gold {
-    color: #f2c766;
-  }
-
-  .dermal-3d-controls {
-    display: flex;
-    flex-direction: column;
-    gap: 0.65rem;
-  }
-  .modality-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.85rem;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 0.75rem;
-    padding: 0.9rem 1.1rem;
-    color: #e5e7eb;
-    text-align: left;
     cursor: pointer;
-    transition: all 0.22s cubic-bezier(0.2, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transform-style: preserve-3d;
+    perspective: 1000px;
   }
-  .modality-btn:hover {
+  .modality-card:hover {
     background: rgba(242, 199, 102, 0.08);
-    border-color: rgba(242, 199, 102, 0.35);
-    transform: translateX(4px);
+    border-color: rgba(242, 199, 102, 0.5);
+    transform: translateY(-6px) rotateX(2deg) rotateY(-2deg);
+    box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.5);
   }
-  .modality-btn.is-active {
-    background: linear-gradient(135deg, rgba(200, 145, 47, 0.22), rgba(30, 20, 45, 0.4));
+  .modality-card.is-active {
+    background: linear-gradient(135deg, rgba(200, 145, 47, 0.25), rgba(42, 18, 54, 0.6));
     border-color: #f2c766;
     box-shadow: 
-      0 4px 18px -2px rgba(200, 145, 47, 0.25),
-      inset 0 0 12px rgba(242, 199, 102, 0.15);
-    transform: translateX(6px);
-  }
-  .btn-indicator {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #4a505c;
-    flex-shrink: 0;
-    transition: all 0.2s ease;
-  }
-  .modality-btn.is-active .btn-indicator {
-    background: #f2c766;
-    box-shadow: 0 0 12px #f2c766;
-  }
-  .btn-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-  }
-  .btn-content strong {
-    font-size: 0.95rem;
-    color: #ffffff;
-    line-height: 1.25;
-  }
-  .btn-content small {
-    font-size: 0.78rem;
-    color: #9ca3af;
-    line-height: 1.2;
+      0 12px 32px -4px rgba(200, 145, 47, 0.3),
+      inset 0 1px 0 rgba(242, 199, 102, 0.4);
   }
 
-  .dermal-3d-footer-note {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.85rem;
-    margin-top: 1.5rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    color: #a4a8b0;
-    font-size: 0.9rem;
+  .modality-card__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.65rem;
+    background: rgba(242, 199, 102, 0.15);
+    border: 1px solid rgba(242, 199, 102, 0.3);
+    border-radius: 2rem;
+    color: #f2c766;
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  .modality-card h3 {
+    color: #fbf1e6;
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+  }
+  .modality-card__tech {
+    color: #f2c766;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.75rem;
+  }
+  .modality-card__text {
+    color: #dcc8de;
+    font-size: 0.95rem;
     line-height: 1.5;
+    margin-bottom: 1rem;
   }
-  .dermal-3d-footer-note svg {
+  .modality-card__specs {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 0.75rem;
+    font-size: 0.84rem;
+    color: #c4b5c7;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .modality-card__specs strong {
+    color: #fbf1e6;
+  }
+
+  .luxury-3d-hud {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    background: rgba(17, 6, 23, 0.9);
+    border: 1px solid rgba(242, 199, 102, 0.3);
+    border-radius: 0.85rem;
+    padding: 1.1rem 1.4rem;
+    backdrop-filter: blur(12px);
+  }
+  .hud-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .hud-box__label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #a392a5;
+  }
+  .hud-box__val {
     color: #f2c766;
-    flex-shrink: 0;
-    margin-top: 0.15rem;
-  }
-  .dermal-3d-footer-note p {
-    margin: 0;
-  }
-  .dermal-3d-footer-note strong {
-    color: #f2c766;
+    font-size: 1.05rem;
+    font-weight: 600;
   }
 </style>
 
 <script>
-  (function initDermal3D() {
-    const canvas = document.getElementById('dermal3dCanvas') as HTMLCanvasElement | null;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+  (function initModalitySuite() {
+    const cards = document.querySelectorAll('.modality-card');
+    const depthVal = document.getElementById('hudDepthVal');
+    const targetVal = document.getElementById('hudTargetVal');
+    const downVal = document.getElementById('hudDownVal');
 
-    const MODALITIES: Record<string, {
-      name: string;
-      depth: string;
-      target: string;
-      downtime: string;
-      targetLayerY: number;
-      beamColor: string;
-      pulseRate: number;
-    }> = {
-      pico: {
-        name: 'Pico & Q-Switched Photonic',
-        depth: '1.50 mm (Reticular Dermis)',
-        target: 'Melanin clusters, sun spots & epidermal turnover',
-        downtime: 'Transient mild redness (12–24h)',
-        targetLayerY: 20,
-        beamColor: '#38ef7d',
-        pulseRate: 0.08
-      },
-      mnrf: {
-        name: 'Fractional Micro-Needle RF',
-        depth: '2.80 mm (Deep Collagen Matrix)',
-        target: 'Fibroblasts, acne scar remodeling & dermal laxity',
-        downtime: 'Grid micro-crusting & flush (2–3 days)',
-        targetLayerY: 60,
-        beamColor: '#f2c766',
-        pulseRate: 0.05
-      },
-      prp: {
-        name: 'Platelet-Rich Plasma (PRP / GFC)',
-        depth: '4.20 mm (Follicular Bulge)',
-        target: 'Follicular miniaturization & autologous growth cascade',
-        downtime: 'Scalp tenderness & mild swelling (24h)',
-        targetLayerY: 100,
-        beamColor: '#ff7675',
-        pulseRate: 0.04
-      },
-      hydra: {
-        name: 'HydraFacial Vortex Infusion',
-        depth: '0.25 mm (Stratum Corneum)',
-        target: 'Follicular sebum, dead keratin & antioxidant infusion',
-        downtime: 'Zero downtime · Immediate post-cleanse glow',
-        targetLayerY: -60,
-        beamColor: '#00f2fe',
-        pulseRate: 0.06
-      },
-      carbon: {
-        name: 'Carbon Laser Genesis',
-        depth: '0.60 mm (Papillary Dermis)',
-        target: 'Micro-exfoliation & thermal pore tightening',
-        downtime: 'Zero downtime · Subtle warmth for 1 hour',
-        targetLayerY: -20,
-        beamColor: '#e056fd',
-        pulseRate: 0.07
-      }
-    };
+    cards.forEach((card) => {
+      card.addEventListener('click', () => {
+        cards.forEach((c) => c.classList.remove('is-active'));
+        card.classList.add('is-active');
 
-    let activeModalityKey = 'pico';
-    let rotX = 0.45;
-    let rotY = -0.55;
-    let targetRotX = 0.45;
-    let targetRotY = -0.55;
-    let isDragging = false;
-    let lastMouseX = 0;
-    let lastMouseY = 0;
-    let time = 0;
+        const depth = card.getAttribute('data-depth');
+        const layer = card.getAttribute('data-layer');
+        const target = card.getAttribute('data-target');
+        const down = card.getAttribute('data-down');
 
-    const STRATA = [
-      { y: -70, label: 'Epidermis & Stratum Corneum (0.10 mm)', color: 'rgba(0, 242, 254, 0.45)' },
-      { y: -30, label: 'Papillary Dermis (0.60 mm)', color: 'rgba(242, 199, 102, 0.45)' },
-      { y: 20, label: 'Reticular Dermis (1.50 mm)', color: 'rgba(56, 239, 125, 0.45)' },
-      { y: 65, label: 'Deep Dermal-Collagen Matrix (2.80 mm)', color: 'rgba(255, 184, 0, 0.45)' },
-      { y: 110, label: 'Subcutaneous & Follicular Bulge (4.20 mm)', color: 'rgba(255, 118, 117, 0.45)' },
-    ];
-
-    const PARTICLES: Array<{ x: number; y: number; z: number; size: number; phase: number }> = [];
-    for (let i = 0; i < 70; i++) {
-      PARTICLES.push({
-        x: (Math.random() - 0.5) * 360,
-        y: (Math.random() - 0.5) * 220,
-        z: (Math.random() - 0.5) * 360,
-        size: Math.random() * 2 + 1,
-        phase: Math.random() * Math.PI * 2
-      });
-    }
-
-    function project(x: number, y: number, z: number, w: number, h: number) {
-      const cosY = Math.cos(rotY);
-      const sinY = Math.sin(rotY);
-      const x1 = x * cosY + z * sinY;
-      const z1 = -x * sinY + z * cosY;
-
-      const cosX = Math.cos(rotX);
-      const sinX = Math.sin(rotX);
-      const y2 = y * cosX - z1 * sinX;
-      const z2 = y * sinX + z1 * cosX;
-
-      const fov = 420;
-      const cameraDistance = 500;
-      const scale = fov / (cameraDistance + z2);
-
-      return {
-        x: w / 2 + x1 * scale,
-        y: h / 2 + y2 * scale,
-        scale,
-        depth: z2
-      };
-    }
-
-    function render() {
-      if (!ctx || !canvas) return;
-      time += 0.03;
-
-      rotX += (targetRotX - rotX) * 0.08;
-      rotY += (targetRotY - rotY) * 0.08;
-
-      if (!isDragging) {
-        targetRotY += 0.0025;
-      }
-
-      const rect = canvas.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      const width = rect.width;
-      const height = rect.height;
-
-      if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
-        canvas.width = width * dpr;
-        canvas.height = height * dpr;
-      }
-
-      ctx.save();
-      ctx.scale(dpr, dpr);
-      ctx.clearRect(0, 0, width, height);
-
-      const grad = ctx.createRadialGradient(width / 2, height / 2, 20, width / 2, height / 2, width * 0.6);
-      grad.addColorStop(0, 'rgba(18, 24, 38, 0.9)');
-      grad.addColorStop(1, 'rgba(6, 8, 12, 1)');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, width, height);
-
-      const activeMod = MODALITIES[activeModalityKey] || MODALITIES.pico;
-
-      STRATA.forEach((stratum) => {
-        const isTarget = Math.abs(stratum.y - activeMod.targetLayerY) < 25;
-        const planeSize = 160;
-        const gridStep = 40;
-
-        ctx.beginPath();
-        for (let gx = -planeSize; gx <= planeSize; gx += gridStep) {
-          const p1 = project(gx, stratum.y, -planeSize, width, height);
-          const p2 = project(gx, stratum.y, planeSize, width, height);
-          ctx.moveTo(p1.x, p1.y);
-          ctx.lineTo(p2.x, p2.y);
-        }
-        for (let gz = -planeSize; gz <= planeSize; gz += gridStep) {
-          const p1 = project(-planeSize, stratum.y, gz, width, height);
-          const p2 = project(planeSize, stratum.y, gz, width, height);
-          ctx.moveTo(p1.x, p1.y);
-          ctx.lineTo(p2.x, p2.y);
-        }
-        ctx.strokeStyle = isTarget ? activeMod.beamColor : stratum.color;
-        ctx.lineWidth = isTarget ? 1.5 : 0.6;
-        ctx.stroke();
-
-        ctx.beginPath();
-        const c1 = project(-planeSize, stratum.y, -planeSize, width, height);
-        const c2 = project(planeSize, stratum.y, -planeSize, width, height);
-        const c3 = project(planeSize, stratum.y, planeSize, width, height);
-        const c4 = project(-planeSize, stratum.y, planeSize, width, height);
-        ctx.moveTo(c1.x, c1.y);
-        ctx.lineTo(c2.x, c2.y);
-        ctx.lineTo(c3.x, c3.y);
-        ctx.lineTo(c4.x, c4.y);
-        ctx.closePath();
-        ctx.strokeStyle = isTarget ? activeMod.beamColor : 'rgba(255, 255, 255, 0.15)';
-        ctx.lineWidth = isTarget ? 2 : 1;
-        ctx.stroke();
-
-        if (isTarget) {
-          ctx.fillStyle = activeMod.beamColor.replace(')', ', 0.08)').replace('rgb', 'rgba');
-          ctx.fill();
-        }
-
-        const tagPos = project(planeSize + 15, stratum.y, 0, width, height);
-        ctx.font = '10px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-        ctx.fillStyle = isTarget ? '#ffffff' : 'rgba(164, 168, 176, 0.65)';
-        ctx.fillText(stratum.label, tagPos.x, tagPos.y + 3);
-      });
-
-      PARTICLES.forEach((pt) => {
-        const floatY = pt.y + Math.sin(time + pt.phase) * 6;
-        const p = project(pt.x, floatY, pt.z, width, height);
-        const alpha = Math.max(0.15, Math.min(0.85, p.scale));
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, Math.max(1, pt.size * p.scale), 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(242, 199, 102, ${alpha * 0.6})`;
-        ctx.fill();
-      });
-
-      const topOrigin = project(0, -140, 0, width, height);
-      const targetImpact = project(0, activeMod.targetLayerY, 0, width, height);
-
-      ctx.beginPath();
-      ctx.arc(topOrigin.x, topOrigin.y, 8 * topOrigin.scale, 0, Math.PI * 2);
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      ctx.fillStyle = activeMod.beamColor;
-      ctx.fill();
-
-      const beamGrad = ctx.createLinearGradient(topOrigin.x, topOrigin.y, targetImpact.x, targetImpact.y);
-      beamGrad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
-      beamGrad.addColorStop(0.3, activeMod.beamColor);
-      beamGrad.addColorStop(1, '#ffffff');
-
-      ctx.beginPath();
-      ctx.moveTo(topOrigin.x, topOrigin.y);
-      ctx.lineTo(targetImpact.x, targetImpact.y);
-      ctx.strokeStyle = beamGrad;
-      ctx.lineWidth = 3 + Math.sin(time * 8) * 1.5;
-      ctx.shadowColor = activeMod.beamColor;
-      ctx.shadowBlur = 18;
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-
-      const ringPulse = (time * 2) % 1;
-      const ringRadius = (15 + ringPulse * 55) * targetImpact.scale;
-      ctx.beginPath();
-      ctx.arc(targetImpact.x, targetImpact.y, ringRadius, 0, Math.PI * 2);
-      ctx.strokeStyle = activeMod.beamColor.replace(')', `, ${1 - ringPulse})`).replace('rgb', 'rgba');
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.arc(targetImpact.x, targetImpact.y, 5 * targetImpact.scale, 0, Math.PI * 2);
-      ctx.fillStyle = '#ffffff';
-      ctx.shadowColor = '#ffffff';
-      ctx.shadowBlur = 12;
-      ctx.fill();
-      ctx.shadowBlur = 0;
-
-      ctx.restore();
-      requestAnimationFrame(render);
-    }
-
-    canvas.addEventListener('pointerdown', (e) => {
-      isDragging = true;
-      lastMouseX = e.clientX;
-      lastMouseY = e.clientY;
-      canvas.setPointerCapture(e.pointerId);
-    });
-
-    canvas.addEventListener('pointermove', (e) => {
-      if (!isDragging) return;
-      const deltaX = e.clientX - lastMouseX;
-      const deltaY = e.clientY - lastMouseY;
-      lastMouseX = e.clientX;
-      lastMouseY = e.clientY;
-      targetRotY += deltaX * 0.008;
-      targetRotX = Math.max(-0.6, Math.min(0.9, targetRotX - deltaY * 0.008));
-    });
-
-    const stopDragging = (e: PointerEvent) => {
-      if (isDragging) {
-        isDragging = false;
-        try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
-      }
-    };
-    canvas.addEventListener('pointerup', stopDragging);
-    canvas.addEventListener('pointercancel', stopDragging);
-
-    const buttons = document.querySelectorAll('.modality-btn');
-    const hudModality = document.getElementById('hudModality');
-    const hudDepth = document.getElementById('hudDepth');
-    const hudTarget = document.getElementById('hudTarget');
-    const hudDowntime = document.getElementById('hudDowntime');
-
-    buttons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const key = btn.getAttribute('data-modality') || 'pico';
-        activeModalityKey = key;
-        const data = MODALITIES[key];
-        if (!data) return;
-
-        buttons.forEach((b) => {
-          b.classList.remove('is-active');
-          b.setAttribute('aria-selected', 'false');
-        });
-        btn.classList.add('is-active');
-        btn.setAttribute('aria-selected', 'true');
-
-        if (hudModality) hudModality.textContent = data.name;
-        if (hudDepth) hudDepth.textContent = data.depth;
-        if (hudTarget) hudTarget.textContent = data.target;
-        if (hudDowntime) hudDowntime.textContent = data.downtime;
+        if (depthVal) depthVal.textContent = `${depth} (${layer})`;
+        if (targetVal) targetVal.textContent = target || '';
+        if (downVal) downVal.textContent = down || '';
       });
     });
-
-    render();
   })();
 </script>

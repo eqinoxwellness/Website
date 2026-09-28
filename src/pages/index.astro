@@ -38,12 +38,22 @@ const schema = [pageNode(origin, `${origin}/`, title, description), faqNode(`${o
 <Base title={title} description={description} schema={schema} pageType="home" waText={waText}>
   <section class="hero" aria-labelledby="hero-h" data-section="hero">
     <div class="hero__day">
-      <h1 id="hero-h">Skin, hair and wellness care that begins with a proper consultation.</h1>
-      <p class="lede">A doctor-led clinic in Satya Nagar, Bhubaneswar. We examine first, explain what we find, and only then talk about options.</p>
+      <div class="hero__eyebrow">
+        <span>✦</span>
+        <span>Doctor-Led Clinical Aesthetics & Trichology</span>
+      </div>
+      <h1 id="hero-h">Scientific Dermal Artistry & Clinical Care in Bhubaneswar</h1>
+      <p class="lede lede--wide">Every care plan at Equinox begins with an unhurried, thorough medical assessment by our consulting doctor. Advanced Pico laser, MNRF, GFC trichology, and targeted skin protocols calibrated precisely for you.</p>
       <CtaButtons waText={waText} location="hero" />
     </div>
     <div class="hero__dusk">
-      <SunMoon />
+      <div class="hero__card-3d luxury-image-frame">
+        <img src="/images/clinic-suite.webp" alt="Equinox Aesthetic and Wellness Centre clinical suite in Satya Nagar" width="800" height="450" loading="eager" decoding="async" />
+        <div class="hero__card-badge luxury-image-badge">
+          <strong>Clinical Treatment Suite</strong>
+          Plot No. 69, 1st Floor, Kali Mandir Road, Satya Nagar
+        </div>
+      </div>
       <div class="hero__facts">
         <p class="place">Satya Nagar, Bhubaneswar</p>
         <p>{site.address.landmark}, Kali Mandir Road</p>
