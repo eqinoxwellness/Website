@@ -32,7 +32,8 @@ export function clinicNode(origin: string) {
     knowsLanguage: ['en', 'hi', 'or'],
   };
   if (site.email) node.email = site.email;
-  if (site.instagramUrl) node.sameAs = [site.instagramUrl];
+  const sameAs = [site.instagramUrl, site.facebookUrl].filter(Boolean);
+  if (sameAs.length) node.sameAs = sameAs;
   return node;
 }
 
@@ -69,7 +70,7 @@ export function serviceNode(origin: string, url: string, s: Service) {
 /** Emitted only once the doctor's qualification and registration are confirmed. */
 export function physicianNode(origin: string) {
   const d = site.doctor;
-  if (!d.qualification || !d.registration) return null;
+  if (!d.displayName || !d.qualification || !d.registration) return null;
   return {
     '@type': 'Physician', '@id': `${origin}/about-the-doctor#physician`, name: d.displayName,
     hasCredential: d.qualification, identifier: d.registration, worksFor: { '@id': clinicId(origin) },

@@ -17,6 +17,7 @@ export const site = {
   whatsappNumber: '916372528534',
   email: orNull(env.PUBLIC_CLINIC_EMAIL), // CONFIRM: clinic email for the privacy policy and footer
   instagramUrl: orNull(env.PUBLIC_INSTAGRAM_URL), // CONFIRM: Instagram profile URL
+  facebookUrl: orNull(env.PUBLIC_FACEBOOK_URL),
   address: {
     street: 'Plot No. 69, 1st Floor, Kali Mandir Road',
     locality: 'Satya Nagar',
@@ -41,7 +42,7 @@ export const site = {
     'Jaydev Vihar', 'Mancheswar', 'Nayapalli', 'Bhubaneswar',
   ],
   doctor: {
-    displayName: 'Dr Heena', // CONFIRM: full name as registered
+    displayName: null as string | null, // CONFIRM: full name as registered
     qualification: null as string | null, // CONFIRM: e.g. MBBS, MD (Dermatology) or BHMS
     registration: null as string | null, // CONFIRM: registration number and council
     focus: null as string | null, // CONFIRM: one sentence on clinical focus, in the doctor's own words

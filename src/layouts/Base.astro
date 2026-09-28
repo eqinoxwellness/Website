@@ -91,6 +91,9 @@ const publicTracking = {
     <Consent />
     <script>
       import '../lib/analytics';
+      if (typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        import('../scripts/depth');
+      }
     </script>
   </body>
 </html>

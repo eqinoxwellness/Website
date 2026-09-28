@@ -9,8 +9,8 @@ import { pageNode, breadcrumbNode, physicianNode } from '../lib/schema';
 const origin = Astro.site?.origin ?? 'http://localhost:4321';
 const url = `${origin}/about-the-doctor`;
 const d = site.doctor;
-const title = `${d.displayName} | Equinox Aesthetic & Wellness Centre, Bhubaneswar`;
-const description = `Meet ${d.displayName} at Equinox in Satya Nagar, Bhubaneswar, and see how a consultation works: listen, examine, explain, then options.`;
+const title = 'Our Doctor & Consultations | Equinox Aesthetic & Wellness Centre, Bhubaneswar';
+const description = 'Meet our consulting doctor at Equinox in Satya Nagar, Bhubaneswar, and see how a consultation works: listen, examine, explain, then options.';
 const physician = physicianNode(origin);
 const schema = [
   pageNode(origin, url, title, description, 'ProfilePage'),
@@ -23,7 +23,7 @@ const waText = 'Hi, I would like to book a consultation with the doctor at Equin
   <section class="page-hero">
     <div class="container">
       <Crumbs items={[{ name: 'Home', href: '/' }, { name: 'Our doctor' }]} />
-      <h1>{d.displayName}</h1>
+      <h1>Our consulting doctor</h1>
       {(d.qualification || d.registration) && <p class="lede lede--wide">{[d.qualification, d.registration && `Registration ${d.registration}`].filter(Boolean).join(' · ')}</p>}
       {d.focus && <p class="lede lede--wide">{d.focus}</p>}
       <CtaButtons waText={waText} location="doctor-hero" />
