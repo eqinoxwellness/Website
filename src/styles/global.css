@@ -180,7 +180,32 @@ li { margin-bottom: 0.45em; }
 .sunmoon__moon { animation: moon-in 1.7s cubic-bezier(0.22, 0.8, 0.24, 1) 0.15s both; }
 @keyframes sun-in { from { transform: translateX(-34px); opacity: 0.35; } to { transform: none; opacity: 1; } }
 @keyframes moon-in { from { transform: translateX(34px); opacity: 0.35; } to { transform: none; opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .sunmoon__sun, .sunmoon__moon { animation: none; } }
+
+/* Hero depth parallax: 3 subtle layers reacting to pointer travel */
+@media (hover: hover) and (pointer: fine) {
+  .sunmoon__glow {
+    transform: translate3d(calc(var(--pointer-x, 0) * 4px), calc(var(--pointer-y, 0) * 4px), 0);
+    will-change: transform;
+    transition: transform 0.1s cubic-bezier(0.2, 0, 0.2, 1);
+  }
+  .sunmoon__mark {
+    transform: translate3d(calc(var(--pointer-x, 0) * 9px), calc(var(--pointer-y, 0) * 9px), 0);
+    will-change: transform;
+    transition: transform 0.1s cubic-bezier(0.2, 0, 0.2, 1);
+  }
+  .hero__facts {
+    transform: translate3d(calc(var(--pointer-x, 0) * -3px), calc(var(--pointer-y, 0) * -3px), 0);
+    will-change: transform;
+    transition: transform 0.1s cubic-bezier(0.2, 0, 0.2, 1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sunmoon__sun, .sunmoon__moon, .sunmoon__glow, .sunmoon__mark, .hero__facts {
+    animation: none !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
 
 /* ============ Page hero (inner pages) ============ */
 .page-hero { padding-block: clamp(2.25rem, 6vw, 4.5rem) clamp(2.25rem, 5vw, 3.75rem); border-bottom: 1px solid var(--line); position: relative; }
@@ -219,7 +244,13 @@ li { margin-bottom: 0.45em; }
 .split { display: grid; gap: 2.5rem; align-items: start; }
 @media (min-width: 56em) { .split { grid-template-columns: 1fr 1fr; gap: 4rem; } .split--wide-left { grid-template-columns: 1.3fr 1fr; } }
 
-.doctor-card { background: var(--dusk); color: var(--on-dusk); border-radius: var(--radius); padding: 2rem 2rem 1.75rem; max-width: 24rem; position: relative; overflow: hidden; }
+.doctor-card {
+  background: var(--dusk); color: var(--on-dusk); border-radius: var(--radius); padding: 2rem 2rem 1.75rem; max-width: 24rem; position: relative; overflow: hidden;
+  box-shadow:
+    calc(var(--tilt-x, 0) * -6px) calc(var(--tilt-y, 0) * -6px + 12px) 28px -6px rgb(20 8 26 / 0.35),
+    inset 0 1px 0 0 rgb(242 199 102 / 0.25),
+    inset 0 0 0 1px rgb(251 241 230 / 0.08);
+}
 .doctor-card::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 3px; background: linear-gradient(180deg, var(--gold-light), var(--horizon)); }
 .doctor-card .mark { width: auto; height: 3.25rem; margin-bottom: 1.25rem; }
 .doctor-card .doctor-card__name { font-family: var(--serif); font-size: 1.9rem; line-height: 1.15; margin: 0 0 0.35rem; color: var(--on-dusk); }
@@ -230,7 +261,14 @@ li { margin-bottom: 0.45em; }
 .covers li { position: relative; padding: 0.7rem 0 0.7rem 1.75rem; border-bottom: 1px solid var(--line); margin: 0; max-width: 60ch; }
 .covers li::before { content: ''; position: absolute; left: 0.2rem; top: 1.25rem; width: 0.7rem; height: 0.7rem; border-radius: 50%; background: linear-gradient(90deg, var(--gold-light) 50%, var(--dusk) 50%); box-shadow: 0 0 0 1.5px var(--horizon); }
 
-.note { border-left: 2px solid var(--horizon); padding: 0.25rem 0 0.25rem 1.25rem; margin: 1.5rem 0; }
+.note {
+  background: linear-gradient(135deg, rgb(251 246 239 / 0.85), rgb(244 232 218 / 0.65));
+  border-left: 3px solid var(--horizon); border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 0.85rem 1.25rem; margin: 1.5rem 0;
+  box-shadow:
+    calc(var(--tilt-x, 0) * -4px) calc(var(--tilt-y, 0) * -4px + 6px) 16px -3px rgb(46 20 55 / 0.06),
+    inset 0 1px 0 0 rgb(255 255 255 / 0.85);
+}
 .note p:last-child { margin-bottom: 0; }
 .alert { background: #FDF3E1; border-left: 3px solid var(--horizon); padding: 1rem 1.25rem; margin: 1.5rem 0; color: var(--ink); }
 
@@ -259,8 +297,39 @@ li { margin-bottom: 0.45em; }
 .chip span { display: inline-block; padding: 0.65rem 1rem; border: 1.5px solid var(--line); border-radius: 2rem; background: #fff; color: var(--ink); font-size: 1rem; line-height: 1.3; min-height: 2.9rem; display: inline-flex; align-items: center; }
 .chip input:checked + span { background: var(--dusk); border-color: var(--dusk); color: var(--on-dusk); }
 .chip input:focus-visible + span { outline: 3px solid var(--dusk); outline-offset: 2px; }
-.finder__result { margin-top: 1.5rem; padding: 1.5rem; background: #fff; border: 1px solid var(--line); border-left: 3px solid var(--horizon); border-radius: var(--radius); max-width: 44rem; }
+.finder__result {
+  margin-top: 1.5rem; padding: 1.5rem; background: #fff; border: 1px solid var(--line); border-left: 3px solid var(--horizon); border-radius: var(--radius); max-width: 44rem;
+  box-shadow:
+    calc(var(--tilt-x, 0) * -5px) calc(var(--tilt-y, 0) * -5px + 8px) 22px -4px rgb(46 20 55 / 0.08),
+    inset 0 1px 0 0 rgb(255 255 255 / 0.95),
+    inset 0 0 0 1px var(--line);
+}
 .finder__result h3 { margin-bottom: 0.35rem; }
+
+/* Surface tilt for interactive cards */
+@media (hover: hover) and (pointer: fine) {
+  .doctor-card,
+  .finder__result,
+  .note {
+    transform-style: preserve-3d;
+    transform: perspective(900px) rotateX(calc(var(--tilt-y, 0) * -2.5deg)) rotateY(calc(var(--tilt-x, 0) * 2.5deg));
+    transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.2, 0, 0.2, 1);
+    will-change: transform, box-shadow;
+  }
+  .doctor-card[data-tilting='true'],
+  .finder__result[data-tilting='true'],
+  .note[data-tilting='true'] {
+    transition: transform 0.04s linear, box-shadow 0.04s linear;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .doctor-card,
+  .finder__result,
+  .note {
+    transform: none !important;
+    transition: none !important;
+  }
+}
 
 .lead-form { display: grid; gap: 1.1rem; max-width: 34rem; }
 .field { display: grid; gap: 0.4rem; }
@@ -329,12 +398,50 @@ html[data-consent='unset'] .consent, .consent[data-open='true'] { display: block
 @media (min-width: 48em) {
   .treatment-list { grid-template-columns: repeat(auto-fill, minmax(24rem, 1fr)); }
 }
-.treatment-card { background: var(--day); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.25rem 1.5rem; }
+.treatment-card {
+  background: var(--day); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.25rem 1.5rem;
+  box-shadow: 0 4px 14px -2px rgb(46 20 55 / 0.05), inset 0 1px 0 0 rgb(255 255 255 / 0.95);
+}
 .treatment-card h3, .treatment-card h4 { font-family: var(--serif); font-size: var(--step-1); color: var(--ink); margin: 0 0 0.5rem; }
 .treatment-card p { margin: 0.3rem 0; font-size: var(--step--1); color: var(--text); }
 .treatment-caution { font-size: var(--step--1); color: var(--muted); border-top: 1px solid var(--line); padding-top: 0.65rem; margin-top: 0.65rem; }
 .treatment-footer { font-size: var(--step--1); color: var(--muted); margin-top: 1rem; font-style: italic; }
 .treatment-service-group { margin-bottom: 2rem; }
 .treatment-service-group h3 { font-size: var(--step-1); color: var(--gold-deep); margin-bottom: 0.5rem; }
+
+/* Subtle gold rule gradient */
+hr { border: 0; height: 1px; background: linear-gradient(90deg, transparent 0%, var(--horizon) 30%, var(--gold-light) 50%, var(--horizon) 70%, transparent 100%); margin: 2rem 0; }
+
+/* ============ Entrance on scroll (CSS scroll-driven animations) ============ */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-section="modalities"],
+    [data-section="cost"],
+    [data-section="next-steps"],
+    [data-section="form"],
+    [data-section="location"],
+    [data-section="doctor"],
+    [data-section="services"] {
+      animation: eqx-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 25%;
+    }
+    @keyframes eqx-rise {
+      from { opacity: 0.5; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .steps li, .treatment-card {
+      animation: eqx-item-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 20%;
+    }
+    .steps li:nth-child(2), .treatment-card:nth-child(2) { animation-delay: 30ms; }
+    .steps li:nth-child(3), .treatment-card:nth-child(3) { animation-delay: 60ms; }
+    @keyframes eqx-item-rise {
+      from { opacity: 0.6; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  }
+}
 
 @media print { .action-bar, .consent, .site-header .header-actions { display: none !important; } }
