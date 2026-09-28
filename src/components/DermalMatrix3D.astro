@@ -356,44 +356,60 @@
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let width = (canvas.width = canvas.parentElement?.clientWidth || 800);
-    let height = (canvas.height = canvas.parentElement?.clientHeight || 320);
+    function getDimensions() {
+      const parent = canvas.parentElement;
+      const w = parent?.clientWidth && parent.clientWidth > 0 ? parent.clientWidth : 800;
+      const h = parent?.clientHeight && parent.clientHeight > 0 ? parent.clientHeight : 320;
+      canvas.width = w;
+      canvas.height = h;
+      return { width: w, height: h };
+    }
+
+    let { width, height } = getDimensions();
 
     window.addEventListener('resize', () => {
-      width = canvas.width = canvas.parentElement?.clientWidth || 800;
-      height = canvas.height = canvas.parentElement?.clientHeight || 320;
+      const d = getDimensions();
+      width = d.width;
+      height = d.height;
     });
+
+    if (typeof ResizeObserver !== 'undefined' && canvas.parentElement) {
+      new ResizeObserver(() => {
+        const d = getDimensions();
+        width = d.width;
+        height = d.height;
+      }).observe(canvas.parentElement);
+    }
 
     // 3D Point Matrix representing Dermal Layers
     interface Point3D {
       x: number;
       y: number;
       z: number;
-      layer: number; // 0: Epidermis, 1: Papillary Dermis, 2: Reticular Dermis, 3: Follicular/Fat
+      layer: number;
       size: number;
       pulse: number;
     }
 
     const points: Point3D[] = [];
     const layers = 4;
-    const pointsPerLayer = 45;
+    const pointsPerLayer = 50;
 
     for (let l = 0; l < layers; l++) {
       for (let i = 0; i < pointsPerLayer; i++) {
         points.push({
-          x: (Math.random() - 0.5) * 500,
-          y: (l - 1.5) * 60 + (Math.random() - 0.5) * 20,
-          z: (Math.random() - 0.5) * 500,
+          x: (Math.random() - 0.5) * 450,
+          y: (l - 1.5) * 55 + (Math.random() - 0.5) * 15,
+          z: (Math.random() - 0.5) * 450,
           layer: l,
-          size: Math.random() * 2.5 + 1.5,
+          size: Math.random() * 3.5 + 2.5,
           pulse: Math.random() * Math.PI * 2,
         });
       }
     }
 
-    // Camera Orbit State
-    let angleX = 0.2;
-    let angleY = 0.4;
+    let angleX = 0.25;
+    let angleY = 0.45;
     let isDragging = false;
     let lastMouseX = 0;
     let lastMouseY = 0;
@@ -410,8 +426,8 @@
         if (!isDragging) return;
         const dx = e.clientX - lastMouseX;
         const dy = e.clientY - lastMouseY;
-        angleY += dx * 0.005;
-        angleX += dy * 0.005;
+        angleY += dx * 0.006;
+        angleX += dy * 0.006;
         lastMouseX = e.clientX;
         lastMouseY = e.clientY;
       });
@@ -419,49 +435,71 @@
       window.addEventListener('mouseup', () => {
         isDragging = false;
       });
+
+      // Touch screen support
+      container.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          isDragging = true;
+          lastMouseX = e.touches[0].clientX;
+          lastMouseY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (!isDragging || e.touches.length !== 1) return;
+        const dx = e.touches[0].clientX - lastMouseX;
+        const dy = e.touches[0].clientY - lastMouseY;
+        angleY += dx * 0.006;
+        angleX += dy * 0.006;
+        lastMouseX = e.touches[0].clientX;
+        lastMouseY = e.touches[0].clientY;
+      }, { passive: true });
+
+      window.addEventListener('touchend', () => {
+        isDragging = false;
+      });
     }
 
-    // Current Modality Physics State
-    let currentMode = 'pico'; // 'pico', 'mnrf', 'prp', 'hydra'
+    let currentMode = 'pico';
     let beamProgress = 0;
 
-    // Render 60 FPS Loop
     function render() {
-      ctx.clearRect(0, 0, width, height);
-
-      // Auto-rotation when idle
-      if (!isDragging) {
-        angleY += 0.002;
+      if (width <= 0 || height <= 0) {
+        const d = getDimensions();
+        width = d.width;
+        height = d.height;
       }
 
-      beamProgress += 0.03;
+      ctx.clearRect(0, 0, width, height);
+
+      if (!isDragging) {
+        angleY += 0.003;
+      }
+
+      beamProgress += 0.025;
       if (beamProgress > 1) beamProgress = 0;
 
-      const fov = 350;
+      const fov = 320;
       const cx = width / 2;
       const cy = height / 2;
 
-      // Layer color definitions
       const layerColors = [
-        '#F2C766', // 0: Epidermis - Specular Gold
-        '#E09156', // 1: Papillary Dermis - Warm Amber
-        '#C24D98', // 2: Reticular Dermis - Dusk Plum
-        '#7A4194', // 3: Deep Follicular - Twilight Violet
+        '#F2C766', // 0: Epidermis - Gold
+        '#E09156', // 1: Papillary Dermis - Amber
+        '#C24D98', // 2: Reticular Dermis - Magenta/Plum
+        '#8B5CF6', // 3: Deep Follicular - Violet
       ];
 
-      // Sort points by transformed Z depth for proper 3D layering
       const transformed = points.map((p) => {
-        // Rotate Y
         let x1 = p.x * Math.cos(angleY) - p.z * Math.sin(angleY);
         let z1 = p.z * Math.cos(angleY) + p.x * Math.sin(angleY);
 
-        // Rotate X
         let y2 = p.y * Math.cos(angleX) - z1 * Math.sin(angleX);
         let z2 = z1 * Math.cos(angleX) + p.y * Math.sin(angleX);
 
-        p.pulse += 0.05;
+        p.pulse += 0.04;
 
-        const scale = fov / (fov + z2 + 300);
+        const scale = fov / (fov + z2 + 280);
         const projX = cx + x1 * scale;
         const projY = cy + y2 * scale;
 
@@ -470,10 +508,10 @@
 
       transformed.sort((a, b) => b.z2 - a.z2);
 
-      // Draw Grid Layer Planes in 3D
-      ctx.lineWidth = 0.5;
+      // Draw Grid Layer Planes
       for (let l = 0; l < layers; l++) {
-        ctx.strokeStyle = `rgba(242, 199, 102, ${0.08 + l * 0.03})`;
+        ctx.strokeStyle = `rgba(242, 199, 102, ${0.12 + l * 0.04})`;
+        ctx.lineWidth = 0.8;
         ctx.beginPath();
         const layerPts = transformed.filter((t) => t.p.layer === l);
         for (let i = 0; i < layerPts.length; i++) {
@@ -484,52 +522,52 @@
         ctx.stroke();
       }
 
-      // Draw Mode Energy Pulses
+      // Draw Energy Pulse Modes
       if (currentMode === 'pico') {
-        // Laser Beam Ray
         ctx.save();
-        ctx.strokeStyle = `rgba(242, 199, 102, ${0.8 - beamProgress * 0.5})`;
-        ctx.lineWidth = 3;
+        ctx.strokeStyle = `rgba(242, 199, 102, ${0.9 - beamProgress * 0.4})`;
+        ctx.lineWidth = 4;
         ctx.shadowColor = '#F2C766';
-        ctx.shadowBlur = 15;
+        ctx.shadowBlur = 20;
         ctx.beginPath();
         ctx.moveTo(cx, 10);
-        ctx.lineTo(cx, cy + (beamProgress - 0.5) * 120);
+        ctx.lineTo(cx, cy + (beamProgress - 0.5) * 140);
         ctx.stroke();
         ctx.restore();
       } else if (currentMode === 'mnrf') {
-        // Thermal Radiofrequency Grid Rings
         ctx.save();
-        ctx.strokeStyle = `rgba(224, 145, 86, ${0.6 - beamProgress * 0.4})`;
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = `rgba(224, 145, 86, ${0.7 - beamProgress * 0.5})`;
+        ctx.lineWidth = 3;
+        ctx.shadowColor = '#E09156';
+        ctx.shadowBlur = 15;
         ctx.beginPath();
-        ctx.arc(cx, cy + 20, beamProgress * 140, 0, Math.PI * 2);
+        ctx.arc(cx, cy + 15, Math.max(10, beamProgress * 150), 0, Math.PI * 2);
         ctx.stroke();
         ctx.restore();
       } else if (currentMode === 'prp') {
-        // Cellular Growth Particles
         ctx.save();
         ctx.fillStyle = '#C24D98';
         ctx.shadowColor = '#C24D98';
-        ctx.shadowBlur = 10;
-        for (let i = 0; i < 6; i++) {
-          const py = cy + Math.sin(beamProgress * Math.PI * 2 + i) * 50 + 40;
-          const px = cx + Math.cos(beamProgress * Math.PI * 2 + i) * 60;
+        ctx.shadowBlur = 12;
+        for (let i = 0; i < 8; i++) {
+          const py = cy + Math.sin(beamProgress * Math.PI * 2 + i) * 60 + 20;
+          const px = cx + Math.cos(beamProgress * Math.PI * 2 + i) * 75;
           ctx.beginPath();
-          ctx.arc(px, py, 3, 0, Math.PI * 2);
+          ctx.arc(px, py, 4.5, 0, Math.PI * 2);
           ctx.fill();
         }
         ctx.restore();
       } else if (currentMode === 'hydra') {
-        // Spiral Vortex Hydro Stream
         ctx.save();
-        ctx.strokeStyle = '#62c2df';
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2.5;
+        ctx.shadowColor = '#38bdf8';
+        ctx.shadowBlur = 10;
         ctx.beginPath();
         for (let a = 0; a < Math.PI * 4; a += 0.2) {
-          const r = a * 8 * beamProgress;
-          const x = cx + Math.cos(a + beamProgress * 5) * r;
-          const y = cy - 60 + Math.sin(a + beamProgress * 5) * r * 0.5;
+          const r = a * 9 * beamProgress;
+          const x = cx + Math.cos(a + beamProgress * 6) * r;
+          const y = cy - 40 + Math.sin(a + beamProgress * 6) * r * 0.5;
           if (a === 0) ctx.moveTo(x, y);
           else ctx.lineTo(x, y);
         }
@@ -537,25 +575,27 @@
         ctx.restore();
       }
 
-      // Draw 3D Matrix Nodes
+      // Draw 3D Spheres with Glow
       transformed.forEach(({ p, projX, projY, scale }) => {
-        const alpha = Math.min(1, Math.max(0.2, (scale - 0.3) * 1.5));
-        const currentSize = p.size * scale * (1 + Math.sin(p.pulse) * 0.2);
+        const alpha = Math.min(1, Math.max(0.35, (scale - 0.25) * 1.6));
+        const currentSize = p.size * scale * (1 + Math.sin(p.pulse) * 0.25);
 
+        ctx.save();
         ctx.fillStyle = layerColors[p.layer];
+        ctx.shadowColor = layerColors[p.layer];
+        ctx.shadowBlur = 10 * scale;
         ctx.globalAlpha = alpha;
         ctx.beginPath();
-        ctx.arc(projX, projY, Math.max(1, currentSize), 0, Math.PI * 2);
+        ctx.arc(projX, projY, Math.max(2, currentSize), 0, Math.PI * 2);
         ctx.fill();
+        ctx.restore();
       });
-      ctx.globalAlpha = 1;
 
       requestAnimationFrame(render);
     }
 
     render();
 
-    // Modality Card Interactions
     const cards = document.querySelectorAll('.modality-card');
     const depthVal = document.getElementById('hudDepthVal');
     const waveVal = document.getElementById('hudWaveVal');
