@@ -1,0 +1,125 @@
+/* ============ Equinox Ultra-Luxury Glossy Aesthetic Engine ============
+   Tailored Dusk Plum (#12071a, #2a1136) & Specular Gold (#F2C766, #C8912F) */
+
+:root {
+  --bg-dark: #12071a;
+  --bg-dusk: #2a1136;
+  --bg-surface: rgba(26, 10, 38, 0.85);
+  --bg-glass: rgba(38, 16, 56, 0.72);
+  --bg-glass-hover: rgba(54, 22, 78, 0.88);
+  
+  --gold-main: #f2c766;
+  --gold-light: #f7dc99;
+  --gold-deep: #c8912f;
+  --gold-glow: rgba(242, 199, 102, 0.35);
+
+  --text-primary: #fbf1e6;
+  --text-muted: #dcc8de;
+  --text-dim: #a392a5;
+  --line-gold: rgba(242, 199, 102, 0.3);
+
+  --font-serif: 'Sorts Mill Goudy', Georgia, serif;
+  --font-sans: 'Source Sans 3', system-ui, sans-serif;
+  --radius-lg: 1.25rem;
+  --radius-md: 0.85rem;
+}
+
+/* Glassmorphism System */
+.glossy-panel {
+  background: var(--bg-glass);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--line-gold);
+  border-radius: var(--radius-lg);
+  box-shadow: 
+    0 24px 60px -12px rgba(12, 4, 18, 0.9),
+    inset 0 1px 0 rgba(242, 199, 102, 0.4);
+  transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.glossy-panel:hover {
+  border-color: var(--gold-main);
+  box-shadow: 
+    0 30px 75px -15px rgba(242, 199, 102, 0.25),
+    inset 0 1px 0 rgba(242, 199, 102, 0.6);
+}
+
+/* Metallic Shimmer Gold Text */
+.gold-shimmer {
+  background: linear-gradient(135deg, #FFF5E1 0%, #F2C766 50%, #C8912F 99.9%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+/* 3D Perspective Card Tilt */
+.card-3d-wrap {
+  perspective: 1200px;
+}
+.card-3d-body {
+  transform-style: preserve-3d;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+}
+.card-3d-body:hover {
+  transform: translateY(-8px) rotateX(3deg) rotateY(-3deg);
+  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.8), 0 0 30px var(--gold-glow);
+}
+
+/* Pulsing Bio Indicators */
+.pulse-emerald {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 12px #10b981;
+  animation: pulseGlow 2s infinite;
+}
+
+@keyframes pulseGlow {
+  from, to { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.85); }
+}
+
+/* Luxury Interactive Buttons */
+.btn-glossy-gold {
+  background: linear-gradient(135deg, rgba(242, 199, 102, 0.28) 0%, rgba(200, 145, 47, 0.6) 99.9%);
+  border: 1px solid rgba(242, 199, 102, 0.5);
+  color: #ffffff !important;
+  padding: 0.8rem 1.6rem;
+  border-radius: 2rem;
+  font-weight: 650;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow: 0 6px 24px rgba(242, 199, 102, 0.25);
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.btn-glossy-gold:hover {
+  background: linear-gradient(135deg, rgba(242, 199, 102, 0.45) 0%, rgba(200, 145, 47, 0.8) 99.9%);
+  border-color: #f2c766;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(242, 199, 102, 0.45);
+}
+
+.btn-glossy-wa {
+  background: linear-gradient(135deg, #10b981 0%, #059669 99.9%);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  color: #ffffff !important;
+  padding: 0.8rem 1.6rem;
+  border-radius: 2rem;
+  font-weight: 650;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow: 0 6px 24px rgba(16, 185, 129, 0.35);
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.btn-glossy-wa:hover {
+  background: linear-gradient(135deg, #34d399 0%, #059669 99.9%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(16, 185, 129, 0.55);
+}

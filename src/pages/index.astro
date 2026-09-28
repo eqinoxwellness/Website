@@ -13,6 +13,7 @@ import DermalMatrix3D from '../components/DermalMatrix3D.astro';
 import { services, categories, firstVisitSteps } from '../data/services';
 import { homeFaqs } from '../data/faqs';
 import { site, waLink, feeLine } from '../config/site';
+import '../styles/luxury.css';
 import { pageNode, faqNode } from '../lib/schema';
 
 const origin = Astro.site?.origin ?? 'http://localhost:4321';
@@ -37,6 +38,7 @@ const finderOptions = [
 const schema = [pageNode(origin, `${origin}/`, title, description), faqNode(`${origin}/`, homeFaqs)];
 ---
 <Base title={title} description={description} schema={schema} pageType="home" waText={waText}>
+  <script src="../app.js"></script>
   <!-- Hero Section: Equinox Logo Day/Dusk Balance -->
   <section class="hero" aria-labelledby="hero-h" data-section="hero">
     <div class="hero__day">
