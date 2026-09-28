@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Crumbs from '../components/Crumbs.astro';
 import CtaButtons from '../components/CtaButtons.astro';
 import DoctorBlock from '../components/DoctorBlock.astro';
+import DermalMatrix3D from '../components/DermalMatrix3D.astro';
 import { treatmentCategories } from '../data/treatments';
 import { waLink, feeLine } from '../config/site';
 import { pageNode, breadcrumbNode } from '../lib/schema';
@@ -22,6 +23,7 @@ const schema = [
     <div class="container split split--wide-left">
       <div>
         <Crumbs items={[{ name: 'Home', href: '/' }, { name: 'Treatments' }]} />
+        <span class="eyebrow">Aesthetic Medicine & Clinical Modalities</span>
         <h1>Treatment modalities at Equinox</h1>
         <p class="lede lede--wide">This is not a menu to order from. Every treatment begins with the doctor's assessment of your concern, your history and your skin or scalp. Only then does the doctor explain which options may suit you, what each involves and what it costs.</p>
         <CtaButtons waText={waText} location="treatments-hero" />
@@ -65,6 +67,12 @@ const schema = [
           </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="section section--dusk" aria-labelledby="dermal-3d-h" style="padding-top: 1rem; padding-bottom: 2rem;">
+    <div class="container">
+      <DermalMatrix3D />
     </div>
   </section>
 
