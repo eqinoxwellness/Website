@@ -68,7 +68,7 @@
     <div class="container">
       <a class="brand-master" href="/" aria-label="Equinox Aesthetic and Wellness Centre, home">
         <div class="brand-emblem-wrap">
-          <img src="/brand/equinox-luxury-logo.jpg" alt="Equinox Emblem" width="48" height="48">
+          <img src="/brand/equinox-luxury-logo.jpg" alt="Equinox Emblem" width="44" height="44">
         </div>
         <div class="brand-text-block">
           <span class="brand-name">EQUINOX</span>
@@ -76,14 +76,14 @@
         </div>
       </a>
 
+      <!-- Desktop Nav -->
       <ul class="header-nav">
-        <li><a href="/treatments" class="active">Modalities &amp; 3D Lab</a></li>
-        <li><a href="/#services-showcase">Clinical Disciplines</a></li>
-        <li><a href="/acne">Acne &amp; Scars</a></li>
+        <li><a href="/treatments" class="active">Modalities</a></li>
+        <li><a href="/acne">Acne &amp; Skin</a></li>
         <li><a href="/pigmentation">Pigmentation</a></li>
         <li><a href="/hair">Hair &amp; Scalp</a></li>
         <li><a href="/about-the-doctor">Our Doctor</a></li>
-        <li><a href="/contact">Visit &amp; Contact</a></li>
+        <li><a href="/contact">Contact</a></li>
       </ul>
 
       <div class="header-actions">
@@ -94,9 +94,31 @@
         <a class="header-cta-btn" href="https://wa.me/916372528534?text=Hi%20Equinox%2C%20I%20would%20like%20to%20inquire%20about%20your%20treatment%20modalities.%20%23EQ-TR" target="_blank" rel="noopener">
           <span>Book Consultation</span>
         </a>
+        <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle Navigation Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </div>
   </header>
+
+  <!-- Mobile Navigation Drawer -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <a href="/treatments" class="active">✦ Modalities &amp; Lasers</a>
+    <a href="/acne">✦ Acne &amp; Scar Remodeling</a>
+    <a href="/pigmentation">✦ Melasma &amp; Pigmentation</a>
+    <a href="/hair">✦ Hair Regrowth &amp; Trichology</a>
+    <a href="/skin-rejuvenation">✦ Skin Boosters &amp; PDRN</a>
+    <a href="/womens-wellness">✦ Women's Endocrine Care</a>
+    <a href="/homeopathy">✦ Constitutional Homeopathy</a>
+    <a href="/wellness">✦ Mental Health Counselling</a>
+    <a href="/about-the-doctor">✦ About Dr. Nishu</a>
+    <a href="/contact">✦ Visit &amp; Contact Clinic</a>
+    <a class="btn-royal" href="https://wa.me/916372528534?text=Hi%20Equinox%2C%20I%20would%20like%20to%20book%20a%20consultation." target="_blank" rel="noopener" style="margin-top: 0.5rem; text-align: center; border-radius: 999px;">
+      <span>Book on WhatsApp</span>
+    </a>
+  </div>
 
   <main id="main">
     <!-- PAGE HERO -->
@@ -130,7 +152,7 @@
               3D Bio-Dermal Matrix &amp; <span class="gold-shimmer-text">Targeted Penetration Lab</span>
             </h2>
             <p style="color: var(--text-muted); max-width: 64ch;">
-              Drag your mouse or swipe to rotate the 3D histological strata (Epidermis, Papillary Dermis, Reticular Dermis, and Follicular Matrix). Select any modality below or click <strong>Play Guided Demo</strong> to simulate live energy pulses and depth targeting.
+              Select any modality card below to see the energy beam penetrate to its exact skin depth. Hover over a layer to read what lies there. Click <strong>Play Guided Simulation</strong> to step through the full clinical protocol automatically.
             </p>
           </div>
 
@@ -150,10 +172,10 @@
             <canvas id="dermal3DCanvas" style="width: 100%; height: 380px; display: block;"></canvas>
             <div class="canvas-badge">
               <span class="pulse-dot"></span>
-              <span>60 FPS Bio-Sim Engine (Real mm Depth Strata)</span>
+              <span>Live Skin Cross-Section · Real mm Depth Scale</span>
             </div>
             <div class="canvas-controls-hint">
-              ✦ Drag to rotate 3D view
+              ✦ Hover over a layer to see what lies at that depth
             </div>
           </div>
 

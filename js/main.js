@@ -234,9 +234,9 @@ class Hero3DBackground {
 
   resize() {
     const parent = this.canvas.parentElement || document.body;
-    this.width = parent.clientWidth || window.innerWidth;
-    this.height = parent.clientHeight || window.innerHeight;
-    this.canvas.width = this.width;
+    this.width  = parent.clientWidth  || window.innerWidth;
+    this.height = Math.max(parent.clientHeight, window.innerHeight * 0.72);
+    this.canvas.width  = this.width;
     this.canvas.height = this.height;
   }
 
@@ -352,7 +352,7 @@ class Hero3DBackground {
 }
 
 // ==========================================
-// 3. CLINICAL SKIN ANATOMY & LASER SIMULATION 3D ENGINE
+// 3. CLINICAL SKIN CROSS-SECTION VISUALIZER
 // ==========================================
 class AnatomicalDermal3DEngine {
   constructor(canvasId, hudConfig = {}) {
@@ -363,121 +363,150 @@ class AnatomicalDermal3DEngine {
 
     this.hudConfig = hudConfig;
     this.currentMode = 'pico';
-    this.currentStep = 1; // 1: Diagnose, 2: Penetrate, 3: Remodel
+    this.currentStep = 1;
     this.isDemoPlaying = false;
     this.demoTimer = null;
-    this.pulseProgress = 0;
-    this.angleX = 0.35;
-    this.angleY = 0.55;
-    this.isDragging = false;
-    this.lastX = 0;
-    this.lastY = 0;
+    this.time = 0;
+    this.beamProgress = 0;
+    this.beamActive = false;
+    this.beamDir = 1;
+    this.hoveredLayer = -1;
 
-    // Define 4 Real Anatomical Skin Layers
+    // Skin layer cross-sections (ordered top→bottom)
     this.skinLayers = [
-      { name: 'Epidermis', depth: '0.10 mm', yOffset: -65, color: '#F6D27A', desc: 'Melanin clusters, sunspots, surface texture' },
-      { name: 'Papillary Dermis', depth: '1.00 mm', yOffset: -20, color: '#E5A65E', desc: 'Fine collagen mesh & vascular micro-capillaries' },
-      { name: 'Reticular Dermis', depth: '2.80 mm', yOffset: 25, color: '#D97398', desc: 'Structural collagen, elastin & deep acne scars' },
-      { name: 'Follicular Matrix', depth: '4.20 mm', yOffset: 70, color: '#9D65C9', desc: 'Hair root bulbs, dermal papilla & cellular growth' },
+      {
+        name: 'Epidermis',
+        depth: '0–0.1 mm',
+        color: '#F7E7C6',
+        borderColor: '#E8C97A',
+        textColor: '#6B4A16',
+        heightRatio: 0.09,
+        desc: 'Melanin clusters · Surface texture · Sunspots',
+        icon: '☀'
+      },
+      {
+        name: 'Papillary Dermis',
+        depth: '0.1–1.0 mm',
+        color: '#F0C8A0',
+        borderColor: '#D4A054',
+        textColor: '#5C330A',
+        heightRatio: 0.18,
+        desc: 'Fine collagen mesh · Vascular capillaries · Superficial nerves',
+        icon: '🩸'
+      },
+      {
+        name: 'Reticular Dermis',
+        depth: '1.0–3.0 mm',
+        color: '#DDA0A0',
+        borderColor: '#C06080',
+        textColor: '#4A1020',
+        heightRatio: 0.30,
+        desc: 'Structural collagen · Elastin fibres · Deep acne scars',
+        icon: '🔬'
+      },
+      {
+        name: 'Follicular Matrix',
+        depth: '3.0–4.5 mm',
+        color: '#C8A0D4',
+        borderColor: '#8040A0',
+        textColor: '#300050',
+        heightRatio: 0.25,
+        desc: 'Hair follicle bulbs · Dermal papilla · Stem cell niche',
+        icon: '💜'
+      },
+      {
+        name: 'Subcutaneous Tissue',
+        depth: '4.5+ mm',
+        color: '#F7E0B0',
+        borderColor: '#C8A850',
+        textColor: '#5A3800',
+        heightRatio: 0.18,
+        desc: 'Adipose layer · Deep vascular supply · Nerve plexus',
+        icon: '⬇'
+      }
     ];
 
+    // Mode configuration
+    this.modes = {
+      pico:      { label: 'Pico Laser', color: '#F6D27A', glow: '#FFE898', targetLayer: 1, targetDepth: 0.27 },
+      mnrf:      { label: 'MNRF RF',    color: '#E5A65E', glow: '#FFB870', targetLayer: 2, targetDepth: 0.62 },
+      'laser-hair': { label: 'Laser Hair Regrowth', color: '#9D65C9', glow: '#C89CF0', targetLayer: 3, targetDepth: 0.90 },
+      gfc:       { label: 'PRP / GFC',  color: '#70C5B0', glow: '#90E5D0', targetLayer: 3, targetDepth: 0.88 },
+      alsavique: { label: 'Alsavique',  color: '#A0D870', glow: '#C0F890', targetLayer: 3, targetDepth: 0.82 },
+      pdrn:      { label: 'PDRN / Booster', color: '#60B8F0', glow: '#90D8FF', targetLayer: 2, targetDepth: 0.55 },
+      diode:     { label: 'Diode Laser', color: '#FF8888', glow: '#FFA8A8', targetLayer: 3, targetDepth: 0.85 },
+      hydra:     { label: 'HydraFacial', color: '#38C4E8', glow: '#78E4FF', targetLayer: 0, targetDepth: 0.08 },
+    };
+
     this.initDimensions();
-    this.initPoints();
     this.attachEvents();
+    this.startBeam();
     this.startLoop();
   }
 
   initDimensions() {
     const parent = this.canvas.parentElement;
-    this.width = parent?.clientWidth && parent.clientWidth > 0 ? parent.clientWidth : 800;
-    this.height = parent?.clientHeight && parent.clientHeight > 0 ? parent.clientHeight : 350;
-    this.canvas.width = this.width;
+    this.width  = parent?.clientWidth  > 0 ? parent.clientWidth  : 800;
+    this.height = parent?.clientHeight > 0 ? parent.clientHeight : 420;
+    this.canvas.width  = this.width;
     this.canvas.height = this.height;
-  }
 
-  initPoints() {
-    this.points = [];
-    // Generate cellular tissue points per layer
-    this.skinLayers.forEach((layer, layerIdx) => {
-      const count = 45;
-      for (let i = 0; i < count; i++) {
-        this.points.push({
-          x: (Math.random() - 0.5) * 440,
-          y: layer.yOffset + (Math.random() - 0.5) * 12,
-          z: (Math.random() - 0.5) * 440,
-          layerIdx: layerIdx,
-          size: Math.random() * 3 + 2.5,
-          pulse: Math.random() * Math.PI * 2,
-        });
-      }
+    // Layout zones
+    this.leftPad   = 170;
+    this.rightPad  = 120;
+    this.topPad    = 28;
+    this.botPad    = 30;
+    this.skinLeft  = this.leftPad;
+    this.skinRight = this.width - this.rightPad;
+    this.skinTop   = this.topPad;
+    this.skinBot   = this.height - this.botPad;
+    this.skinW     = this.skinRight - this.skinLeft;
+    this.skinH     = this.skinBot   - this.skinTop;
+
+    // Pre-compute layer Y positions
+    let y = this.skinTop;
+    this.skinLayers.forEach((layer) => {
+      layer._y = y;
+      layer._h = Math.round(layer.heightRatio * this.skinH);
+      y += layer._h;
     });
   }
 
   attachEvents() {
-    window.addEventListener('resize', () => this.initDimensions());
-
-    const container = this.canvas.parentElement;
-    if (!container) return;
-
-    container.addEventListener('mousedown', (e) => {
-      this.isDragging = true;
-      this.lastX = e.clientX;
-      this.lastY = e.clientY;
+    window.addEventListener('resize', () => {
+      this.initDimensions();
     });
 
-    window.addEventListener('mousemove', (e) => {
-      if (!this.isDragging) return;
-      const dx = e.clientX - this.lastX;
-      const dy = e.clientY - this.lastY;
-      this.angleY += dx * 0.006;
-      this.angleX += dy * 0.006;
-      // Clamp vertical tilt
-      this.angleX = Math.max(0.1, Math.min(0.75, this.angleX));
-      this.lastX = e.clientX;
-      this.lastY = e.clientY;
-    });
-
-    window.addEventListener('mouseup', () => { this.isDragging = false; });
-
-    // Touch
-    container.addEventListener('touchstart', (e) => {
-      if (e.touches.length === 1) {
-        this.isDragging = true;
-        this.lastX = e.touches[0].clientX;
-        this.lastY = e.touches[0].clientY;
+    this.canvas.addEventListener('mousemove', (e) => {
+      const rect = this.canvas.getBoundingClientRect();
+      const my = e.clientY - rect.top;
+      const mx = e.clientX - rect.left;
+      this.hoveredLayer = -1;
+      if (mx >= this.skinLeft && mx <= this.skinRight) {
+        this.skinLayers.forEach((l, i) => {
+          if (my >= l._y && my < l._y + l._h) this.hoveredLayer = i;
+        });
       }
-    }, { passive: true });
-
-    window.addEventListener('touchmove', (e) => {
-      if (!this.isDragging || e.touches.length !== 1) return;
-      const dx = e.touches[0].clientX - this.lastX;
-      const dy = e.touches[0].clientY - this.lastY;
-      this.angleY += dx * 0.006;
-      this.angleX += dy * 0.006;
-      this.angleX = Math.max(0.1, Math.min(0.75, this.angleX));
-      this.lastX = e.touches[0].clientX;
-      this.lastY = e.touches[0].clientY;
-    }, { passive: true });
-
-    window.addEventListener('touchend', () => { this.isDragging = false; });
+    });
+    this.canvas.addEventListener('mouseleave', () => { this.hoveredLayer = -1; });
   }
 
   setMode(mode, meta = {}) {
-    this.currentMode = mode;
-    this.pulseProgress = 0;
+    this.currentMode = mode in this.modes ? mode : 'pico';
+    this.beamProgress = 0;
+    this.beamActive = false;
 
-    if (this.hudConfig.depthVal && meta.depth) document.getElementById(this.hudConfig.depthVal).textContent = meta.depth;
-    if (this.hudConfig.waveVal && meta.wave) document.getElementById(this.hudConfig.waveVal).textContent = meta.wave;
-    if (this.hudConfig.targetVal && meta.target) document.getElementById(this.hudConfig.targetVal).textContent = meta.target;
-    if (this.hudConfig.downVal && meta.down) document.getElementById(this.hudConfig.downVal).textContent = meta.down;
+    if (this.hudConfig.depthVal && meta.depth)  document.getElementById(this.hudConfig.depthVal)?.textContent !== undefined && (document.getElementById(this.hudConfig.depthVal).textContent = meta.depth);
+    if (this.hudConfig.waveVal && meta.wave)    document.getElementById(this.hudConfig.waveVal)?.textContent !== undefined && (document.getElementById(this.hudConfig.waveVal).textContent = meta.wave);
+    if (this.hudConfig.targetVal && meta.target) document.getElementById(this.hudConfig.targetVal)?.textContent !== undefined && (document.getElementById(this.hudConfig.targetVal).textContent = meta.target);
+    if (this.hudConfig.downVal && meta.down)    document.getElementById(this.hudConfig.downVal)?.textContent !== undefined && (document.getElementById(this.hudConfig.downVal).textContent = meta.down);
 
-    // Update Step Explanation
     this.updateStepUI();
+    setTimeout(() => { this.beamActive = true; }, 300);
   }
 
   setStep(stepNum) {
     this.currentStep = stepNum;
-    this.pulseProgress = 0;
     this.updateStepUI();
   }
 
@@ -488,210 +517,250 @@ class AnatomicalDermal3DEngine {
       btn.classList.toggle('is-active', idx + 1 === this.currentStep);
     });
 
-    if (!stepTextEl) return;
-
     const descriptions = {
-      pico: [
-        'Step 1 (Scan): Cross-polarized diagnosis maps melanin cluster depth and boundaries in the epidermis & reticular dermis.',
-        'Step 2 (Pulse): 1064nm picosecond acoustic shockwaves shatter melanin pigment without thermal heat damage.',
-        'Step 3 (Clearance): Macrophages clear shattered pigment micro-particles naturally over 3 to 4 weeks.'
-      ],
-      mnrf: [
-        'Step 1 (Scan): Assessment identifies tethered boxcar scar bases and structural pore enlargement.',
-        'Step 2 (Penetrate): 2.80mm insulated micro-needles penetrate and discharge calibrated fractional radiofrequency heat.',
-        'Step 3 (Remodel): Thermal micro-coagulation zones trigger neo-collagenesis and scar matrix remodeling.'
-      ],
-      prp: [
-        'Step 1 (Scan): Trichoscopic camera identifies miniaturized follicular roots and androgenetic shedding pattern.',
-        'Step 2 (Infuse): Autologous growth factors & platelets micro-injected at 4.20mm follicular bulb depth.',
-        'Step 3 (Nourish): Vascular endothelial growth factors stimulate micro-circulation to strengthen hair roots.'
-      ],
-      hydra: [
-        'Step 1 (Exfoliate): Vortex suction loosens stratum corneum dead cells and superficial blackheads.',
-        'Step 2 (Extract): 40kPa vacuum extracts deeply congested pore sebum and comedones.',
-        'Step 3 (Hydrate): Simultaneous vortex infusion of hyaluronic acid, peptides, and botanical antioxidants.'
-      ]
+      pico:  ['Step 1 – Diagnostic mapping: cross-polarised light identifies melanin cluster depth across epidermis and dermis.', 'Step 2 – Acoustic pulse: 1064nm picosecond shockwave shatters melanin granules without thermal epidermal damage.', 'Step 3 – Clearance: macrophages phagocytose shattered pigment micro-particles over 3 to 4 weeks.'],
+      mnrf:  ['Step 1 – Scar assessment: tethered boxcar and rolling scar bases are mapped on digital imaging.', 'Step 2 – Deep penetration: 2.80mm gold-insulated micro-needles discharge fractional RF heat into reticular dermis.', 'Step 3 – Neo-collagenesis: thermal micro-coagulation zones trigger remodeling and collagen synthesis over 6 weeks.'],
+      'laser-hair': ['Step 1 – Trichoscopy: miniaturised follicles and shedding pattern are mapped by dermoscopy camera.', 'Step 2 – Photobiomodulation: 650nm low-level laser energises mitochondrial ATP synthesis in follicle cells.', 'Step 3 – Micro-circulation boost: laser drives capillary vasodilation and nutrient delivery around the follicular bulb.'],
+      gfc:   ['Step 1 – Blood draw: 20ml autologous blood is centrifuged to concentrate platelets and growth factors.', 'Step 2 – Scalp infusion: GFC is micro-injected at 4.2mm depth directly at the follicular dermal papilla.', 'Step 3 – Anagen activation: VEGF and PDGF extend the active growth phase and reduce miniaturisation.'],
+      pdrn:  ['Step 1 – Hydration mapping: moisture levels and barrier integrity assessed with corneometry.', 'Step 2 – PDRN micro-infusion: salmon DNA polynucleotides deposited at 1.2mm papillary dermis depth.', 'Step 3 – Fibroblast activation: PDRN stimulates collagen I & III synthesis and epidermal barrier regeneration.'],
+      diode: ['Step 1 – Cooling prep: sapphire contact tip chills skin surface to 4°C to protect the epidermis.', 'Step 2 – Follicular targeting: 808nm diode pulses absorbed by anagen melanin in the hair follicle matrix.', 'Step 3 – Thermal disruption: selective photothermolysis disables the follicle bulge without epidermal injury.'],
+      alsavique: ['Step 1 – Scalp analysis: sebum levels, follicular plugging, and root density assessed.', 'Step 2 – Peptide infusion: Italian Alsavique complex micro-injected at the perifollicular vascular zone (3.5mm).', 'Step 3 – Root nourishment: oligo-elements and vascular signalling molecules revitalise depleted hair roots.'],
+      hydra: ['Step 1 – Exfoliation: vortex tip loosens stratum corneum dead cells and superficial comedones.', 'Step 2 – Extraction: 40 kPa vacuum draws out pore sebum without manual pressure.', 'Step 3 – Infusion: hyaluronic acid, antioxidants, and peptide serums delivered under pressure into open pores.'],
     };
 
-    const currentList = descriptions[this.currentMode] || descriptions.pico;
-    stepTextEl.textContent = currentList[this.currentStep - 1] || currentList[0];
+    if (stepTextEl) {
+      const list = descriptions[this.currentMode] || descriptions.pico;
+      stepTextEl.textContent = list[this.currentStep - 1] || list[0];
+    }
   }
 
   playDemo() {
     if (this.isDemoPlaying) {
       clearInterval(this.demoTimer);
       this.isDemoPlaying = false;
-      const playBtn = document.getElementById('playDemoBtn');
-      if (playBtn) playBtn.textContent = '▶ Play Guided Demo';
+      const btn = document.getElementById('playDemoBtn');
+      if (btn) btn.textContent = '▶ Play Guided Simulation';
       return;
     }
-
     this.isDemoPlaying = true;
-    const playBtn = document.getElementById('playDemoBtn');
-    if (playBtn) playBtn.textContent = '⏸ Pause Demo';
-
+    const btn = document.getElementById('playDemoBtn');
+    if (btn) btn.textContent = '⏸ Pause Demo';
     this.currentStep = 1;
+    this.beamActive = true;
     this.updateStepUI();
-
     this.demoTimer = setInterval(() => {
       this.currentStep++;
-      if (this.currentStep > 3) {
-        this.currentStep = 1;
-      }
+      if (this.currentStep > 3) this.currentStep = 1;
       this.updateStepUI();
-    }, 4000);
+    }, 3500);
+  }
+
+  startBeam() {
+    this.beamActive = true;
   }
 
   startLoop() {
     const render = () => {
-      if (this.width <= 0 || this.height <= 0) this.initDimensions();
-      this.ctx.clearRect(0, 0, this.width, this.height);
-
-      if (!this.isDragging) {
-        this.angleY += 0.003;
+      this.time += 0.025;
+      if (this.beamActive) {
+        this.beamProgress += 0.018 * this.beamDir;
+        if (this.beamProgress >= 1) { this.beamProgress = 1; this.beamDir = -1; }
+        if (this.beamProgress <= 0) { this.beamProgress = 0; this.beamDir =  1; }
       }
 
-      this.pulseProgress += 0.025;
-      if (this.pulseProgress > 1) this.pulseProgress = 0;
+      const ctx = this.ctx;
+      const W = this.width, H = this.height;
+      ctx.clearRect(0, 0, W, H);
 
-      const fov = 340;
-      const cx = this.width / 2;
-      const cy = this.height / 2;
+      // ─── BACKGROUND ───────────────────────────────────────────────
+      const bg = ctx.createLinearGradient(0, 0, 0, H);
+      bg.addColorStop(0, '#1A1410');
+      bg.addColorStop(1, '#0D0A08');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, H);
 
-      // Project all cell points
-      const transformed = this.points.map((p) => {
-        let x1 = p.x * Math.cos(this.angleY) - p.z * Math.sin(this.angleY);
-        let z1 = p.z * Math.cos(this.angleY) + p.x * Math.sin(this.angleY);
+      const sL = this.skinLeft, sT = this.skinTop, sW = this.skinW, sH = this.skinH;
 
-        let y2 = p.y * Math.cos(this.angleX) - z1 * Math.sin(this.angleX);
-        let z2 = z1 * Math.cos(this.angleX) + p.y * Math.sin(this.angleX);
+      // ─── DEPTH RULER (left of skin) ────────────────────────────────
+      const rulerX = sL - 22;
+      ctx.strokeStyle = 'rgba(197,154,63,0.35)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(rulerX, sT); ctx.lineTo(rulerX, sT + sH); ctx.stroke();
+      // Ruler ticks at 1mm intervals
+      const totalMm = 5.0;
+      for (let mm = 0; mm <= totalMm; mm += 0.5) {
+        const ty = sT + (mm / totalMm) * sH;
+        const tickLen = mm === Math.round(mm) ? 8 : 4;
+        ctx.strokeStyle = mm === Math.round(mm) ? 'rgba(197,154,63,0.6)' : 'rgba(197,154,63,0.3)';
+        ctx.beginPath(); ctx.moveTo(rulerX - tickLen, ty); ctx.lineTo(rulerX, ty); ctx.stroke();
+        if (mm === Math.round(mm) && mm <= totalMm) {
+          ctx.fillStyle = 'rgba(197,154,63,0.7)';
+          ctx.font = '500 10px system-ui, sans-serif';
+          ctx.textAlign = 'right';
+          ctx.fillText(`${mm.toFixed(0)} mm`, rulerX - 10, ty + 3.5);
+        }
+      }
+      ctx.fillStyle = 'rgba(197,154,63,0.55)';
+      ctx.font = '600 10px system-ui, sans-serif';
+      ctx.save(); ctx.translate(rulerX - 36, sT + sH / 2);
+      ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center';
+      ctx.fillText('DEPTH', 0, 0); ctx.restore();
 
-        p.pulse += 0.04;
+      // ─── SKIN LAYERS ───────────────────────────────────────────────
+      this.skinLayers.forEach((layer, i) => {
+        const ly = layer._y, lh = layer._h;
+        const isHovered = this.hoveredLayer === i;
 
-        const scale = fov / (fov + z2 + 280);
-        const projX = cx + x1 * scale;
-        const projY = cy + y2 * scale;
+        // Gradient fill
+        const grad = ctx.createLinearGradient(sL, 0, sL + sW, 0);
+        grad.addColorStop(0, layer.color + 'CC');
+        grad.addColorStop(0.5, layer.color + 'E8');
+        grad.addColorStop(1, layer.color + '88');
+        ctx.fillStyle = grad;
+        ctx.globalAlpha = isHovered ? 1 : 0.82;
+        ctx.fillRect(sL, ly, sW, lh - 1);
+        ctx.globalAlpha = 1;
 
-        return { p, scale, projX, projY, z2 };
+        // Tissue texture dots
+        ctx.globalAlpha = 0.25;
+        for (let d = 0; d < Math.floor(sW / 14); d++) {
+          const tx = sL + 10 + d * 14 + ((i * 7) % 8);
+          const ty = ly + lh / 2 + Math.sin(d + i * 2.1 + this.time * 0.5) * (lh * 0.2);
+          ctx.fillStyle = layer.borderColor;
+          ctx.beginPath();
+          ctx.arc(tx, ty, isHovered ? 2.5 : 1.8, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+
+        // Border
+        ctx.strokeStyle = layer.borderColor;
+        ctx.lineWidth = isHovered ? 2 : 1;
+        ctx.globalAlpha = isHovered ? 0.9 : 0.45;
+        ctx.strokeRect(sL, ly, sW, lh - 1);
+        ctx.globalAlpha = 1;
+
+        // Left label panel
+        const panelW = sL - 8;
+        ctx.fillStyle = layer.textColor;
+        ctx.globalAlpha = isHovered ? 1 : 0.85;
+        ctx.font = `700 ${isHovered ? 12 : 11}px system-ui, sans-serif`;
+        ctx.textAlign = 'right';
+        ctx.fillText(layer.name, sL - 26, ly + (lh < 36 ? lh / 2 + 4 : 20));
+        ctx.font = '500 9.5px system-ui, sans-serif';
+        ctx.fillStyle = layer.borderColor;
+        ctx.fillText(layer.depth, sL - 26, ly + (lh < 36 ? lh / 2 + 16 : 34));
+
+        if (lh >= 42 && isHovered) {
+          ctx.font = '400 9px system-ui, sans-serif';
+          ctx.fillStyle = layer.textColor;
+          ctx.fillText(layer.desc, sL - 26, ly + 48);
+        }
+        ctx.globalAlpha = 1;
+
+        // Right-side depth guide line
+        ctx.strokeStyle = layer.borderColor;
+        ctx.lineWidth = 0.6;
+        ctx.globalAlpha = 0.3;
+        ctx.setLineDash([3, 4]);
+        ctx.beginPath();
+        ctx.moveTo(sL + sW + 2, ly);
+        ctx.lineTo(sL + sW + 12, ly);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.globalAlpha = 1;
       });
 
-      transformed.sort((a, b) => b.z2 - a.z2);
+      // ─── ENERGY BEAM ANIMATION ─────────────────────────────────────
+      const mode = this.modes[this.currentMode] || this.modes.pico;
+      const targetY = sT + mode.targetDepth * sH;
+      const beamX = sL + sW * 0.5 + Math.sin(this.time * 0.4) * (sW * 0.08);
 
-      // 1. Draw 4 Transparent Anatomical Skin Planes
-      this.skinLayers.forEach((layer, lIdx) => {
-        const layerPts = transformed.filter((t) => t.p.layerIdx === lIdx);
-        if (layerPts.length === 0) return;
+      if (this.beamActive && this.currentStep >= 2) {
+        const beamEndY = sT + this.beamProgress * mode.targetDepth * sH;
 
-        // Plane boundary outline
-        this.ctx.strokeStyle = layer.color;
-        this.ctx.lineWidth = 0.9;
-        this.ctx.globalAlpha = 0.25;
-        this.ctx.beginPath();
-        for (let i = 0; i < layerPts.length; i++) {
-          const next = layerPts[(i + 1) % layerPts.length];
-          this.ctx.moveTo(layerPts[i].projX, layerPts[i].projY);
-          this.ctx.lineTo(next.projX, next.projY);
+        // Beam glow shaft
+        const bGrad = ctx.createLinearGradient(beamX, sT - 40, beamX, beamEndY);
+        bGrad.addColorStop(0, mode.glow + 'FF');
+        bGrad.addColorStop(0.6, mode.color + 'CC');
+        bGrad.addColorStop(1, mode.color + '44');
+        ctx.save();
+        ctx.shadowColor = mode.glow;
+        ctx.shadowBlur = 20;
+        ctx.strokeStyle = bGrad;
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.moveTo(beamX, sT - 40);
+        ctx.lineTo(beamX, beamEndY);
+        ctx.stroke();
+
+        // Beam entry hairline
+        ctx.strokeStyle = mode.glow;
+        ctx.lineWidth = 1.5;
+        ctx.globalAlpha = 0.6;
+        ctx.beginPath();
+        ctx.moveTo(beamX - 12, sT - 40);
+        ctx.lineTo(beamX + 12, sT - 40);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+
+        // Impact rings at target depth
+        if (this.beamProgress > 0.7) {
+          const ringAlpha = (this.beamProgress - 0.7) / 0.3;
+          for (let r = 1; r <= 3; r++) {
+            ctx.strokeStyle = mode.color;
+            ctx.lineWidth = 2;
+            ctx.globalAlpha = ringAlpha * (1 - r * 0.28);
+            ctx.shadowColor = mode.glow;
+            ctx.shadowBlur = 14;
+            ctx.beginPath();
+            ctx.arc(beamX, beamEndY, r * 16 * ringAlpha, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+          ctx.globalAlpha = 1;
+          ctx.shadowBlur = 0;
         }
-        this.ctx.stroke();
-        this.ctx.globalAlpha = 1.0;
+        ctx.restore();
+      }
 
-        // Layer Name Label on the plane edge
-        const leftmostPt = layerPts.reduce((min, cur) => cur.projX < min.projX ? cur : min, layerPts[0]);
-        if (leftmostPt) {
-          this.ctx.font = '600 11px system-ui, sans-serif';
-          this.ctx.fillStyle = layer.color;
-          this.ctx.fillText(`${layer.name} (${layer.depth})`, leftmostPt.projX - 10, leftmostPt.projY - 4);
-        }
-      });
+      // ─── TARGET DEPTH INDICATOR (right side) ───────────────────────
+      ctx.fillStyle = mode.color;
+      ctx.globalAlpha = 0.85 + Math.sin(this.time * 2) * 0.1;
+      ctx.font = '700 10px system-ui, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(`▶ ${mode.label}`, sL + sW + 16, targetY + 4);
+      // Dashed line to target
+      ctx.strokeStyle = mode.color;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(sL + sW, targetY);
+      ctx.lineTo(sL + sW + 14, targetY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.globalAlpha = 1;
 
-      // 2. Render Active Energy Modality Physics
+      // ─── TOP LABEL: Probe/Handpiece ────────────────────────────────
       if (this.currentStep >= 2) {
-        if (this.currentMode === 'pico') {
-          // Pico Laser Acoustic Beam
-          this.ctx.save();
-          this.ctx.strokeStyle = `rgba(246, 210, 122, ${0.95 - this.pulseProgress * 0.4})`;
-          this.ctx.lineWidth = 4;
-          this.ctx.shadowColor = '#F6D27A';
-          this.ctx.shadowBlur = 24;
-          this.ctx.beginPath();
-          this.ctx.moveTo(cx, 15);
-          this.ctx.lineTo(cx, cy + (this.pulseProgress - 0.4) * 110);
-          this.ctx.stroke();
-
-          // Shockwave Rings at Target Depth
-          this.ctx.strokeStyle = `rgba(246, 210, 122, ${1 - this.pulseProgress})`;
-          this.ctx.lineWidth = 2;
-          this.ctx.beginPath();
-          this.ctx.arc(cx, cy + 10, this.pulseProgress * 70, 0, Math.PI * 2);
-          this.ctx.stroke();
-          this.ctx.restore();
-        } else if (this.currentMode === 'mnrf') {
-          // Micro-needle thermal RF grid
-          this.ctx.save();
-          this.ctx.strokeStyle = `rgba(229, 166, 94, ${0.85 - this.pulseProgress * 0.5})`;
-          this.ctx.lineWidth = 3;
-          this.ctx.shadowColor = '#E5A65E';
-          this.ctx.shadowBlur = 18;
-          for (let k = -2; k <= 2; k++) {
-            this.ctx.beginPath();
-            this.ctx.moveTo(cx + k * 20, 20);
-            this.ctx.lineTo(cx + k * 20, cy + 30);
-            this.ctx.stroke();
-          }
-          this.ctx.beginPath();
-          this.ctx.arc(cx, cy + 30, Math.max(10, this.pulseProgress * 90), 0, Math.PI * 2);
-          this.ctx.stroke();
-          this.ctx.restore();
-        } else if (this.currentMode === 'prp') {
-          // Growth Factor Cellular Droplets
-          this.ctx.save();
-          this.ctx.fillStyle = '#9D65C9';
-          this.ctx.shadowColor = '#9D65C9';
-          this.ctx.shadowBlur = 15;
-          for (let i = 0; i < 8; i++) {
-            const py = cy + 50 + Math.sin(this.pulseProgress * Math.PI * 2 + i) * 25;
-            const px = cx + Math.cos(this.pulseProgress * Math.PI * 2 + i) * 60;
-            this.ctx.beginPath();
-            this.ctx.arc(px, py, 4.5, 0, Math.PI * 2);
-            this.ctx.fill();
-          }
-          this.ctx.restore();
-        } else if (this.currentMode === 'hydra') {
-          // Vortex Spiral Suction
-          this.ctx.save();
-          this.ctx.strokeStyle = '#38bdf8';
-          this.ctx.lineWidth = 2.5;
-          this.ctx.shadowColor = '#38bdf8';
-          this.ctx.shadowBlur = 12;
-          this.ctx.beginPath();
-          for (let a = 0; a < Math.PI * 4; a += 0.2) {
-            const r = a * 8 * this.pulseProgress;
-            const x = cx + Math.cos(a + this.pulseProgress * 6) * r;
-            const y = cy - 50 + Math.sin(a + this.pulseProgress * 6) * r * 0.5;
-            if (a === 0) this.ctx.moveTo(x, y);
-            else this.ctx.lineTo(x, y);
-          }
-          this.ctx.stroke();
-          this.ctx.restore();
-        }
+        const probeX = beamX;
+        ctx.save();
+        ctx.fillStyle = mode.glow;
+        ctx.shadowColor = mode.glow;
+        ctx.shadowBlur = 12;
+        ctx.fillRect(probeX - 14, sT - 52, 28, 12);
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = '#1A1410';
+        ctx.font = '600 8px system-ui, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('HANDPIECE', probeX, sT - 43);
+        ctx.restore();
       }
 
-      // 3. Render 3D Spheres with Volumetric Glow
-      transformed.forEach(({ p, projX, projY, scale }) => {
-        const layerInfo = this.skinLayers[p.layerIdx];
-        const alpha = Math.min(1, Math.max(0.35, (scale - 0.25) * 1.6));
-        const currentSize = p.size * scale * (1 + Math.sin(p.pulse) * 0.25);
-
-        this.ctx.save();
-        this.ctx.fillStyle = layerInfo.color;
-        this.ctx.shadowColor = layerInfo.color;
-        this.ctx.shadowBlur = 10 * scale;
-        this.ctx.globalAlpha = alpha;
-        this.ctx.beginPath();
-        this.ctx.arc(projX, projY, Math.max(2, currentSize), 0, Math.PI * 2);
-        this.ctx.fill();
-        this.ctx.restore();
-      });
+      // ─── SURFACE LABEL ─────────────────────────────────────────────
+      ctx.fillStyle = 'rgba(230,200,130,0.6)';
+      ctx.font = '600 10px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('SKIN SURFACE', sL + sW / 2, sT - 4);
 
       requestAnimationFrame(render);
     };
@@ -1095,6 +1164,46 @@ function initEquinoxApp() {
       window.location.href = `/${radio.value}/`;
     });
   });
+
+  // E.1 Interactive Clinical Concern & Modality Matcher
+  const concernPillBtns = document.querySelectorAll('.concern-pill-btn');
+  concernPillBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const targetConcern = btn.getAttribute('data-target-concern');
+      if (!targetConcern) return;
+
+      concernPillBtns.forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+
+      document.querySelectorAll('.concern-panel').forEach((p) => p.classList.remove('is-active'));
+      const activePanel = document.getElementById(`panel-${targetConcern}`);
+      if (activePanel) {
+        activePanel.classList.add('is-active');
+      }
+
+      OmniTracker.sendEvent('select_content', {
+        content_type: 'concern_matcher',
+        item_name: targetConcern
+      }, 'ViewContent');
+    });
+  });
+
+  // E.2 Mobile Navigation Drawer Toggle
+  const mobileToggle = document.getElementById('mobileNavToggle');
+  const mobileDrawer = document.getElementById('mobileDrawer');
+  if (mobileToggle && mobileDrawer) {
+    mobileToggle.addEventListener('click', () => {
+      const isOpen = mobileDrawer.classList.toggle('is-open');
+      mobileToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    mobileDrawer.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        mobileDrawer.classList.remove('is-open');
+        mobileToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
 
   // F. Lead Form & Telemetry
   initLeadForm();

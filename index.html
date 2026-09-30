@@ -97,11 +97,12 @@
 
 <body data-page-type="home">
   <!-- MASTER LUXURY HEADER -->
+  <!-- MASTER LUXURY HEADER -->
   <header class="site-header">
     <div class="container">
       <a class="brand-master" href="/" aria-label="Equinox Aesthetic and Wellness Centre, home">
         <div class="brand-emblem-wrap">
-          <img src="/brand/equinox-luxury-logo.jpg" alt="Equinox Luxury Emblem" width="48" height="48">
+          <img src="/brand/equinox-luxury-logo.jpg" alt="Equinox Luxury Emblem" width="44" height="44">
         </div>
         <div class="brand-text-block">
           <span class="brand-name">EQUINOX</span>
@@ -109,14 +110,14 @@
         </div>
       </a>
 
-      <!-- Desktop Nav -->
+      <!-- Desktop Nav (Clean, concise, no line-wrapping) -->
       <ul class="header-nav">
-        <li><a href="/treatments">All Modalities</a></li>
-        <li><a href="#services-showcase">Clinical Disciplines</a></li>
-        <li><a href="#clinical-technologies">Technologies</a></li>
-        <li><a href="#reels-gallery">Procedure Reels</a></li>
+        <li><a href="/treatments">Modalities</a></li>
+        <li><a href="/acne">Acne &amp; Skin</a></li>
+        <li><a href="/pigmentation">Pigmentation</a></li>
+        <li><a href="/hair">Hair &amp; Scalp</a></li>
         <li><a href="/about-the-doctor">Our Doctor</a></li>
-        <li><a href="/contact">Visit &amp; Contact</a></li>
+        <li><a href="/contact">Contact</a></li>
       </ul>
 
       <div class="header-actions">
@@ -127,24 +128,47 @@
         <a class="header-cta-btn" href="https://wa.me/916372528534?text=Hi%20Equinox%2C%20I%20would%20like%20to%20book%20a%20consultation.%20%23EQ-HDR" target="_blank" rel="noopener">
           <span>Book Consultation</span>
         </a>
+        <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="Toggle Navigation Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </div>
   </header>
 
+  <!-- Mobile Navigation Drawer -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <a href="/treatments">✦ Modalities &amp; Lasers</a>
+    <a href="/acne">✦ Acne &amp; Scar Remodeling</a>
+    <a href="/pigmentation">✦ Melasma &amp; Pigmentation</a>
+    <a href="/hair">✦ Hair Regrowth &amp; Trichology</a>
+    <a href="/skin-rejuvenation">✦ Skin Boosters &amp; PDRN</a>
+    <a href="/womens-wellness">✦ Women's Endocrine Care</a>
+    <a href="/homeopathy">✦ Constitutional Homeopathy</a>
+    <a href="/wellness">✦ Mental Health Counselling</a>
+    <a href="/about-the-doctor">✦ About Dr. Nishu</a>
+    <a href="/contact">✦ Visit &amp; Contact Clinic</a>
+    <a class="btn-royal" href="https://wa.me/916372528534?text=Hi%20Equinox%2C%20I%20would%20like%20to%20book%20a%20consultation." target="_blank" rel="noopener" style="margin-top: 0.5rem; text-align: center; border-radius: 999px;">
+      <span>Book Consultation on WhatsApp</span>
+    </a>
+  </div>
+
   <main id="main">
-    <!-- 1. HERO SECTION (WARM CHAMPAGNE IVORY & METALLIC 3D GOLD) -->
-    <section class="section-wrap" style="padding-top: clamp(2.5rem, 5vw, 4.5rem); padding-bottom: clamp(3rem, 6vw, 5.5rem);">
-      <div class="container">
-        <div style="display: grid; grid-template-columns: 1fr; gap: 3rem; align-items: center;">
-          <div style="max-width: 900px; margin-inline: auto; text-align: center;">
-            <div class="luxury-eyebrow">
-              <span>✦</span>
-              <span>14 Years Clinical Experience in Homeopathy &amp; Cosmetology</span>
+    <!-- 1. HERO SECTION (WARM CHAMPAGNE IVORY & 3D INTERACTIVE GOLD PARTICLES) -->
+    <section class="section-wrap hero-luxury-wrap" style="padding-top: clamp(3rem, 5vw, 5rem); padding-bottom: clamp(3.5rem, 6vw, 6rem);">
+      <canvas id="heroCanvas3D" class="hero-3d-canvas"></canvas>
+      <div class="container hero-luxury-content">
+        <div style="display: grid; grid-template-columns: 1fr; gap: 2.5rem; align-items: center;">
+          <div style="max-width: 920px; margin-inline: auto; text-align: center;">
+            <div class="hero-stat-badge">
+              <span style="color: var(--gold-deep); font-size: 1rem;">✦</span>
+              <span style="font-size: 0.84rem; font-weight: 700; color: #2D2721; letter-spacing: 0.04em; text-transform: uppercase;">14 Years Clinical Experience in Homeopathy &amp; Cosmetology</span>
             </div>
             <h1 class="section-title" style="margin-bottom: 1.25rem;">
               Doctor-Led Precision Aesthetics &amp; <span class="gold-shimmer-text">Restorative Wellness</span>
             </h1>
-            <p class="section-lead" style="max-width: 64ch;">
+            <p class="section-lead" style="max-width: 66ch;">
               Welcome to Equinox Aesthetic &amp; Wellness Centre in Satya Nagar, Bhubaneswar. We bring together physician-supervised clinical cosmetology, advanced laser modalities, and constitutional wellness—delivering honest assessments and scientific protocols without commercial pressure.
             </p>
 
@@ -153,8 +177,8 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.48 15.04L2.2 21.8l4.9-1.3A9.9 9.9 0 1 0 12.04 2Zm0 18.1a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-2.9.77.78-2.83-.2-.3a8.2 8.2 0 1 1 6.8 3.7Zm4.5-6.14c-.25-.12-1.46-.72-1.69-.8-.23-.08-.39-.12-.55.12-.16.25-.63.8-.78.97-.14.16-.29.18-.53.06a6.7 6.7 0 0 1-3.34-2.92c-.25-.43.25-.4.72-1.34.08-.16.04-.3-.02-.42l-.75-1.8c-.2-.47-.4-.4-.55-.41h-.47a.9.9 0 0 0-.65.3 2.73 2.73 0 0 0-.85 2.03 4.74 4.74 0 0 0 1 2.52 10.86 10.86 0 0 0 4.16 3.67c1.55.67 2.16.73 2.93.61.47-.07 1.46-.6 1.66-1.17.2-.58.2-1.07.14-1.17-.06-.1-.22-.16-.47-.28Z"/></svg>
                 <span>Consult on WhatsApp</span>
               </a>
-              <a class="btn-outline-gold" href="#contact-form">
-                <span>Book In-Clinic Assessment</span>
+              <a class="btn-outline-gold" href="#concern-navigator">
+                <span>✦ Explore Interactive Modalities</span>
               </a>
             </div>
           </div>
@@ -162,7 +186,7 @@
 
         <!-- CLINIC TRUST PILLARS STRIP -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-top: 3.5rem;">
-          <div style="background: #FFFFFF; border: 1px solid var(--gold-border-subtle); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-sm); display: flex; align-items: flex-start; gap: 1rem;">
+          <div style="background: rgba(255, 255, 255, 0.92); border: 1px solid var(--gold-border-subtle); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-sm); display: flex; align-items: flex-start; gap: 1rem; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);">
             <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(197, 154, 63, 0.12); display: flex; align-items: center; justify-content: center; color: var(--gold-deep); font-size: 1.2rem; flex-shrink: 0;">✦</div>
             <div>
               <strong style="display: block; font-size: 1rem; color: var(--text-primary); margin-bottom: 0.25rem;">14 Years Clinical Rigour</strong>
@@ -170,7 +194,7 @@
             </div>
           </div>
 
-          <div style="background: #FFFFFF; border: 1px solid var(--gold-border-subtle); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-sm); display: flex; align-items: flex-start; gap: 1rem;">
+          <div style="background: rgba(255, 255, 255, 0.92); border: 1px solid var(--gold-border-subtle); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-sm); display: flex; align-items: flex-start; gap: 1rem; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);">
             <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(197, 154, 63, 0.12); display: flex; align-items: center; justify-content: center; color: var(--gold-deep); font-size: 1.2rem; flex-shrink: 0;">🔬</div>
             <div>
               <strong style="display: block; font-size: 1rem; color: var(--text-primary); margin-bottom: 0.25rem;">Advanced Modalities</strong>
@@ -178,7 +202,7 @@
             </div>
           </div>
 
-          <div style="background: #FFFFFF; border: 1px solid var(--gold-border-subtle); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-sm); display: flex; align-items: flex-start; gap: 1rem;">
+          <div style="background: rgba(255, 255, 255, 0.92); border: 1px solid var(--gold-border-subtle); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-sm); display: flex; align-items: flex-start; gap: 1rem; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);">
             <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(197, 154, 63, 0.12); display: flex; align-items: center; justify-content: center; color: var(--gold-deep); font-size: 1.2rem; flex-shrink: 0;">🌿</div>
             <div>
               <strong style="display: block; font-size: 1rem; color: var(--text-primary); margin-bottom: 0.25rem;">Whole-Person Care</strong>
@@ -186,11 +210,243 @@
             </div>
           </div>
 
-          <div style="background: #FFFFFF; border: 1px solid var(--gold-border-subtle); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-sm); display: flex; align-items: flex-start; gap: 1rem;">
+          <div style="background: rgba(255, 255, 255, 0.92); border: 1px solid var(--gold-border-subtle); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-sm); display: flex; align-items: flex-start; gap: 1rem; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);">
             <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(197, 154, 63, 0.12); display: flex; align-items: center; justify-content: center; color: var(--gold-deep); font-size: 1.2rem; flex-shrink: 0;">📍</div>
             <div>
               <strong style="display: block; font-size: 1rem; color: var(--text-primary); margin-bottom: 0.25rem;">Satya Nagar Suite</strong>
               <span style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">Plot 69, Kali Mandir Road, Bhubaneswar. Easily reached from Saheed Nagar, Janpath, &amp; Vani Vihar.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1.1 INTERACTIVE CLINICAL CONCERN & MODALITY MATCHER -->
+    <section class="section-wrap concern-matcher-section" id="concern-navigator">
+      <div class="container">
+        <div class="text-center" style="max-width: 840px; margin-inline: auto;">
+          <div class="luxury-eyebrow">✦ Interactive Clinical Navigator</div>
+          <h2 class="section-title">Match Your Concern with <span class="gold-shimmer-text">Targeted Modalities</span></h2>
+          <p class="section-lead">Select your primary concern below to explore physician-supervised clinical protocols, target dermal depths, and scientific mechanisms:</p>
+        </div>
+
+        <div class="concern-matcher-box">
+          <div class="concern-nav-pills">
+            <button type="button" class="concern-pill-btn is-active" data-target-concern="acne">✦ Active Acne &amp; Breakouts</button>
+            <button type="button" class="concern-pill-btn" data-target-concern="scars">✦ Deep Acne Scars &amp; Pits</button>
+            <button type="button" class="concern-pill-btn" data-target-concern="pigment">✦ Melasma &amp; Pigmentation</button>
+            <button type="button" class="concern-pill-btn" data-target-concern="hair">✦ Hair Fall &amp; Thinning Scalp</button>
+            <button type="button" class="concern-pill-btn" data-target-concern="booster">✦ Skin Glow &amp; PDRN Boosters</button>
+            <button type="button" class="concern-pill-btn" data-target-concern="laser-hair">✦ Laser Hair Reduction</button>
+          </div>
+
+          <!-- Panel 1: Acne -->
+          <div class="concern-panel is-active" id="panel-acne">
+            <div>
+              <span class="card-category-tag" style="margin-bottom: 0.75rem;">Discipline: Dermatological Cosmetology</span>
+              <h3 style="font-size: 1.5rem; color: var(--text-heading); margin-bottom: 0.75rem;">Active Acne Flare Suppression &amp; Sebum Regulation</h3>
+              <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
+                Targeted physician chemical peels (Salicylic, Mandelic) combined with high-frequency comedone extraction to clear follicular blockages, reduce Cutibacterium acnes bacterial colonization, and suppress painful active inflammatory lesions without systemic antibiotics.
+              </p>
+              <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                <span style="background: rgba(197, 154, 63, 0.12); color: var(--gold-deep); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">Salicylic &amp; Mandelic Peels</span>
+                <span style="background: rgba(197, 154, 63, 0.12); color: var(--gold-deep); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">Comedone Clearance</span>
+                <span style="background: rgba(197, 154, 63, 0.12); color: var(--gold-deep); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">Homeopathic Constitutional Support</span>
+              </div>
+              <a class="btn-royal" href="https://wa.me/916372528534?text=Hi%20Equinox%2C%20I%20would%20like%20to%20consult%20about%20Active%20Acne%20Treatment.%20%23EQ-ACNE" target="_blank" rel="noopener" style="padding: 0.6rem 1.4rem; font-size: 0.9rem;">
+                <span>Consult Doctor for Acne &rarr;</span>
+              </a>
+            </div>
+            <div class="concern-detail-card">
+              <div style="font-weight: 700; color: var(--gold-deep); font-size: 0.85rem; text-transform: uppercase;">Clinical Depth &amp; Protocol</div>
+              <div class="depth-meter-wrap">
+                <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600;">
+                  <span>Tissue Level: Stratum Corneum &amp; Follicle</span>
+                  <span style="color: var(--gold-deep);">0.10 mm – 0.50 mm</span>
+                </div>
+                <div class="depth-meter-track"><div class="depth-meter-fill" style="width: 25%;"></div></div>
+                <div style="font-size: 0.76rem; color: var(--text-subtle);">Epidermal surface stratum targeting follicular ostia</div>
+              </div>
+              <ul style="list-style: none; padding: 0; margin: 1rem 0 0; font-size: 0.88rem; color: var(--text-body); display: flex; flex-direction: column; gap: 0.5rem;">
+                <li>⏱ <strong>Session Cadence:</strong> Every 2 to 3 weeks</li>
+                <li>🩹 <strong>Social Downtime:</strong> Zero (mild erythema clears in 2 hours)</li>
+                <li>🩺 <strong>Supervision:</strong> 100% In-Clinic Doctor Evaluation</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Panel 2: Scars -->
+          <div class="concern-panel" id="panel-scars">
+            <div>
+              <span class="card-category-tag" style="margin-bottom: 0.75rem;">Discipline: Fractional Dermal Remodeling</span>
+              <h3 style="font-size: 1.5rem; color: var(--text-heading); margin-bottom: 0.75rem;">Micro-Needle RF (MNRF) &amp; Subcision for Depressed Scars</h3>
+              <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
+                Insulated gold micro-needles deliver 1.0 MHz radiofrequency thermal coagulative pulses directly into the deep reticular dermis. Releases fibrotic tethering in rolling and boxcar scars while stimulating long-term neo-collagenesis.
+              </p>
+              <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                <span style="background: rgba(197, 154, 63, 0.12); color: var(--gold-deep); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">Fractional MNRF</span>
+                <span style="background: rgba(197, 154, 63, 0.12); color: var(--gold-deep); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">Subcision Scar Release</span>
+                <span style="background: rgba(197, 154, 63, 0.12); color: var(--gold-deep); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">PDRN Dermal Infusion</span>
+              </div>
+              <a class="btn-royal" href="https://wa.me/916372528534?text=Hi%20Equinox%2C%20I%20would%20like%20to%20consult%20about%20Acne%20Scar%20MNRF.%20%23EQ-SCARS" target="_blank" rel="noopener" style="padding: 0.6rem 1.4rem; font-size: 0.9rem;">
+                <span>Consult Doctor for Scars &rarr;</span>
+              </a>
+            </div>
+            <div class="concern-detail-card">
+              <div style="font-weight: 700; color: var(--gold-deep); font-size: 0.85rem; text-transform: uppercase;">Clinical Depth &amp; Protocol</div>
+              <div class="depth-meter-wrap">
+                <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600;">
+                  <span>Tissue Level: Reticular Dermis</span>
+                  <span style="color: var(--gold-deep);">1.50 mm – 2.80 mm</span>
+                </div>
+                <div class="depth-meter-track"><div class="depth-meter-fill" style="width: 70%;"></div></div>
+                <div style="font-size: 0.76rem; color: var(--text-subtle);">Deep structural collagen matrix with insulated epidermal protection</div>
+              </div>
+              <ul style="list-style: none; padding: 0; margin: 1rem 0 0; font-size: 0.88rem; color: var(--text-body); display: flex; flex-direction: column; gap: 0.5rem;">
+                <li>⏱ <strong>Session Cadence:</strong> 3 to 5 sessions, 4–6 weeks apart</li>
+                <li>🩹 <strong>Social Downtime:</strong> 24 to 48 hours mild grid erythema</li>
+                <li>🩺 <strong>Supervision:</strong> Calibrated specifically to skin phototype</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Panel 3: Melasma & Pigmentation -->
+          <div class="concern-panel" id="panel-pigment">
+            <div>
+              <span class="card-category-tag" style="margin-bottom: 0.75rem;">Discipline: Photoacoustic Laser Science</span>
+              <h3 style="font-size: 1.5rem; color: var(--text-heading); margin-bottom: 0.75rem;">Pico Nd:YAG Laser &amp; Carbon Peel for Melanin Fragmentation</h3>
+              <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
+                Ultra-short picosecond pulses deliver photo-mechanical shockwaves that shatter deep stubborn melanin clusters into dust-like micro-particles for natural lymphatic clearance—without thermal heat accumulation or rebound pigmentation.
+              </p>
+              <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                <span style="background: rgba(197, 154, 63, 0.12); color: var(--gold-deep); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">1064nm Pico Laser</span>
+                <span style="background: rgba(197, 154, 63, 0.12); color: var(--gold-deep); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">Carbon Facial Toning</span>
+                <span style="background: rgba(197, 154, 63, 0.12); color: var(--gold-deep); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">Tattoo Removal</span>
+              </div>
+              <a class="btn-royal" href="https://wa.me/916372528534?text=Hi%20Equinox%2C%20I%20would%20like%20to%20consult%20about%20Pico%20Laser%20Pigmentation.%20%23EQ-PICO" target="_blank" rel="noopener" style="padding: 0.6rem 1.4rem; font-size: 0.9rem;">
+                <span>Consult Doctor for Pigmentation &rarr;</span>
+              </a>
+            </div>
+            <div class="concern-detail-card">
+              <div style="font-weight: 700; color: var(--gold-deep); font-size: 0.85rem; text-transform: uppercase;">Clinical Depth &amp; Protocol</div>
+              <div class="depth-meter-wrap">
+                <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600;">
+                  <span>Tissue Level: Papillary &amp; Mid-Dermis</span>
+                  <span style="color: var(--gold-deep);">0.50 mm – 1.50 mm</span>
+                </div>
+                <div class="depth-meter-track"><div class="depth-meter-fill" style="width: 50%;"></div></div>
+                <div style="font-size: 0.76rem; color: var(--text-subtle);">Targeted melanosomes without epidermal thermal injury</div>
+              </div>
+              <ul style="list-style: none; padding: 0; margin: 1rem 0 0; font-size: 0.88rem; color: var(--text-body); display: flex; flex-direction: column; gap: 0.5rem;">
+                <li>⏱ <strong>Session Cadence:</strong> 4 to 6 sessions, 3–4 weeks apart</li>
+                <li>🩹 <strong>Social Downtime:</strong> Zero (mild pinkness fades in 1–2 hours)</li>
+                <li>🩺 <strong>Supervision:</strong> Monitored closely for safe pigment stability</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Panel 4: Hair Fall -->
+          <div class="concern-panel" id="panel-hair">
+            <div>
+              <span class="card-category-tag" style="margin-bottom: 0.75rem;">Discipline: Advanced Trichology &amp; Biostimulation</span>
+              <h3 style="font-size: 1.5rem; color: var(--text-heading); margin-bottom: 0.75rem;">Laser Hair Regrowth Machine + GFC + Alsavique Italian Therapy</h3>
+              <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
+                Multi-pathway scalp restoration: Low-level laser photobiomodulation boosts capillary micro-circulation and cellular ATP synthesis, combined with autologous Growth Factor Concentrate (GFC), Exosomes, and imported Italian Alsavique peptide therapy to revitalize miniaturized hair roots.
+              </p>
+              <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                <span style="background: rgba(197, 154, 63, 0.12); color: var(--gold-deep); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">Laser Hair Regrowth Machine</span>
+                <span style="background: rgba(197, 154, 63, 0.12); color: var(--gold-deep); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">Autologous GFC &amp; PRP</span>
+                <span style="background: rgba(197, 154, 63, 0.12); color: var(--gold-deep); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">Alsavique Italian Restoration</span>
+              </div>
+              <a class="btn-royal" href="https://wa.me/916372528534?text=Hi%20Equinox%2C%20I%20would%20like%20to%20consult%20about%20Hair%20Fall%20and%20Regrowth.%20%23EQ-HAIR" target="_blank" rel="noopener" style="padding: 0.6rem 1.4rem; font-size: 0.9rem;">
+                <span>Consult Doctor for Hair &rarr;</span>
+              </a>
+            </div>
+            <div class="concern-detail-card">
+              <div style="font-weight: 700; color: var(--gold-deep); font-size: 0.85rem; text-transform: uppercase;">Clinical Depth &amp; Protocol</div>
+              <div class="depth-meter-wrap">
+                <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600;">
+                  <span>Tissue Level: Subcutaneous Follicular Matrix</span>
+                  <span style="color: var(--gold-deep);">3.50 mm – 4.50 mm</span>
+                </div>
+                <div class="depth-meter-track"><div class="depth-meter-fill" style="width: 90%;"></div></div>
+                <div style="font-size: 0.76rem; color: var(--text-subtle);">Dermal papilla capillary micro-bed and stem cell niche</div>
+              </div>
+              <ul style="list-style: none; padding: 0; margin: 1rem 0 0; font-size: 0.88rem; color: var(--text-body); display: flex; flex-direction: column; gap: 0.5rem;">
+                <li>⏱ <strong>Session Cadence:</strong> Bi-weekly or monthly protocols</li>
+                <li>🩹 <strong>Social Downtime:</strong> Zero downtime</li>
+                <li>🩺 <strong>Supervision:</strong> Trichoscopy microscopic follicular mapping</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Panel 5: Skin Glow & PDRN -->
+          <div class="concern-panel" id="panel-booster">
+            <div>
+              <span class="card-category-tag" style="margin-bottom: 0.75rem;">Discipline: Cellular Biorejuvenation</span>
+              <h3 style="font-size: 1.5rem; color: var(--text-heading); margin-bottom: 0.75rem;">PDRN Salmon DNA + Skin Vector + HydraFacial</h3>
+              <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
+                Polynucleotide (PDRN) cellular fragments micro-infused alongside non-crosslinked hyaluronic acid and Skin Vector bioremodeling. Deep vortex hydration clears dull stratum corneum while activating fibroblast synthesis for a luminous, hydrated glow.
+              </p>
+              <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                <span style="background: rgba(197, 154, 63, 0.12); color: var(--gold-deep); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">PDRN Salmon DNA</span>
+                <span style="background: rgba(197, 154, 63, 0.12); color: var(--gold-deep); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">Skin Vector Bioremodeling</span>
+                <span style="background: rgba(197, 154, 63, 0.12); color: var(--gold-deep); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">Advanced HydraFacial</span>
+              </div>
+              <a class="btn-royal" href="https://wa.me/916372528534?text=Hi%20Equinox%2C%20I%20would%20like%20to%20consult%20about%20Skin%20Boosters%20and%20PDRN.%20%23EQ-GLOW" target="_blank" rel="noopener" style="padding: 0.6rem 1.4rem; font-size: 0.9rem;">
+                <span>Consult Doctor for Skin Glow &rarr;</span>
+              </a>
+            </div>
+            <div class="concern-detail-card">
+              <div style="font-weight: 700; color: var(--gold-deep); font-size: 0.85rem; text-transform: uppercase;">Clinical Depth &amp; Protocol</div>
+              <div class="depth-meter-wrap">
+                <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600;">
+                  <span>Tissue Level: Papillary &amp; Reticular ECM</span>
+                  <span style="color: var(--gold-deep);">1.00 mm – 2.00 mm</span>
+                </div>
+                <div class="depth-meter-track"><div class="depth-meter-fill" style="width: 55%;"></div></div>
+                <div style="font-size: 0.76rem; color: var(--text-subtle);">Extracellular matrix fibroblast and collagen hydration zone</div>
+              </div>
+              <ul style="list-style: none; padding: 0; margin: 1rem 0 0; font-size: 0.88rem; color: var(--text-body); display: flex; flex-direction: column; gap: 0.5rem;">
+                <li>⏱ <strong>Session Cadence:</strong> 2 to 3 sessions, 3–4 weeks apart</li>
+                <li>🩹 <strong>Social Downtime:</strong> 12 to 24 hours mild hydration dewiness</li>
+                <li>🩺 <strong>Supervision:</strong> Micro-dosing adjusted to skin sensitivity</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Panel 6: Laser Hair Reduction -->
+          <div class="concern-panel" id="panel-laser-hair">
+            <div>
+              <span class="card-category-tag" style="margin-bottom: 0.75rem;">Discipline: Phototrichology</span>
+              <h3 style="font-size: 1.5rem; color: var(--text-heading); margin-bottom: 0.75rem;">808nm Diode Laser Hair Reduction with Sapphire Chill</h3>
+              <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.25rem;">
+                Precision 808nm diode wavelength absorbed selectively by melanin in active anagen hair follicles, while the integrated active contact sapphire cooling tip maintains epidermis comfort, preventing superficial burning on Indian skin phototypes.
+              </p>
+              <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                <span style="background: rgba(197, 154, 63, 0.12); color: var(--gold-deep); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">808nm Diode Wavelength</span>
+                <span style="background: rgba(197, 154, 63, 0.12); color: var(--gold-deep); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">Sapphire Chill Tip</span>
+                <span style="background: rgba(197, 154, 63, 0.12); color: var(--gold-deep); padding: 0.3rem 0.75rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600;">PCOS / Facial Protocols</span>
+              </div>
+              <a class="btn-royal" href="https://wa.me/916372528534?text=Hi%20Equinox%2C%20I%20would%20like%20to%20consult%20about%20Diode%20Laser%20Hair%20Reduction.%20%23EQ-DIODE" target="_blank" rel="noopener" style="padding: 0.6rem 1.4rem; font-size: 0.9rem;">
+                <span>Consult Doctor for Laser Hair &rarr;</span>
+              </a>
+            </div>
+            <div class="concern-detail-card">
+              <div style="font-weight: 700; color: var(--gold-deep); font-size: 0.85rem; text-transform: uppercase;">Clinical Depth &amp; Protocol</div>
+              <div class="depth-meter-wrap">
+                <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600;">
+                  <span>Tissue Level: Deep Follicular Bulb</span>
+                  <span style="color: var(--gold-deep);">3.00 mm – 4.20 mm</span>
+                </div>
+                <div class="depth-meter-track"><div class="depth-meter-fill" style="width: 85%;"></div></div>
+                <div style="font-size: 0.76rem; color: var(--text-subtle);">Anagen hair bulb matrix with active sapphire surface protection</div>
+              </div>
+              <ul style="list-style: none; padding: 0; margin: 1rem 0 0; font-size: 0.88rem; color: var(--text-body); display: flex; flex-direction: column; gap: 0.5rem;">
+                <li>⏱ <strong>Session Cadence:</strong> 6 to 8 sessions, 4–6 weeks apart</li>
+                <li>🩹 <strong>Social Downtime:</strong> Zero downtime</li>
+                <li>🩺 <strong>Supervision:</strong> Energy fluence calibrated to skin undertone</li>
+              </ul>
             </div>
           </div>
         </div>
