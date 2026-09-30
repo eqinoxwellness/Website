@@ -1,0 +1,67 @@
+# Equinox Aesthetic & Wellness Centre
+
+> Doctor-led aesthetic, skin, hair and wellness consultations in Satya Nagar, Bhubaneswar. Assessment first, clear explanations, no pressure to commit.
+
+- Address: Plot No. 69, 1st Floor, Kali Mandir Road, Satya Nagar, Bhubaneswar, Odisha 751007 (Above Sweekruti Creations)
+- Phone and WhatsApp: +91 63725 28534
+- Hours: 11am to 8pm, Saturday to Thursday. Closed on Fridays.
+- Consultations are with our consulting doctor.
+- Serves: Satya Nagar, Saheed Nagar, Kharavela Nagar, Vani Vihar, Rasulgarh, Jaydev Vihar, Mancheswar, Nayapalli, Bhubaneswar.
+- Approach: every consultation starts with history and examination, followed by a plain explanation of options, costs and realistic expectations. No specific outcome is promised.
+
+## Skin
+
+- [Acne consultation](http://localhost:4321/acne): Acne has more than one cause, and the right approach depends on which ones apply to you. The consultation is where we find that out, before anything is suggested.
+- [Pigmentation consultation](http://localhost:4321/pigmentation): Pigmentation looks similar on the surface but has different causes underneath: sun, hormones, inflammation or old marks. Treating the wrong cause can make it worse, so the consultation starts by working out which one you have.
+- [Skin rejuvenation consultation](http://localhost:4321/skin-rejuvenation): Dull or tired-looking skin is usually a mix of dehydration, texture and a routine that no longer suits you. We look at all three before recommending anything, including whether you need a session at all.
+
+## Hair
+
+- [Hair fall and scalp consultation](http://localhost:4321/hair): Hair fall has many possible causes, from stress, diet and hormones to genetics and scalp conditions. The consultation narrows down which ones apply to you, because the options differ for each.
+
+## Hormones and weight
+
+- [Women’s wellness consultation](http://localhost:4321/womens-wellness): Irregular cycles, hormonal changes and their effect on skin, hair, energy and weight are often looked at separately. This consultation looks at them together, and tells you clearly when you need a gynaecologist or another specialist instead.
+- [Weight management consultation](http://localhost:4321/weight-management): Weight is shaped by food, sleep, stress, activity, hormones and medicines, and most people have already tried the simple advice. The assessment looks at what is specific to you before any plan is suggested.
+
+## Whole-person care
+
+- [Homeopathy consultation](http://localhost:4321/homeopathy): A homeopathy consultation is a long conversation about your concern, your history and your general health. It is usually followed by a series of follow-up visits rather than a single appointment.
+- [General and mental wellness consultation](http://localhost:4321/wellness): Some people come in with a specific concern. Others feel run down, stressed or out of balance and want to understand why. A wellness consultation starts with a broad conversation and ends with a small number of practical next steps.
+
+## Treatment modalities
+
+- [All treatments](http://localhost:4321/treatments)
+
+### Skin
+- Advanced HydraFacial: A multi-step facial that cleanses, exfoliates, extracts and hydrates using a device with medical-grade serums.
+- Skin boosters: Micro-injections of hyaluronic acid into the skin to improve hydration from within.
+- PDRN therapy: Micro-injections of polynucleotides derived from salmon DNA, aimed at supporting skin repair.
+- Skin vector therapy: A technique using threads or fillers placed along specific vectors to support skin structure.
+- Acne treatment: A combination of topical care, in-clinic procedures and sometimes oral medication, guided by the type and severity of breakouts.
+- Melasma and pigmentation treatment: A course of topical agents, in-clinic procedures such as pico laser or peels, and sun protection, tailored to the type of pigmentation.
+- Pico laser: A laser that delivers energy in very short pulses (picoseconds) to target pigment or ink in the skin with less surrounding heat.
+- MNRF (micro-needling with radiofrequency): Fine needles deliver radiofrequency energy into the deeper skin layers, stimulating the skin's own repair process.
+
+### Hair and scalp
+- Diode laser hair reduction: A medical-grade laser targets the pigment in hair follicles to reduce hair growth over a course of sessions.
+- Laser hair regrowth therapy: A device directs low-level laser energy to the scalp to support micro-circulation and encourage the hair growth cycle.
+- PRP (platelet-rich plasma): A small blood sample is drawn, processed to concentrate the platelets, and injected into the scalp. Sessions are usually spaced a few weeks apart over a course.
+- GFC (growth factor concentrate): Similar to PRP, but the blood processing concentrates growth factors specifically. Injected into the scalp over a planned course.
+- Exosome therapy: A newer approach where exosomes (tiny vesicles derived from cells) are applied to the scalp to support the hair growth environment.
+- Alsavique hair restoration therapy: A hair restoration protocol from Italy (Alsavique) involving a planned course of scalp treatments using proprietary formulations.
+
+### Homeopathy and counselling
+- Homeopathy (14 years of clinical experience): A detailed consultation covering your concern, general health and history, followed by a course of follow-up visits rather than a single appointment.
+- Mental health counselling: A confidential conversation about stress, low mood, anxiety, sleep or other concerns affecting daily life, with referral when a specialist is the right next step.
+- Child counselling: Supportive sessions for children and young people, after an initial conversation with a parent or guardian.
+
+## The clinic
+
+- [Our doctor](http://localhost:4321/about-the-doctor)
+- [Visit and contact](http://localhost:4321/contact)
+- [Privacy policy](http://localhost:4321/privacy-policy)
+
+## Optional
+
+- [Sitemap](http://localhost:4321/sitemap-index.xml)

@@ -1,34 +1,10 @@
 {
   "name": "equinox-website",
   "private": true,
-  "type": "module",
   "version": "1.0.0",
+  "description": "Equinox Aesthetic & Wellness Centre Website",
   "scripts": {
-    "dev": "astro dev",
-    "preflight": "node scripts/preflight.mjs",
-    "prebuild": "node scripts/preflight.mjs",
-    "build": "astro build",
-    "preview": "astro preview",
-    "og": "node scripts/og.mjs",
-    "postbuild": "node scripts/postbuild.mjs"
-  },
-  "engines": {
-    "node": ">=20"
-  },
-  "dependencies": {
-    "@astrojs/react": "^6.0.6",
-    "@astrojs/sitemap": "^3.7.4",
-    "@astrojs/vercel": "^11.0.10",
-    "@fontsource-variable/source-sans-3": "^5.3.0",
-    "@fontsource/sorts-mill-goudy": "^5.3.0",
-    "astro": "^7.3.3",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0"
-  },
-  "devDependencies": {
-    "@types/react": "^19.3.0",
-    "@types/react-dom": "^19.3.0",
-    "sharp": "^0.35.4",
-    "typescript": "^7.0.2"
+    "dev": "npx serve .",
+    "start": "npx serve ."
   }
 }
