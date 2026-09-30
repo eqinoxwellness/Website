@@ -1,16 +1,45 @@
 /**
- * Equinox Aesthetic & Wellness Centre — Ultra-Luxury Vanilla JS Engine
- * Features:
- * 1. 60 FPS Interactive 3D Hero Canvas Background (Golden Constellation & Bio-Wave Field)
- * 2. 60 FPS Interactive 3D Dermal Matrix & Precision Laser Visualizer
- * 3. Interactive Protocol & Consultation Cost Estimator
- * 4. Interactive Concern Finder
- * 5. Real-Time Clinic Desk Operating Telemetry
- * 6. 3D Card Hover Perspective Tilt & Micro-Animations
+ * Equinox Aesthetic & Wellness Centre — Clinical Luxury Application Engine
+ * Modules:
+ * 1. Global Configuration (Analytics, Google Search Console, Clarity, Google Sheets)
+ * 2. 60 FPS Interactive Hero 3D Background Canvas
+ * 3. Clinical Skin Anatomy & Laser Simulation 3D Engine (with Guided Clinical Demo Stepper & Depth Ruler)
+ * 4. Instagram Clinical Video Reels Player & Gallery Controller
+ * 5. Interactive Consultation Protocol & Cost Estimator
+ * 6. Lead Form with Direct Google Sheets Webhook Integration & WhatsApp Forwarding
+ * 7. Real-Time Medical Desk Telemetry & 3D Tilt Perspective
  */
 
 // ==========================================
-// 1. 60 FPS INTERACTIVE 3D HERO CANVAS BACKGROUND
+// 1. GLOBAL CLINIC CONFIGURATION
+// ==========================================
+const CLINIC_CONFIG = {
+  // Google Analytics 4 (Replace with your Measurement ID e.g., 'G-XXXXXXXXXX')
+  ga4MeasurementId: 'G-EQUINOX2026',
+
+  // Google Search Console Verification Token
+  gscVerificationToken: 'GSC_EQUINOX_VERIFICATION_TOKEN',
+
+  // Microsoft Clarity Project ID (Replace with your Clarity ID e.g., 'abcdef1234')
+  clarityProjectId: 'CLARITY_EQUINOX_ID',
+
+  // Google Apps Script Web App URL for Google Sheets lead recording
+  // (Paste your deployed Google Apps Script /exec URL here)
+  googleSheetWebAppUrl: 'https://script.google.com/macros/s/AKfycbw_PLACEHOLDER_EQUINOX_SHEET/exec',
+
+  // Clinic Contact Facts
+  phoneRaw: '916372528534',
+  phoneDisplay: '+91 63725 28534',
+  address: 'Plot No. 69, 1st Floor, Kali Mandir Road, Satya Nagar, Bhubaneswar 751007',
+  operatingHours: {
+    openHour: 11,
+    closeHour: 20,
+    closedDays: [5], // 5 = Friday
+  }
+};
+
+// ==========================================
+// 2. 60 FPS INTERACTIVE 3D HERO CANVAS
 // ==========================================
 class Hero3DBackground {
   constructor(canvasId) {
@@ -45,13 +74,13 @@ class Hero3DBackground {
     this.particles = [];
     for (let i = 0; i < this.numParticles; i++) {
       this.particles.push({
-        x: (Math.random() - 0.5) * this.width * 1.4,
-        y: (Math.random() - 0.5) * this.height * 1.4,
+        x: (Math.random() - 0.5) * this.width * 1.3,
+        y: (Math.random() - 0.5) * this.height * 1.3,
         z: Math.random() * 800 + 100,
         baseSize: Math.random() * 2.8 + 1.2,
         speedZ: Math.random() * 0.4 + 0.2,
         pulseOffset: Math.random() * Math.PI * 2,
-        colorType: Math.random() > 0.4 ? 'gold' : 'amethyst'
+        colorType: Math.random() > 0.35 ? 'gold' : 'amber'
       });
     }
   }
@@ -80,7 +109,6 @@ class Hero3DBackground {
 
   animate() {
     this.time += 0.015;
-    // Smooth lerp mouse
     this.mouseX += (this.targetMouseX - this.mouseX) * 0.05;
     this.mouseY += (this.targetMouseY - this.mouseY) * 0.05;
 
@@ -90,17 +118,14 @@ class Hero3DBackground {
     const cy = this.height / 2 + this.mouseY;
     const fov = 400;
 
-    // Projected particle list
     const projected = [];
 
     for (let p of this.particles) {
-      // Move slightly forward
       p.z -= p.speedZ;
       if (p.z <= 20) p.z = 800;
 
-      // Subtle float wave
-      const waveY = Math.sin(this.time + p.pulseOffset) * 15;
-      const waveX = Math.cos(this.time * 0.7 + p.pulseOffset) * 15;
+      const waveY = Math.sin(this.time + p.pulseOffset) * 14;
+      const waveX = Math.cos(this.time * 0.7 + p.pulseOffset) * 14;
 
       const scale = fov / (fov + p.z);
       const px = cx + (p.x + waveX) * scale;
@@ -113,14 +138,13 @@ class Hero3DBackground {
         z: p.z,
         size: p.baseSize * scale * (1 + Math.sin(this.time * 2 + p.pulseOffset) * 0.25),
         colorType: p.colorType,
-        alpha: Math.min(1, Math.max(0.15, (1 - p.z / 800) * 1.2))
+        alpha: Math.min(1, Math.max(0.18, (1 - p.z / 800) * 1.2))
       });
     }
 
-    // Sort by depth
     projected.sort((a, b) => b.z - a.z);
 
-    // Connect close neighbors with luminous gold threads
+    // Luminous connections
     this.ctx.lineWidth = 0.6;
     for (let i = 0; i < projected.length; i++) {
       for (let j = i + 1; j < projected.length; j++) {
@@ -130,7 +154,7 @@ class Hero3DBackground {
 
         if (dist < 110) {
           const lineAlpha = (1 - dist / 110) * 0.25 * Math.min(projected[i].alpha, projected[j].alpha);
-          this.ctx.strokeStyle = `rgba(242, 199, 102, ${lineAlpha})`;
+          this.ctx.strokeStyle = `rgba(212, 175, 55, ${lineAlpha})`;
           this.ctx.beginPath();
           this.ctx.moveTo(projected[i].px, projected[i].py);
           this.ctx.lineTo(projected[j].px, projected[j].py);
@@ -139,24 +163,16 @@ class Hero3DBackground {
       }
     }
 
-    // Draw glowing spheres
+    // Render particles
     for (let p of projected) {
-      if (p.px < -20 || p.px > this.width + 20 || p.py < -20 || p.py > this.height + 20) continue;
-
       this.ctx.save();
-      this.ctx.beginPath();
-      this.ctx.arc(p.px, p.py, Math.max(1, p.size), 0, Math.PI * 2);
-
-      if (p.colorType === 'gold') {
-        this.ctx.fillStyle = '#f2c766';
-        this.ctx.shadowColor = '#f2c766';
-      } else {
-        this.ctx.fillStyle = '#d88b48';
-        this.ctx.shadowColor = '#d88b48';
-      }
-
+      const col = p.colorType === 'gold' ? '#F7DC99' : '#D4AF37';
+      this.ctx.fillStyle = col;
+      this.ctx.shadowColor = col;
       this.ctx.shadowBlur = 10 * p.scale;
       this.ctx.globalAlpha = p.alpha;
+      this.ctx.beginPath();
+      this.ctx.arc(p.px, p.py, Math.max(1.8, p.size), 0, Math.PI * 2);
       this.ctx.fill();
       this.ctx.restore();
     }
@@ -166,23 +182,34 @@ class Hero3DBackground {
 }
 
 // ==========================================
-// 2. 60 FPS INTERACTIVE 3D DERMAL MATRIX & LASER ENGINE
+// 3. CLINICAL SKIN ANATOMY & LASER SIMULATION 3D ENGINE
 // ==========================================
-class Dermal3DEngine {
-  constructor(canvasId, hudIds = {}) {
+class AnatomicalDermal3DEngine {
+  constructor(canvasId, hudConfig = {}) {
     this.canvas = document.getElementById(canvasId);
     if (!this.canvas) return;
     this.ctx = this.canvas.getContext('2d');
     if (!this.ctx) return;
 
-    this.hudIds = hudIds;
+    this.hudConfig = hudConfig;
     this.currentMode = 'pico';
-    this.beamProgress = 0;
-    this.angleX = 0.25;
-    this.angleY = 0.45;
+    this.currentStep = 1; // 1: Diagnose, 2: Penetrate, 3: Remodel
+    this.isDemoPlaying = false;
+    this.demoTimer = null;
+    this.pulseProgress = 0;
+    this.angleX = 0.35;
+    this.angleY = 0.55;
     this.isDragging = false;
-    this.lastMouseX = 0;
-    this.lastMouseY = 0;
+    this.lastX = 0;
+    this.lastY = 0;
+
+    // Define 4 Real Anatomical Skin Layers
+    this.skinLayers = [
+      { name: 'Epidermis', depth: '0.10 mm', yOffset: -65, color: '#F6D27A', desc: 'Melanin clusters, sunspots, surface texture' },
+      { name: 'Papillary Dermis', depth: '1.00 mm', yOffset: -20, color: '#E5A65E', desc: 'Fine collagen mesh & vascular micro-capillaries' },
+      { name: 'Reticular Dermis', depth: '2.80 mm', yOffset: 25, color: '#D97398', desc: 'Structural collagen, elastin & deep acne scars' },
+      { name: 'Follicular Matrix', depth: '4.20 mm', yOffset: 70, color: '#9D65C9', desc: 'Hair root bulbs, dermal papilla & cellular growth' },
+    ];
 
     this.initDimensions();
     this.initPoints();
@@ -193,364 +220,400 @@ class Dermal3DEngine {
   initDimensions() {
     const parent = this.canvas.parentElement;
     this.width = parent?.clientWidth && parent.clientWidth > 0 ? parent.clientWidth : 800;
-    this.height = parent?.clientHeight && parent.clientHeight > 0 ? parent.clientHeight : 340;
+    this.height = parent?.clientHeight && parent.clientHeight > 0 ? parent.clientHeight : 350;
     this.canvas.width = this.width;
     this.canvas.height = this.height;
   }
 
   initPoints() {
     this.points = [];
-    const layers = 4;
-    const pointsPerLayer = 55;
-
-    for (let l = 0; l < layers; l++) {
-      for (let i = 0; i < pointsPerLayer; i++) {
+    // Generate cellular tissue points per layer
+    this.skinLayers.forEach((layer, layerIdx) => {
+      const count = 45;
+      for (let i = 0; i < count; i++) {
         this.points.push({
-          x: (Math.random() - 0.5) * 460,
-          y: (l - 1.5) * 58 + (Math.random() - 0.5) * 16,
-          z: (Math.random() - 0.5) * 460,
-          layer: l,
-          size: Math.random() * 3.5 + 2.5,
+          x: (Math.random() - 0.5) * 440,
+          y: layer.yOffset + (Math.random() - 0.5) * 12,
+          z: (Math.random() - 0.5) * 440,
+          layerIdx: layerIdx,
+          size: Math.random() * 3 + 2.5,
           pulse: Math.random() * Math.PI * 2,
         });
       }
-    }
+    });
   }
 
   attachEvents() {
     window.addEventListener('resize', () => this.initDimensions());
 
-    if (typeof ResizeObserver !== 'undefined' && this.canvas.parentElement) {
-      new ResizeObserver(() => this.initDimensions()).observe(this.canvas.parentElement);
-    }
+    const container = this.canvas.parentElement;
+    if (!container) return;
 
-    const startDrag = (x, y) => {
+    container.addEventListener('mousedown', (e) => {
       this.isDragging = true;
-      this.lastMouseX = x;
-      this.lastMouseY = y;
-    };
+      this.lastX = e.clientX;
+      this.lastY = e.clientY;
+    });
 
-    const doDrag = (x, y) => {
+    window.addEventListener('mousemove', (e) => {
       if (!this.isDragging) return;
-      const dx = x - this.lastMouseX;
-      const dy = y - this.lastMouseY;
+      const dx = e.clientX - this.lastX;
+      const dy = e.clientY - this.lastY;
       this.angleY += dx * 0.006;
       this.angleX += dy * 0.006;
-      this.angleX = Math.max(-0.6, Math.min(0.6, this.angleX));
-      this.lastMouseX = x;
-      this.lastMouseY = y;
-    };
+      // Clamp vertical tilt
+      this.angleX = Math.max(0.1, Math.min(0.75, this.angleX));
+      this.lastX = e.clientX;
+      this.lastY = e.clientY;
+    });
 
-    const endDrag = () => {
-      this.isDragging = false;
-    };
+    window.addEventListener('mouseup', () => { this.isDragging = false; });
 
-    this.canvas.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY));
-    window.addEventListener('mousemove', (e) => doDrag(e.clientX, e.clientY));
-    window.addEventListener('mouseup', endDrag);
-
-    this.canvas.addEventListener('touchstart', (e) => {
-      if (e.touches.length === 1) startDrag(e.touches[0].clientX, e.touches[0].clientY);
+    // Touch
+    container.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        this.isDragging = true;
+        this.lastX = e.touches[0].clientX;
+        this.lastY = e.touches[0].clientY;
+      }
     }, { passive: true });
 
     window.addEventListener('touchmove', (e) => {
-      if (e.touches.length === 1) doDrag(e.touches[0].clientX, e.touches[0].clientY);
+      if (!this.isDragging || e.touches.length !== 1) return;
+      const dx = e.touches[0].clientX - this.lastX;
+      const dy = e.touches[0].clientY - this.lastY;
+      this.angleY += dx * 0.006;
+      this.angleX += dy * 0.006;
+      this.angleX = Math.max(0.1, Math.min(0.75, this.angleX));
+      this.lastX = e.touches[0].clientX;
+      this.lastY = e.touches[0].clientY;
     }, { passive: true });
 
-    window.addEventListener('touchend', endDrag);
+    window.addEventListener('touchend', () => { this.isDragging = false; });
   }
 
   setMode(mode, meta = {}) {
     this.currentMode = mode;
-    this.beamProgress = 0;
+    this.pulseProgress = 0;
 
-    if (this.hudIds.depthVal) {
-      const el = document.getElementById(this.hudIds.depthVal);
-      if (el && meta.depth) el.textContent = meta.depth;
+    if (this.hudConfig.depthVal && meta.depth) document.getElementById(this.hudConfig.depthVal).textContent = meta.depth;
+    if (this.hudConfig.waveVal && meta.wave) document.getElementById(this.hudConfig.waveVal).textContent = meta.wave;
+    if (this.hudConfig.targetVal && meta.target) document.getElementById(this.hudConfig.targetVal).textContent = meta.target;
+    if (this.hudConfig.downVal && meta.down) document.getElementById(this.hudConfig.downVal).textContent = meta.down;
+
+    // Update Step Explanation
+    this.updateStepUI();
+  }
+
+  setStep(stepNum) {
+    this.currentStep = stepNum;
+    this.pulseProgress = 0;
+    this.updateStepUI();
+  }
+
+  updateStepUI() {
+    const stepTextEl = document.getElementById('demoStepText');
+    const stepButtons = document.querySelectorAll('.demo-step-btn');
+    stepButtons.forEach((btn, idx) => {
+      btn.classList.toggle('is-active', idx + 1 === this.currentStep);
+    });
+
+    if (!stepTextEl) return;
+
+    const descriptions = {
+      pico: [
+        'Step 1 (Scan): Cross-polarized diagnosis maps melanin cluster depth and boundaries in the epidermis & reticular dermis.',
+        'Step 2 (Pulse): 1064nm picosecond acoustic shockwaves shatter melanin pigment without thermal heat damage.',
+        'Step 3 (Clearance): Macrophages clear shattered pigment micro-particles naturally over 3 to 4 weeks.'
+      ],
+      mnrf: [
+        'Step 1 (Scan): Assessment identifies tethered boxcar scar bases and structural pore enlargement.',
+        'Step 2 (Penetrate): 2.80mm insulated micro-needles penetrate and discharge calibrated fractional radiofrequency heat.',
+        'Step 3 (Remodel): Thermal micro-coagulation zones trigger neo-collagenesis and scar matrix remodeling.'
+      ],
+      prp: [
+        'Step 1 (Scan): Trichoscopic camera identifies miniaturized follicular roots and androgenetic shedding pattern.',
+        'Step 2 (Infuse): Autologous growth factors & platelets micro-injected at 4.20mm follicular bulb depth.',
+        'Step 3 (Nourish): Vascular endothelial growth factors stimulate micro-circulation to strengthen hair roots.'
+      ],
+      hydra: [
+        'Step 1 (Exfoliate): Vortex suction loosens stratum corneum dead cells and superficial blackheads.',
+        'Step 2 (Extract): 40kPa vacuum extracts deeply congested pore sebum and comedones.',
+        'Step 3 (Hydrate): Simultaneous vortex infusion of hyaluronic acid, peptides, and botanical antioxidants.'
+      ]
+    };
+
+    const currentList = descriptions[this.currentMode] || descriptions.pico;
+    stepTextEl.textContent = currentList[this.currentStep - 1] || currentList[0];
+  }
+
+  playDemo() {
+    if (this.isDemoPlaying) {
+      clearInterval(this.demoTimer);
+      this.isDemoPlaying = false;
+      const playBtn = document.getElementById('playDemoBtn');
+      if (playBtn) playBtn.textContent = '▶ Play Guided Demo';
+      return;
     }
-    if (this.hudIds.waveVal) {
-      const el = document.getElementById(this.hudIds.waveVal);
-      if (el && meta.wave) el.textContent = meta.wave;
-    }
-    if (this.hudIds.targetVal) {
-      const el = document.getElementById(this.hudIds.targetVal);
-      if (el && meta.target) el.textContent = meta.target;
-    }
-    if (this.hudIds.downVal) {
-      const el = document.getElementById(this.hudIds.downVal);
-      if (el && meta.down) el.textContent = meta.down;
-    }
+
+    this.isDemoPlaying = true;
+    const playBtn = document.getElementById('playDemoBtn');
+    if (playBtn) playBtn.textContent = '⏸ Pause Demo';
+
+    this.currentStep = 1;
+    this.updateStepUI();
+
+    this.demoTimer = setInterval(() => {
+      this.currentStep++;
+      if (this.currentStep > 3) {
+        this.currentStep = 1;
+      }
+      this.updateStepUI();
+    }, 4000);
   }
 
   startLoop() {
     const render = () => {
-      this.update();
-      this.draw();
+      if (this.width <= 0 || this.height <= 0) this.initDimensions();
+      this.ctx.clearRect(0, 0, this.width, this.height);
+
+      if (!this.isDragging) {
+        this.angleY += 0.003;
+      }
+
+      this.pulseProgress += 0.025;
+      if (this.pulseProgress > 1) this.pulseProgress = 0;
+
+      const fov = 340;
+      const cx = this.width / 2;
+      const cy = this.height / 2;
+
+      // Project all cell points
+      const transformed = this.points.map((p) => {
+        let x1 = p.x * Math.cos(this.angleY) - p.z * Math.sin(this.angleY);
+        let z1 = p.z * Math.cos(this.angleY) + p.x * Math.sin(this.angleY);
+
+        let y2 = p.y * Math.cos(this.angleX) - z1 * Math.sin(this.angleX);
+        let z2 = z1 * Math.cos(this.angleX) + p.y * Math.sin(this.angleX);
+
+        p.pulse += 0.04;
+
+        const scale = fov / (fov + z2 + 280);
+        const projX = cx + x1 * scale;
+        const projY = cy + y2 * scale;
+
+        return { p, scale, projX, projY, z2 };
+      });
+
+      transformed.sort((a, b) => b.z2 - a.z2);
+
+      // 1. Draw 4 Transparent Anatomical Skin Planes
+      this.skinLayers.forEach((layer, lIdx) => {
+        const layerPts = transformed.filter((t) => t.p.layerIdx === lIdx);
+        if (layerPts.length === 0) return;
+
+        // Plane boundary outline
+        this.ctx.strokeStyle = layer.color;
+        this.ctx.lineWidth = 0.9;
+        this.ctx.globalAlpha = 0.25;
+        this.ctx.beginPath();
+        for (let i = 0; i < layerPts.length; i++) {
+          const next = layerPts[(i + 1) % layerPts.length];
+          this.ctx.moveTo(layerPts[i].projX, layerPts[i].projY);
+          this.ctx.lineTo(next.projX, next.projY);
+        }
+        this.ctx.stroke();
+        this.ctx.globalAlpha = 1.0;
+
+        // Layer Name Label on the plane edge
+        const leftmostPt = layerPts.reduce((min, cur) => cur.projX < min.projX ? cur : min, layerPts[0]);
+        if (leftmostPt) {
+          this.ctx.font = '600 11px system-ui, sans-serif';
+          this.ctx.fillStyle = layer.color;
+          this.ctx.fillText(`${layer.name} (${layer.depth})`, leftmostPt.projX - 10, leftmostPt.projY - 4);
+        }
+      });
+
+      // 2. Render Active Energy Modality Physics
+      if (this.currentStep >= 2) {
+        if (this.currentMode === 'pico') {
+          // Pico Laser Acoustic Beam
+          this.ctx.save();
+          this.ctx.strokeStyle = `rgba(246, 210, 122, ${0.95 - this.pulseProgress * 0.4})`;
+          this.ctx.lineWidth = 4;
+          this.ctx.shadowColor = '#F6D27A';
+          this.ctx.shadowBlur = 24;
+          this.ctx.beginPath();
+          this.ctx.moveTo(cx, 15);
+          this.ctx.lineTo(cx, cy + (this.pulseProgress - 0.4) * 110);
+          this.ctx.stroke();
+
+          // Shockwave Rings at Target Depth
+          this.ctx.strokeStyle = `rgba(246, 210, 122, ${1 - this.pulseProgress})`;
+          this.ctx.lineWidth = 2;
+          this.ctx.beginPath();
+          this.ctx.arc(cx, cy + 10, this.pulseProgress * 70, 0, Math.PI * 2);
+          this.ctx.stroke();
+          this.ctx.restore();
+        } else if (this.currentMode === 'mnrf') {
+          // Micro-needle thermal RF grid
+          this.ctx.save();
+          this.ctx.strokeStyle = `rgba(229, 166, 94, ${0.85 - this.pulseProgress * 0.5})`;
+          this.ctx.lineWidth = 3;
+          this.ctx.shadowColor = '#E5A65E';
+          this.ctx.shadowBlur = 18;
+          for (let k = -2; k <= 2; k++) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(cx + k * 20, 20);
+            this.ctx.lineTo(cx + k * 20, cy + 30);
+            this.ctx.stroke();
+          }
+          this.ctx.beginPath();
+          this.ctx.arc(cx, cy + 30, Math.max(10, this.pulseProgress * 90), 0, Math.PI * 2);
+          this.ctx.stroke();
+          this.ctx.restore();
+        } else if (this.currentMode === 'prp') {
+          // Growth Factor Cellular Droplets
+          this.ctx.save();
+          this.ctx.fillStyle = '#9D65C9';
+          this.ctx.shadowColor = '#9D65C9';
+          this.ctx.shadowBlur = 15;
+          for (let i = 0; i < 8; i++) {
+            const py = cy + 50 + Math.sin(this.pulseProgress * Math.PI * 2 + i) * 25;
+            const px = cx + Math.cos(this.pulseProgress * Math.PI * 2 + i) * 60;
+            this.ctx.beginPath();
+            this.ctx.arc(px, py, 4.5, 0, Math.PI * 2);
+            this.ctx.fill();
+          }
+          this.ctx.restore();
+        } else if (this.currentMode === 'hydra') {
+          // Vortex Spiral Suction
+          this.ctx.save();
+          this.ctx.strokeStyle = '#38bdf8';
+          this.ctx.lineWidth = 2.5;
+          this.ctx.shadowColor = '#38bdf8';
+          this.ctx.shadowBlur = 12;
+          this.ctx.beginPath();
+          for (let a = 0; a < Math.PI * 4; a += 0.2) {
+            const r = a * 8 * this.pulseProgress;
+            const x = cx + Math.cos(a + this.pulseProgress * 6) * r;
+            const y = cy - 50 + Math.sin(a + this.pulseProgress * 6) * r * 0.5;
+            if (a === 0) this.ctx.moveTo(x, y);
+            else this.ctx.lineTo(x, y);
+          }
+          this.ctx.stroke();
+          this.ctx.restore();
+        }
+      }
+
+      // 3. Render 3D Spheres with Volumetric Glow
+      transformed.forEach(({ p, projX, projY, scale }) => {
+        const layerInfo = this.skinLayers[p.layerIdx];
+        const alpha = Math.min(1, Math.max(0.35, (scale - 0.25) * 1.6));
+        const currentSize = p.size * scale * (1 + Math.sin(p.pulse) * 0.25);
+
+        this.ctx.save();
+        this.ctx.fillStyle = layerInfo.color;
+        this.ctx.shadowColor = layerInfo.color;
+        this.ctx.shadowBlur = 10 * scale;
+        this.ctx.globalAlpha = alpha;
+        this.ctx.beginPath();
+        this.ctx.arc(projX, projY, Math.max(2, currentSize), 0, Math.PI * 2);
+        this.ctx.fill();
+        this.ctx.restore();
+      });
+
       requestAnimationFrame(render);
     };
-    requestAnimationFrame(render);
-  }
 
-  update() {
-    if (!this.isDragging) {
-      this.angleY += 0.0025;
-    }
-    this.beamProgress = (this.beamProgress + 0.02) % (Math.PI * 2);
-    for (let p of this.points) {
-      p.pulse += 0.035;
-    }
-  }
-
-  project(x, y, z) {
-    const cosY = Math.cos(this.angleY);
-    const sinY = Math.sin(this.angleY);
-    const x1 = x * cosY - z * sinY;
-    const z1 = z * cosY + x * sinY;
-
-    const cosX = Math.cos(this.angleX);
-    const sinX = Math.sin(this.angleX);
-    const y2 = y * cosX - z1 * sinX;
-    const z2 = z1 * cosX + y * sinX;
-
-    const fov = 420;
-    const distance = 520;
-    const scale = fov / (distance + z2);
-
-    return {
-      x: this.width / 2 + x1 * scale,
-      y: this.height / 2 + y2 * scale,
-      scale: scale,
-      depth: z2,
-    };
-  }
-
-  draw() {
-    this.ctx.clearRect(0, 0, this.width, this.height);
-
-    // Deep luxury plum vignette background
-    const bgGrad = this.ctx.createLinearGradient(0, 0, 0, this.height);
-    bgGrad.addColorStop(0, '#150820');
-    bgGrad.addColorStop(1, '#0c0412');
-    this.ctx.fillStyle = bgGrad;
-    this.ctx.fillRect(0, 0, this.width, this.height);
-
-    // Grid wireframes for 4 distinct dermal layers
-    const layerColors = ['#f2c766', '#d88b48', '#b54e7d', '#6e2b8c'];
-    this.ctx.lineWidth = 0.9;
-
-    for (let l = 0; l < 4; l++) {
-      const yL = (l - 1.5) * 58;
-      const corner1 = this.project(-230, yL, -230);
-      const corner2 = this.project(230, yL, -230);
-      const corner3 = this.project(230, yL, 230);
-      const corner4 = this.project(-230, yL, 230);
-
-      this.ctx.strokeStyle = `${layerColors[l]}33`;
-      this.ctx.beginPath();
-      this.ctx.moveTo(corner1.x, corner1.y);
-      this.ctx.lineTo(corner2.x, corner2.y);
-      this.ctx.lineTo(corner3.x, corner3.y);
-      this.ctx.lineTo(corner4.x, corner4.y);
-      this.ctx.closePath();
-      this.ctx.stroke();
-    }
-
-    // Points Projection & Sorting
-    const projected = this.points.map((p) => {
-      const proj = this.project(p.x, p.y, p.z);
-      return { ...p, px: proj.x, py: proj.y, scale: proj.scale, depth: proj.depth };
-    });
-    projected.sort((a, b) => b.depth - a.depth);
-
-    for (let p of projected) {
-      if (p.scale <= 0) continue;
-      const col = layerColors[p.layer];
-      const alpha = Math.sin(p.pulse) * 0.25 + 0.75;
-      const r = Math.max(1, p.size * p.scale);
-
-      this.ctx.beginPath();
-      this.ctx.arc(p.px, p.py, r, 0, Math.PI * 2);
-      this.ctx.fillStyle = col;
-      this.ctx.globalAlpha = alpha;
-      this.ctx.fill();
-    }
-    this.ctx.globalAlpha = 1;
-
-    // Specialized Modality Firing Simulation
-    const cx = this.width / 2;
-    const cy = this.height / 2;
-
-    if (this.currentMode === 'pico') {
-      // Focused 1064nm Pico Acoustic Shockwave Beam
-      const beamYOffset = Math.sin(this.beamProgress) * 40;
-      const origin = this.project(0, -140, 0);
-      const target = this.project(0, -15 + beamYOffset, 0);
-
-      const beamGrad = this.ctx.createLinearGradient(origin.x, origin.y, target.x, target.y);
-      beamGrad.addColorStop(0, '#ffffff');
-      beamGrad.addColorStop(0.5, '#f2c766');
-      beamGrad.addColorStop(1, '#ff3366');
-
-      this.ctx.beginPath();
-      this.ctx.moveTo(origin.x, origin.y);
-      this.ctx.lineTo(target.x, target.y);
-      this.ctx.strokeStyle = beamGrad;
-      this.ctx.lineWidth = 4;
-      this.ctx.shadowColor = '#f2c766';
-      this.ctx.shadowBlur = 20;
-      this.ctx.stroke();
-      this.ctx.shadowBlur = 0;
-
-      // Focal spot acoustic bloom
-      this.ctx.beginPath();
-      this.ctx.arc(target.x, target.y, 7, 0, Math.PI * 2);
-      this.ctx.fillStyle = '#ffffff';
-      this.ctx.shadowColor = '#f2c766';
-      this.ctx.shadowBlur = 25;
-      this.ctx.fill();
-      this.ctx.shadowBlur = 0;
-    } else if (this.currentMode === 'mnrf') {
-      // 1MHz RF Thermal Electro-Matrix
-      const origin = this.project(0, 0, 0);
-      const rfRadius = (Math.sin(this.beamProgress) * 0.5 + 0.5) * 110 + 20;
-
-      this.ctx.save();
-      this.ctx.strokeStyle = '#d88b48';
-      this.ctx.lineWidth = 2.5;
-      this.ctx.shadowColor = '#d88b48';
-      this.ctx.shadowBlur = 16;
-      this.ctx.beginPath();
-      this.ctx.arc(origin.x, origin.y + 10, rfRadius, 0, Math.PI * 2);
-      this.ctx.stroke();
-      this.ctx.restore();
-    } else if (this.currentMode === 'hydra') {
-      // Vortex Hydro-Extraction Spiral
-      this.ctx.save();
-      this.ctx.strokeStyle = '#38bdf8';
-      this.ctx.lineWidth = 2.5;
-      this.ctx.shadowColor = '#38bdf8';
-      this.ctx.shadowBlur = 14;
-      this.ctx.beginPath();
-      for (let a = 0; a < Math.PI * 4; a += 0.2) {
-        const r = a * 8 * (Math.sin(this.beamProgress) * 0.5 + 0.5);
-        const x = cx + Math.cos(a + this.beamProgress * 4) * r;
-        const y = cy - 30 + Math.sin(a + this.beamProgress * 4) * r * 0.5;
-        if (a === 0) this.ctx.moveTo(x, y);
-        else this.ctx.lineTo(x, y);
-      }
-      this.ctx.stroke();
-      this.ctx.restore();
-    } else if (this.currentMode === 'prp') {
-      // Autologous GFC Biostimulation Clusters
-      this.ctx.save();
-      this.ctx.fillStyle = '#b54e7d';
-      this.ctx.shadowColor = '#b54e7d';
-      this.ctx.shadowBlur = 15;
-      for (let i = 0; i < 8; i++) {
-        const py = cy + Math.sin(this.beamProgress * Math.PI * 2 + i) * 55 + 20;
-        const px = cx + Math.cos(this.beamProgress * Math.PI * 2 + i) * 75;
-        this.ctx.beginPath();
-        this.ctx.arc(px, py, 5, 0, Math.PI * 2);
-        this.ctx.fill();
-      }
-      this.ctx.restore();
-    }
+    render();
   }
 }
 
 // ==========================================
-// 3. STORE & INTERACTIVE ESTIMATOR CONTROLLER
+// 4. INSTAGRAM CLINICAL VIDEO REELS CONTROLLER
 // ==========================================
-const store = {
-  getClinicStatus() {
-    const now = new Date();
-    const day = now.getDay();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const totalMin = hours * 60 + minutes;
+function initInstagramReels() {
+  const cards = document.querySelectorAll('.reel-card');
+  cards.forEach((card) => {
+    const video = card.querySelector('video');
+    const playBtn = card.querySelector('.reel-play-btn');
+    const muteBtn = card.querySelector('.reel-mute-btn');
 
-    const openMin = 11 * 60;
-    const closeMin = 20 * 60;
+    if (!video) return;
 
-    if (day === 5) {
-      return { isOpen: false, statusText: 'Closed Today (Friday) · Resumes Sat 11 AM', pulseColor: '#f85149' };
-    }
-    if (totalMin >= openMin && totalMin < closeMin) {
-      return { isOpen: true, statusText: 'Open Now · Desk Active Till 8:00 PM', pulseColor: '#10b981' };
-    }
-    if (totalMin < openMin) {
-      return { isOpen: false, statusText: 'Opens Today at 11:00 AM · Booking Open', pulseColor: '#f2c766' };
-    }
-    return { isOpen: false, statusText: 'Closed for Tonight · Re-opens 11 AM', pulseColor: '#f2c766' };
-  },
+    // Toggle Play/Pause
+    const togglePlay = () => {
+      if (video.paused) {
+        // Pause other videos first
+        document.querySelectorAll('.reel-card video').forEach((v) => {
+          if (v !== video) v.pause();
+        });
+        video.play().then(() => {
+          card.classList.add('is-playing');
+        }).catch(() => {});
+      } else {
+        video.pause();
+        card.classList.remove('is-playing');
+      }
+    };
 
-  modalities: [
-    {
-      mode: 'pico',
-      depth: '1.50 mm (Reticular Dermis)',
-      wave: '1064nm Pico Pulse',
-      target: 'Melanin clusters & pigmentation',
-      down: '12–24 hours (Mild flush)'
-    },
-    {
-      mode: 'mnrf',
-      depth: '2.80 mm (Deep Collagen Matrix)',
-      wave: '1MHz RF Matrix',
-      target: 'Fibroblast stimulation & scar remodeling',
-      down: '2–3 days (Micro-crusting)'
-    },
-    {
-      mode: 'hydra',
-      depth: '0.25 mm (Stratum Corneum)',
-      wave: 'Vortex Infusion 40kPa',
-      target: 'Sebum extraction & antioxidant infusion',
-      down: 'Zero downtime'
-    },
-    {
-      mode: 'prp',
-      depth: '4.20 mm (Follicular Matrix)',
-      wave: 'Biostimulation Factor',
-      target: 'Autologous growth factors & vascular support',
-      down: '24 hours (Mild scalp tenderness)'
-    }
-  ]
-};
+    if (playBtn) playBtn.addEventListener('click', togglePlay);
+    video.addEventListener('click', togglePlay);
 
+    // Toggle Audio
+    if (muteBtn) {
+      muteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        video.muted = !video.muted;
+        muteBtn.textContent = video.muted ? '🔇' : '🔊';
+      });
+    }
+
+    video.addEventListener('ended', () => {
+      card.classList.remove('is-playing');
+    });
+  });
+}
+
+// ==========================================
+// 5. ESTIMATOR & CONCERN FINDER DATA
+// ==========================================
 const CONCERNS_DATA = {
   acne: {
     title: 'Acne & Acne Scar Protocol',
-    modalities: ['Fractional MNRF', 'Salicylic Chemical Peels', 'HydraFacial Vortex'],
-    sessions: { mild: '2 – 3 Sessions', moderate: '4 – 6 Sessions', extensive: '6 – 8 Sessions' },
+    sessions: { mild: '3 – 4 Sessions', moderate: '4 – 6 Sessions', extensive: '6 – 8 Sessions' },
+    modalities: ['Fractional MNRF (2.80mm depth)', 'Salicylic Chemical Peels', 'HydraFacial Vortex'],
     interval: '3 to 4 weeks apart',
-    note: 'Active inflammation is addressed first before deep scar tissue remodeling begins.'
+    note: 'Active inflammation is calmed first before deep structural scar remodeling begins.'
   },
   pigmentation: {
-    title: 'Pigmentation & Melasma Care',
-    modalities: ['Q-Switched Pico Laser', 'Tranexamic Micro-Infusion', 'Targeted Peels'],
-    sessions: { mild: '3 – 4 Sessions', moderate: '5 – 8 Sessions', extensive: '8 – 10 Sessions' },
-    interval: '2 to 4 weeks apart',
-    note: 'Phototype and sun exposure history guide pulse energy parameters.'
+    title: 'Melasma & Pigmentation Protocol',
+    sessions: { mild: '3 – 4 Sessions', moderate: '4 – 6 Sessions', extensive: '6 – 8 Sessions' },
+    modalities: ['Pico & Q-Switched 1064nm Laser', 'Targeted Lactic & Ferulic Peels', 'Barrier Support'],
+    interval: '3 to 4 weeks apart',
+    note: 'Acoustic picosecond pulses break melanin clusters safely without heat rebound.'
   },
   rejuvenation: {
-    title: 'Skin Hydration & Texture Rejuvenation',
-    modalities: ['Advanced HydraFacial', 'Skin Boosters (Hyaluronic Acid)', 'PDRN Polynucleotides'],
-    sessions: { mild: '2 – 3 Sessions', moderate: '3 – 4 Sessions', extensive: '4 – 6 Sessions' },
+    title: 'Skin Texture & Rejuvenation Protocol',
+    sessions: { mild: '2 – 3 Sessions', moderate: '3 – 5 Sessions', extensive: '4 – 6 Sessions' },
+    modalities: ['HydraFacial Vortex Infusion', 'Polynucleotide Skin Boosters', 'Gentle Laser Toning'],
     interval: '3 to 4 weeks apart',
-    note: 'Supports natural skin barrier repair and internal hydration.'
+    note: 'Restores skin hydration, pore tightness, and smooth light-reflecting elasticity.'
   },
   hair: {
-    title: 'Hair Growth & Scalp Trichology',
-    modalities: ['Growth Factor Concentrate (GFC)', 'PRP Biostimulation', 'Scalp Microneedling'],
-    sessions: { mild: '4 – 5 Sessions', moderate: '6 – 8 Sessions', extensive: '8 – 12 Sessions' },
-    interval: 'Monthly protocol',
-    note: 'In-person scalp dermoscopy evaluates follicular bulb viability.'
+    title: 'Follicular Hair Restoration Protocol',
+    sessions: { mild: '4 Sessions', moderate: '4 – 6 Sessions', extensive: '6 – 8 Sessions' },
+    modalities: ['Autologous Growth Factor (GFC)', 'Scalp Microneedling (PRP)', 'Nutritional Assessment'],
+    interval: 'Monthly sessions (4 weeks)',
+    note: 'Direct 4.20mm follicular bulb biostimulation to anchor roots and reduce shedding.'
   },
   wellness: {
-    title: 'Hormonal & Holistic Wellness',
-    modalities: ['Individualized Homeopathy', 'Nutritional Assessment', 'Hormonal Screening'],
-    sessions: { mild: 'Monthly Review', moderate: 'Ongoing Follow-ups', extensive: 'Quarterly Wellness Cycle' },
-    interval: 'Monthly review',
-    note: 'Addresses root systemic factors alongside topical aesthetic care.'
+    title: 'Hormonal Wellness & Homeopathy Protocol',
+    sessions: { mild: 'Monthly Review', moderate: 'Structured 3-Month Plan', extensive: 'Structured 6-Month Plan' },
+    modalities: ['Constitutional Homeopathy Consultation', 'PCOS / Thyroid Lifestyle Care', 'Metabolic Weight Review'],
+    interval: 'Follow-ups every 3 to 4 weeks',
+    note: 'Whole-person clinical assessment addressing hormonal triggers behind skin and hair concerns.'
   }
 };
 
@@ -558,9 +621,7 @@ let currentEstimatorConcern = 'acne';
 let currentEstimatorSeverity = 'moderate';
 
 function updateEstimatorUI() {
-  const data = CONCERNS_DATA[currentEstimatorConcern];
-  if (!data) return;
-
+  const data = CONCERNS_DATA[currentEstimatorConcern] || CONCERNS_DATA.acne;
   const titleEl = document.querySelector('.results-header h4');
   const badgeEl = document.querySelector('.results-badge');
   const modalitiesList = document.querySelector('.results-grid ul');
@@ -578,61 +639,142 @@ function updateEstimatorUI() {
   if (noteEl) noteEl.textContent = data.note;
 
   if (waBtn) {
-    const msg = encodeURIComponent(
-      `Hi, I calculated an estimate for ${data.title} (${currentEstimatorSeverity} level) on the Equinox website. I would like to book a doctor assessment. #EQ-CALC`
+    const text = encodeURIComponent(
+      `Hi Equinox, I reviewed the estimate for ${data.title} (${currentEstimatorSeverity} severity) on the website. I would like to book a doctor assessment. #EQ-CALC`
     );
-    waBtn.href = `https://wa.me/916372528534?text=${msg}`;
+    waBtn.href = `https://wa.me/${CLINIC_CONFIG.phoneRaw}?text=${text}`;
   }
 }
 
 // ==========================================
-// 4. MAIN INITIALIZATION
+// 6. LEAD FORM & GOOGLE SHEETS WEBHOOK INTEGRATION
 // ==========================================
-function initEquinoxApp() {
-  // A. Initialize Hero 3D Background
-  if (document.getElementById('heroCanvas3D')) {
-    new Hero3DBackground('heroCanvas3D');
-  }
+function initLeadForm() {
+  const leadForms = document.querySelectorAll('.lead-form');
+  leadForms.forEach((form) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
 
-  // B. Initialize Dermal 3D Simulation
-  if (document.getElementById('dermal3DCanvas')) {
-    const engine = new Dermal3DEngine('dermal3DCanvas', {
-      depthVal: 'hudDepthVal',
-      waveVal: 'hudWaveVal',
-      targetVal: 'hudTargetVal',
-      downVal: 'hudDownVal',
-    });
+      const nameInput = form.querySelector('[name="lf-name"]') || form.querySelector('#lf-name');
+      const phoneInput = form.querySelector('[name="lf-phone"]') || form.querySelector('#lf-phone');
+      const serviceSelect = form.querySelector('[name="lf-service"]') || form.querySelector('#lf-service');
+      const timeRadio = form.querySelector('input[name="lf-time"]:checked');
+      const notesInput = form.querySelector('[name="lf-notes"]') || form.querySelector('#lf-notes');
+      const submitBtn = form.querySelector('button[type="submit"]');
 
-    const cards = document.querySelectorAll('.modality-card');
-    cards.forEach((card) => {
-      card.addEventListener('click', () => {
-        cards.forEach((c) => c.classList.remove('is-active'));
-        card.classList.add('is-active');
+      const name = nameInput?.value.trim() || 'Visitor';
+      const phone = phoneInput?.value.trim() || '';
+      const service = serviceSelect?.options[serviceSelect.selectedIndex]?.text || 'General Enquiry';
+      const time = timeRadio ? timeRadio.value : 'Anytime';
+      const notes = notesInput?.value.trim() || 'None';
 
-        const modeKey = card.getAttribute('data-mode') || 'pico';
-        const meta = store.modalities.find((m) => m.mode === modeKey) || {};
+      if (!phone || phone.length < 10) {
+        alert('Please enter a valid 10-digit mobile number so the doctor desk can reach you.');
+        phoneInput?.focus();
+        return;
+      }
 
-        engine.setMode(modeKey, {
-          depth: card.getAttribute('data-depth') || meta.depth,
-          wave: card.getAttribute('data-wave') || meta.wave,
-          target: card.getAttribute('data-target') || meta.target,
-          down: card.getAttribute('data-down') || meta.down,
+      // Visual feedback: submitting
+      const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Request a call back';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = 'Submitting to Medical Desk...';
+      }
+
+      // Payload for Google Sheets Webhook
+      const payload = {
+        name,
+        phone,
+        service,
+        preferredTime: time,
+        notes,
+        pageUrl: window.location.href,
+        referrer: document.referrer || 'Direct',
+        timestamp: new Date().toISOString()
+      };
+
+      try {
+        // Attempt POST to Google Apps Script Web App
+        if (CLINIC_CONFIG.googleSheetWebAppUrl && !CLINIC_CONFIG.googleSheetWebAppUrl.includes('PLACEHOLDER')) {
+          await fetch(CLINIC_CONFIG.googleSheetWebAppUrl, {
+            method: 'POST',
+            mode: 'no-cors', // Google Apps Script requires no-cors on client
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        }
+      } catch (err) {
+        console.warn('Google Sheet sync notice:', err);
+      }
+
+      // Google Analytics Event
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'lead_form_submitted', {
+          event_category: 'Lead',
+          event_label: service
         });
-      });
+      }
+
+      // Success Display Card
+      const successHtml = `
+        <div class="lead-success-card" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.45); border-radius: 0.85rem; padding: 1.5rem; text-align: center; color: #ffffff;">
+          <div style="font-size: 2.2rem; color: #34d399; margin-bottom: 0.5rem;">✓</div>
+          <h3 style="color: #ffffff; margin-bottom: 0.4rem; font-size: 1.3rem;">Request Received, ${name}!</h3>
+          <p style="color: #e2d2e5; font-size: 0.95rem; margin-bottom: 1.25rem;">
+            Your consultation request has been recorded. Our consulting doctor's desk will call you at <strong>${phone}</strong> during clinic hours (${time}).
+          </p>
+          <a class="btn btn--wa" href="https://wa.me/${CLINIC_CONFIG.phoneRaw}?text=${encodeURIComponent(`Hi Equinox, I just submitted a callback request for ${service}. Name: ${name}, Phone: ${phone}. #EQ-CONFIRM`)}" target="_blank" rel="noopener">
+            💬 Open in WhatsApp for Faster Reply
+          </a>
+        </div>
+      `;
+
+      form.innerHTML = successHtml;
     });
+  });
+}
+
+// ==========================================
+// 7. REAL-TIME DESK STATUS & 3D TILT
+// ==========================================
+function updateClinicTelemetry() {
+  const now = new Date();
+  // IST Time (UTC + 5:30)
+  const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+  const ist = new Date(utc + (3600000 * 5.5));
+  const day = ist.getDay(); // 0 = Sun, 5 = Fri
+  const hours = ist.getHours();
+
+  let isOpen = true;
+  let statusText = 'Open 11am–8pm';
+  let pulseColor = '#34d399';
+
+  if (day === 5) {
+    isOpen = false;
+    statusText = 'Closed on Fridays';
+    pulseColor = '#f87171';
+  } else if (hours < 11) {
+    isOpen = false;
+    statusText = 'Opens at 11:00 AM';
+    pulseColor = '#facc15';
+  } else if (hours >= 20) {
+    isOpen = false;
+    statusText = 'Desk Closed (Opens 11am)';
+    pulseColor = '#f87171';
   }
 
-  // C. Update Real-Time Desk Status
-  const statusBadge = document.querySelector('.clinic-status-badge');
-  const statusText = document.querySelector('.status-text');
-  const statusPulse = document.querySelector('.status-pulse');
-  if (statusBadge && statusText) {
-    const status = store.getClinicStatus();
-    statusText.textContent = status.statusText;
-    if (statusPulse) statusPulse.style.background = status.pulseColor;
-  }
+  const statusTextEls = document.querySelectorAll('.status-text, .status-desk-text');
+  statusTextEls.forEach((el) => {
+    el.textContent = statusText;
+  });
 
-  // D. 3D Tilt Card Effects
+  const pulseDots = document.querySelectorAll('.status-pulse');
+  pulseDots.forEach((dot) => {
+    dot.style.background = pulseColor;
+  });
+}
+
+function init3DTilt() {
   document.querySelectorAll('.card-3d-wrap').forEach((wrap) => {
     const card = wrap.querySelector('.card-3d-body') || wrap;
     wrap.addEventListener('mousemove', (e) => {
@@ -648,8 +790,66 @@ function initEquinoxApp() {
       card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
     });
   });
+}
 
-  // E. Estimator Tabs
+// ==========================================
+// 8. MASTER INITIALIZATION
+// ==========================================
+function initEquinoxApp() {
+  // A. Hero 3D Background
+  if (document.getElementById('heroCanvas3D')) {
+    new Hero3DBackground('heroCanvas3D');
+  }
+
+  // B. Anatomical Dermal 3D Simulation
+  let dermalEngine = null;
+  if (document.getElementById('dermal3DCanvas')) {
+    dermalEngine = new AnatomicalDermal3DEngine('dermal3DCanvas', {
+      depthVal: 'hudDepthVal',
+      waveVal: 'hudWaveVal',
+      targetVal: 'hudTargetVal',
+      downVal: 'hudDownVal',
+    });
+
+    // Modality Cards Click
+    const modalityCards = document.querySelectorAll('.modality-card');
+    modalityCards.forEach((card) => {
+      card.addEventListener('click', () => {
+        modalityCards.forEach((c) => c.classList.remove('is-active'));
+        card.classList.add('is-active');
+
+        const modeKey = card.getAttribute('data-mode') || 'pico';
+        dermalEngine.setMode(modeKey, {
+          depth: card.getAttribute('data-depth'),
+          wave: card.getAttribute('data-wave'),
+          target: card.getAttribute('data-target'),
+          down: card.getAttribute('data-down'),
+        });
+      });
+    });
+
+    // Play Guided Demo Button
+    const playDemoBtn = document.getElementById('playDemoBtn');
+    if (playDemoBtn) {
+      playDemoBtn.addEventListener('click', () => {
+        dermalEngine.playDemo();
+      });
+    }
+
+    // Step Stepper Buttons
+    const stepBtns = document.querySelectorAll('.demo-step-btn');
+    stepBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const stepNum = parseInt(btn.getAttribute('data-step') || '1', 10);
+        dermalEngine.setStep(stepNum);
+      });
+    });
+  }
+
+  // C. Instagram Reels Gallery
+  initInstagramReels();
+
+  // D. Dynamic Cost Estimator Tabs
   const concernKeys = ['acne', 'pigmentation', 'rejuvenation', 'hair', 'wellness'];
   const tabButtons = document.querySelectorAll('.estimator-tab');
   tabButtons.forEach((tab, idx) => {
@@ -665,7 +865,7 @@ function initEquinoxApp() {
     });
   });
 
-  // F. Estimator Severity Selectors
+  // Estimator Severity Buttons
   const severityKeys = ['mild', 'moderate', 'extensive'];
   const sevButtons = document.querySelectorAll('.severity-btn');
   sevButtons.forEach((btn, idx) => {
@@ -677,7 +877,7 @@ function initEquinoxApp() {
     });
   });
 
-  // G. Concern Finder Chips
+  // E. Concern Finder Chips Navigation
   const concernRadios = document.querySelectorAll('.finder input[type="radio"]');
   concernRadios.forEach((radio) => {
     radio.addEventListener('change', () => {
@@ -685,26 +885,12 @@ function initEquinoxApp() {
     });
   });
 
-  // H. Lead Form WhatsApp Submission
-  const leadForm = document.querySelector('.lead-form');
-  if (leadForm) {
-    leadForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = document.getElementById('lf-name')?.value.trim() || 'Visitor';
-      const phone = document.getElementById('lf-phone')?.value.trim() || '';
-      const serviceSelect = document.getElementById('lf-service');
-      const service = serviceSelect?.options[serviceSelect.selectedIndex]?.text || 'General Enquiry';
-      const timeRadios = document.querySelectorAll('input[name="lf-time"]:checked');
-      const time = timeRadios.length ? timeRadios[0].value : 'Anytime';
+  // F. Lead Form & Telemetry
+  initLeadForm();
+  updateClinicTelemetry();
+  init3DTilt();
 
-      const msg = encodeURIComponent(
-        `Hi Equinox, I would like to request a callback.\nName: ${name}\nPhone: ${phone}\nTopic: ${service}\nPreferred Time: ${time}\n#EQ-LEAD`
-      );
-      window.open(`https://wa.me/916372528534?text=${msg}`, '_blank');
-    });
-  }
-
-  // I. Cookie Consent
+  // G. Cookie Consent
   const consentBanner = document.getElementById('consent');
   if (consentBanner) {
     if (localStorage.getItem('eqx_consent')) {
@@ -714,12 +900,8 @@ function initEquinoxApp() {
       localStorage.setItem('eqx_consent', val);
       consentBanner.style.display = 'none';
     };
-    const allowBtn = consentBanner.querySelector('[data-consent-action="all"]');
-    const noneBtn = consentBanner.querySelector('[data-consent-action="none"]');
-    const saveBtn = consentBanner.querySelector('[data-consent-action="save"]');
-    if (allowBtn) allowBtn.addEventListener('click', () => closeConsent('all'));
-    if (noneBtn) noneBtn.addEventListener('click', () => closeConsent('necessary'));
-    if (saveBtn) saveBtn.addEventListener('click', () => closeConsent('custom'));
+    consentBanner.querySelector('[data-consent-action="all"]')?.addEventListener('click', () => closeConsent('all'));
+    consentBanner.querySelector('[data-consent-action="none"]')?.addEventListener('click', () => closeConsent('necessary'));
   }
 }
 
