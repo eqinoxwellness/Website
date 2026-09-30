@@ -37,6 +37,7 @@
   <link rel="apple-touch-icon" href="/brand/equinox-luxury-logo.jpg">
   <link rel="manifest" href="/site.webmanifest">
   <link rel="sitemap" href="/sitemap-index.xml">
+  <link rel="stylesheet" href="/css/luxury-brand.css">
 
   <!-- OpenGraph & Social Metadata -->
   <meta property="og:type" content="website">
@@ -1172,45 +1173,35 @@
 </head>
 
 <body data-page-type="home">
-  <!-- LUXURY STICKY HEADER -->
+  <!-- MASTER LUXURY HEADER -->
   <header class="site-header">
     <div class="container">
-      <a class="brand" href="/" aria-label="Equinox Aesthetic and Wellness Centre, home">
-        <!-- Authentic Embossed Gold Luxury Logo -->
-        <div class="brand-logo-frame">
-          <img src="/brand/equinox-luxury-logo.jpg" alt="Equinox Aesthetic and Wellness Centre Logo" width="160" height="48">
+      <a class="brand-master" href="/" aria-label="Equinox Aesthetic and Wellness Centre, home">
+        <div class="brand-emblem-wrap">
+          <img src="/brand/equinox-luxury-logo.jpg" alt="Equinox Emblem" width="48" height="48">
         </div>
-        <div class="brand__text-wrap">
-          <span class="brand__title">EQUINOX</span>
-          <span class="brand__sub">Aesthetic &amp; Wellness Centre</span>
+        <div class="brand-text-block">
+          <span class="brand-name">EQUINOX</span>
+          <span class="brand-sub">Aesthetic &amp; Wellness Centre</span>
         </div>
       </a>
 
-      <!-- Desktop Nav -->
-      <nav class="desktop-nav" aria-label="Primary Navigation">
-        <ul class="nav-links">
-          <li><a href="/treatments">All Modalities</a></li>
-          <li><a href="#dermal-3d-suite">3D Skin Demo</a></li>
-          <li><a href="#reels-gallery">Instagram Videos</a></li>
-          <li><a href="/acne">Skin</a></li>
-          <li><a href="/hair">Hair &amp; Scalp</a></li>
-          <li><a href="/about-the-doctor">Our Doctor</a></li>
-          <li><a href="/contact">Contact &amp; Visit</a></li>
-        </ul>
-      </nav>
+      <!-- Desktop Nav with Gold Underglow -->
+      <ul class="header-nav">
+        <li><a href="/treatments">Modalities &amp; 3D Lab</a></li>
+        <li><a href="#services-showcase">Clinical Disciplines</a></li>
+        <li><a href="#reels-gallery">Procedure Reels</a></li>
+        <li><a href="/about-the-doctor">Our Doctor</a></li>
+        <li><a href="/contact">Visit &amp; Contact</a></li>
+      </ul>
 
       <div class="header-actions">
-        <div class="clinic-status-badge" aria-label="Clinic operating hours status">
-          <span class="status-pulse"></span>
-          <span class="status-text">Open 11am–8pm</span>
+        <div class="clinic-telemetry-badge">
+          <span class="pulse-dot"></span>
+          <span class="status-desk-text">Open 11am–8pm</span>
         </div>
-        <a class="btn btn--wa header-wa" href="https://wa.me/916372528534?text=Hi%2C%20I%20would%20like%20to%20book%20a%20consultation%20at%20Equinox.%20%23EQ-HDR" data-cta="header" rel="noopener">
-          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.48 15.04L2.2 21.8l4.9-1.3A9.9 9.9 0 1 0 12.04 2Zm0 18.1a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-2.9.77.78-2.83-.2-.3a8.2 8.2 0 1 1 6.8 3.7Zm4.5-6.14c-.25-.12-1.46-.72-1.69-.8-.23-.08-.39-.12-.55.12-.16.25-.63.8-.78.97-.14.16-.29.18-.53.06a6.7 6.7 0 0 1-3.34-2.92c-.25-.43.25-.4.72-1.34.08-.16.04-.3-.02-.42l-.75-1.8c-.2-.47-.4-.4-.55-.41h-.47a.9.9 0 0 0-.65.3 2.73 2.73 0 0 0-.85 2.03 4.74 4.74 0 0 0 1 2.52 10.86 10.86 0 0 0 4.16 3.67c1.55.67 2.16.73 2.93.61.47-.07 1.46-.6 1.66-1.17.2-.58.2-1.07.14-1.17-.06-.1-.22-.16-.47-.28Z"></path></svg>
-          <span class="btn-text">WhatsApp</span>
-        </a>
-        <a class="menu-btn" href="/treatments" aria-label="Open directory">
-          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"></path></svg>
-          <span>Menu</span>
+        <a class="header-cta-btn" href="https://wa.me/916372528534?text=Hi%20Equinox%2C%20I%20would%20like%20to%20book%20a%20consultation.%20%23EQ-HDR" target="_blank" rel="noopener">
+          <span>Book Consultation</span>
         </a>
       </div>
     </div>
@@ -1626,84 +1617,145 @@
       </div>
     </section>
 
-    <!-- 6. SERVICES CATEGORIES INDEX -->
-    <section class="section section--tint" aria-labelledby="svc-h" data-section="services">
+    <!-- 6. CURATED CLINICAL DISCIPLINES & CONSULTATIONS SHOWCASE -->
+    <section class="section section--tint" id="services-showcase" aria-labelledby="svc-h" data-section="services">
       <div class="container">
-        <h2 id="svc-h">What you can consult us about</h2>
-        <p class="lede lede--wide">Each consultation starts the same way: your history, an examination, and a plain explanation before any option is discussed.</p>
-
-        <div style="margin-top:2rem">
-          <div class="index-group">
-            <h3>Skin</h3>
-            <ul>
-              <li>
-                <a class="svc-link" href="/acne">
-                  <span class="svc-link__name">Acne</span>
-                  <span class="svc-link__line">Breakouts, the marks they leave behind, and acne that keeps coming back.</span>
-                </a>
-              </li>
-              <li>
-                <a class="svc-link" href="/pigmentation">
-                  <span class="svc-link__name">Pigmentation</span>
-                  <span class="svc-link__line">Dark patches, uneven tone, sun spots and marks that linger.</span>
-                </a>
-              </li>
-              <li>
-                <a class="svc-link" href="/skin-rejuvenation">
-                  <span class="svc-link__name">Skin rejuvenation</span>
-                  <span class="svc-link__line">Dullness, dehydration, uneven texture and skin that looks tired.</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div class="index-group">
-            <h3>Hair</h3>
-            <ul>
-              <li>
-                <a class="svc-link" href="/hair">
-                  <span class="svc-link__name">Hair and scalp</span>
-                  <span class="svc-link__line">Hair fall, thinning, patches and scalp concerns, for women and men.</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div class="index-group">
-            <h3>Hormones and weight</h3>
-            <ul>
-              <li>
-                <a class="svc-link" href="/womens-wellness">
-                  <span class="svc-link__name">Women’s wellness</span>
-                  <span class="svc-link__line">Irregular periods, hormonal concerns, and how they show up in skin, hair and weight.</span>
-                </a>
-              </li>
-              <li>
-                <a class="svc-link" href="/weight-management">
-                  <span class="svc-link__name">Weight management</span>
-                  <span class="svc-link__line">A measured, supervised plan built around your routine.</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div class="index-group">
-            <h3>Whole-person care</h3>
-            <ul>
-              <li>
-                <a class="svc-link" href="/homeopathy">
-                  <span class="svc-link__name">Homeopathy</span>
-                  <span class="svc-link__line">A detailed consultation for long-standing concerns, with planned follow-ups.</span>
-                </a>
-              </li>
-              <li>
-                <a class="svc-link" href="/wellness">
-                  <span class="svc-link__name">General and mental wellness</span>
-                  <span class="svc-link__line">Preventive check-ins, stress and wellbeing, with a plan you can keep.</span>
-                </a>
-              </li>
-            </ul>
-          </div>
+        <div style="text-align: center; max-width: 48rem; margin: 0 auto 3rem;">
+          <div class="luxury-badge">✦ Specialized Medical Consultations</div>
+          <h2 id="svc-h" style="font-size: clamp(2rem, 1.6rem + 2vw, 3rem);">What You Can <span class="gold-gradient-text">Consult Us About</span></h2>
+          <p class="lede" style="margin: 0 auto; color: #dcc8de;">
+            Every appointment begins the exact same way: an unhurried clinical history, high-magnification dermal or trichological examination, and a transparent medical explanation before any procedure is considered.
+          </p>
         </div>
 
-        <p style="margin-top:2rem"><a class="btn btn--line" href="/treatments">See all treatment modalities the clinic offers →</a></p>
+        <div class="services-editorial-grid">
+          <!-- 1. ACNE -->
+          <article class="service-luxury-card">
+            <div class="card-num-badge">
+              <span>01</span>
+              <span class="card-category-tag">Dermal Science</span>
+            </div>
+            <h3>Clinical Acne &amp; Flare Protocol</h3>
+            <p>Active breakouts, inflammatory comedones, deep cystic lesions, and post-acne erythema marks. Systematic root-cause evaluation followed by calibrated in-clinic care.</p>
+            <div class="service-card-meta">
+              <div><strong>Core Modalities:</strong> Salicylic/Mandelic Peels, Blue Light, Topical Regimens</div>
+              <div><strong>Average Timeline:</strong> 4 to 8 weeks cellular cycle review</div>
+            </div>
+            <a class="service-card-link" href="/acne">Explore Dedicated Acne Page →</a>
+          </article>
+
+          <!-- 2. PIGMENTATION -->
+          <article class="service-luxury-card">
+            <div class="card-num-badge">
+              <span>02</span>
+              <span class="card-category-tag">Photomedicine</span>
+            </div>
+            <h3>Melasma &amp; Pigmentary Disorders</h3>
+            <p>Epidermal &amp; dermal melasma, recalcitrant sun spots, freckles, and stubborn post-inflammatory hyperpigmentation evaluated under polarized clinical illumination.</p>
+            <div class="service-card-meta">
+              <div><strong>Core Modalities:</strong> Pico Laser, Q-Switched Nd:YAG 1064nm, Tranexamic Meso</div>
+              <div><strong>Protocol Focus:</strong> Melanosome dispersion without thermal trauma</div>
+            </div>
+            <a class="service-card-link" href="/pigmentation">Explore Dedicated Pigmentation Page →</a>
+          </article>
+
+          <!-- 3. SKIN REJUVENATION -->
+          <article class="service-luxury-card">
+            <div class="card-num-badge">
+              <span>03</span>
+              <span class="card-category-tag">Cellular Matrix</span>
+            </div>
+            <h3>Structural Skin Rejuvenation</h3>
+            <p>Cellular dehydration, dullness, fine dynamic lines, uneven dermal micro-texture, and early laxity addressed through multi-depth collagen synthesis.</p>
+            <div class="service-card-meta">
+              <div><strong>Core Modalities:</strong> HydraFacial Vortex Infusion, Micro-Needle RF, Exosomes</div>
+              <div><strong>Expected Downtime:</strong> Minimal (0 to 24 hours social recovery)</div>
+            </div>
+            <a class="service-card-link" href="/skin-rejuvenation">Explore Dedicated Rejuvenation Page →</a>
+          </article>
+
+          <!-- 4. HAIR & SCALP -->
+          <article class="service-luxury-card">
+            <div class="card-num-badge">
+              <span>04</span>
+              <span class="card-category-tag">Trichology</span>
+            </div>
+            <h3>Hair Fall, Scalp &amp; Density Care</h3>
+            <p>Androgenetic pattern thinning, telogen effluvium shedding, alopecia areata patches, and chronic seborrheic scalp conditions diagnosed via digital trichoscopy.</p>
+            <div class="service-card-meta">
+              <div><strong>Core Modalities:</strong> Autologous GFC (Growth Factor Concentrate), PRP, Meso-peptides</div>
+              <div><strong>Frequency:</strong> Sessions spaced 3 to 4 weeks apart</div>
+            </div>
+            <a class="service-card-link" href="/hair">Explore Dedicated Hair &amp; Scalp Page →</a>
+          </article>
+
+          <!-- 5. WOMEN'S WELLNESS -->
+          <article class="service-luxury-card">
+            <div class="card-num-badge">
+              <span>05</span>
+              <span class="card-category-tag">Hormonal Care</span>
+            </div>
+            <h3>Women’s Hormonal &amp; Metabolic Care</h3>
+            <p>PCOS skin breakouts, androgenic hirsutism, cyclical hair shedding, and stress-related hormonal fluctuations addressed with whole-body medical coherence.</p>
+            <div class="service-card-meta">
+              <div><strong>Diagnostic Scope:</strong> Blood panels, cycle telemetry, endocrinology referral</div>
+              <div><strong>Philosophy:</strong> Root cause balance over superficial cover-ups</div>
+            </div>
+            <a class="service-card-link" href="/womens-wellness">Explore Women's Wellness Page →</a>
+          </article>
+
+          <!-- 6. WEIGHT MANAGEMENT -->
+          <article class="service-luxury-card">
+            <div class="card-num-badge">
+              <span>06</span>
+              <span class="card-category-tag">Metabolic Health</span>
+            </div>
+            <h3>Physician-Supervised Weight Protocol</h3>
+            <p>Scientific body composition assessment, visceral fat analysis, and individualized metabolic nutrition plans integrated around your active lifestyle.</p>
+            <div class="service-card-meta">
+              <div><strong>Methodology:</strong> Bio-impedance analysis, safe sustainable progression</div>
+              <div><strong>Structure:</strong> Bi-weekly physician check-ins &amp; vitals tracking</div>
+            </div>
+            <a class="service-card-link" href="/weight-management">Explore Weight Management Page →</a>
+          </article>
+
+          <!-- 7. HOMEOPATHY -->
+          <article class="service-luxury-card">
+            <div class="card-num-badge">
+              <span>07</span>
+              <span class="card-category-tag">Integrative</span>
+            </div>
+            <h3>Constitutional Homeopathy</h3>
+            <p>Individualized constitutional prescriptions for recurring allergies, persistent eczema, chronic urticaria, migraine, and functional gastrointestinal stress.</p>
+            <div class="service-card-meta">
+              <div><strong>Assessment:</strong> Extensive 45-minute clinical intake</div>
+              <div><strong>Compatibility:</strong> Safe alongside conventional medical regimens</div>
+            </div>
+            <a class="service-card-link" href="/homeopathy">Explore Dedicated Homeopathy Page →</a>
+          </article>
+
+          <!-- 8. WHOLE-PERSON WELLNESS -->
+          <article class="service-luxury-card">
+            <div class="card-num-badge">
+              <span>08</span>
+              <span class="card-category-tag">Cellular Vitality</span>
+            </div>
+            <h3>General &amp; Mental Vitality</h3>
+            <p>Chronic burnout, circadian sleep dysregulation, neuro-endocrine fatigue, and preventive cellular health optimization with structured lifestyle medicine.</p>
+            <div class="service-card-meta">
+              <div><strong>Core Approach:</strong> Micronutrient profiling, sleep hygiene, cortisol pacing</div>
+              <div><strong>Benefit:</strong> Sustained physical vitality and immune resilience</div>
+            </div>
+            <a class="service-card-link" href="/wellness">Explore Dedicated Wellness Page →</a>
+          </article>
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem;">
+          <a class="btn-gold" href="/treatments">
+            <span>Explore All Advanced Laser &amp; Energy Modalities</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
 
         <!-- Sanctuary Feature Block -->
         <div class="clinical-feature split split--wide-left" style="margin-top: 3.5rem;">
@@ -1995,17 +2047,18 @@
     </div>
   </footer>
 
-  <!-- MOBILE STICKY ACTION BAR -->
-  <div class="action-bar" aria-label="Contact the clinic">
-    <a class="btn btn--wa" href="https://wa.me/916372528534?text=Hi%2C%20I%20would%20like%20to%20book%20a%20consultation%20at%20Equinox.%20%23EQ-HOME" data-cta="sticky-bar" rel="noopener">
-      <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.48 15.04L2.2 21.8l4.9-1.3A9.9 9.9 0 1 0 12.04 2Zm0 18.1a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-2.9.77.78-2.83-.2-.3a8.2 8.2 0 1 1 6.8 3.7Zm4.5-6.14c-.25-.12-1.46-.72-1.69-.8-.23-.08-.39-.12-.55.12-.16.25-.63.8-.78.97-.14.16-.29.18-.53.06a6.7 6.7 0 0 1-3.34-2.92c-.25-.43.25-.4.72-1.34.08-.16.04-.3-.02-.42l-.75-1.8c-.2-.47-.4-.4-.55-.41h-.47a.9.9 0 0 0-.65.3 2.73 2.73 0 0 0-.85 2.03 4.74 4.74 0 0 0 1 2.52 10.86 10.86 0 0 0 4.16 3.67c1.55.67 2.16.73 2.93.61.47-.07 1.46-.6 1.66-1.17.2-.58.2-1.07.14-1.17-.06-.1-.22-.16-.47-.28Z"></path></svg>
-      <span>WhatsApp</span>
+  <!-- HIGH-END FLOATING CLINICAL CONCIERGE -->
+  <aside class="floating-concierge" aria-label="Clinical Concierge">
+    <a class="concierge-pill" href="https://wa.me/916372528534?text=Hi%20Equinox%2C%20I%20would%20like%20to%20connect%20with%20the%20consulting%20desk.%20%23EQ-CONCIERGE" target="_blank" rel="noopener">
+      <div class="concierge-icon-circle">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.48 15.04L2.2 21.8l4.9-1.3A9.9 9.9 0 1 0 12.04 2Zm0 18.1a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-2.9.77.78-2.83-.2-.3a8.2 8.2 0 1 1 6.8 3.7Zm4.5-6.14c-.25-.12-1.46-.72-1.69-.8-.23-.08-.39-.12-.55.12-.16.25-.63.8-.78.97-.14.16-.29.18-.53.06a6.7 6.7 0 0 1-3.34-2.92c-.25-.43.25-.4.72-1.34.08-.16.04-.3-.02-.42l-.75-1.8c-.2-.47-.4-.4-.55-.41h-.47a.9.9 0 0 0-.65.3 2.73 2.73 0 0 0-.85 2.03 4.74 4.74 0 0 0 1 2.52 10.86 10.86 0 0 0 4.16 3.67c1.55.67 2.16.73 2.93.61.47-.07 1.46-.6 1.66-1.17.2-.58.2-1.07.14-1.17-.06-.1-.22-.16-.47-.28Z"/></svg>
+      </div>
+      <div class="concierge-text">
+        <span class="concierge-title">Clinic Concierge</span>
+        <span class="concierge-sub">Direct Doctor Desk</span>
+      </div>
     </a>
-    <a class="btn btn--dusk" href="tel:+916372528534" data-cta="sticky-bar">
-      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 1.1 4.2 2 2 0 0 1 3.1 2h3a2 2 0 0 1 2 1.7c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.1L7.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.45c.9.34 1.84.57 2.8.7a2 2 0 0 1 1.7 2Z"></path></svg>
-      <span>Call</span>
-    </a>
-  </div>
+  </aside>
 
   <!-- COOKIE CONSENT BANNER -->
   <div id="consent" class="consent" role="region" aria-label="Cookie and tracking choices" style="display:none;">
