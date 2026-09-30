@@ -19,4 +19,5 @@ Allow: /
 Disallow: /api/
 Disallow: /thank-you
 
-Sitemap: http://localhost:4321/sitemap-index.xml
+Sitemap: https://www.equinoxwellness.in/sitemap.xml
+Sitemap: https://www.equinoxwellness.in/sitemap-index.xml
