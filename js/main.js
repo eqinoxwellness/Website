@@ -27,7 +27,7 @@ const CLINIC_CONFIG = {
   metaPixelId: '1326462718420658',
 
   // Google Apps Script Web App URL for Google Sheets lead recording
-  googleSheetWebAppUrl: 'https://script.google.com/macros/s/AKfycbw_PLACEHOLDER_EQUINOX_SHEET/exec',
+  googleSheetWebAppUrl: 'https://script.google.com/macros/s/AKfycbw0tM81Na6P8izDEher3KZvGmshmATs2RXco7g1vEtxydtJUXrVRpMLx3il5SMJXeY7/exec',
 
   // Clinic Contact Facts
   phoneRaw: '916372528534',
