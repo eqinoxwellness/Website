@@ -704,48 +704,55 @@ class AnatomicalDermal3DEngine {
 // 4. INSTAGRAM CLINICAL VIDEO REELS CONTROLLER
 // ==========================================
 function initInstagramReels() {
-  const cards = document.querySelectorAll('.reel-card');
-  cards.forEach((card) => {
-    const video = card.querySelector('video');
-    const playBtn = card.querySelector('.reel-play-btn');
-    const muteBtn = card.querySelector('.reel-mute-btn');
+  const filterBtns = document.querySelectorAll('.reel-filter-btn');
+  const reelCards = document.querySelectorAll('.reel-card');
 
-    if (!video) return;
+  // A. Category Filter Handler
+  filterBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
 
-    // Toggle Play/Pause
-    const togglePlay = () => {
-      if (video.paused) {
-        // Pause other videos first
-        document.querySelectorAll('.reel-card video').forEach((v) => {
-          if (v !== video) v.pause();
-        });
-        video.play().then(() => {
-          card.classList.add('is-playing');
-          OmniTracker.sendEvent('video_play', {
-            video_title: card.querySelector('.reel-title')?.textContent?.trim() || 'Clinical Video Reel'
-          }, 'ViewContent');
-        }).catch(() => {});
-      } else {
-        video.pause();
-        card.classList.remove('is-playing');
-      }
-    };
+      const filterVal = btn.getAttribute('data-filter') || 'all';
 
-    if (playBtn) playBtn.addEventListener('click', togglePlay);
-    video.addEventListener('click', togglePlay);
+      reelCards.forEach((card) => {
+        const cardCat = card.getAttribute('data-category');
+        if (filterVal === 'all' || cardCat === filterVal) {
+          card.classList.remove('is-hidden');
+        } else {
+          card.classList.add('is-hidden');
+        }
+      });
 
-    // Toggle Audio
-    if (muteBtn) {
-      muteBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        video.muted = !video.muted;
-        muteBtn.textContent = video.muted ? '🔇' : '🔊';
+      OmniTracker.sendEvent('filter_reels', {
+        selected_category: filterVal
+      });
+    });
+  });
+
+  // B. Reel Action Click Telemetry (WhatsApp & Instagram)
+  reelCards.forEach((card) => {
+    const title = card.querySelector('.reel-title')?.textContent?.trim() || 'Clinical Reel';
+    const waBtn = card.querySelector('.btn-royal');
+    const igBtn = card.querySelector('.btn-ig-view');
+
+    if (waBtn) {
+      waBtn.addEventListener('click', () => {
+        OmniTracker.sendEvent('reel_whatsapp_inquiry', {
+          reel_title: title,
+          placement: 'reels_gallery'
+        }, 'Lead');
       });
     }
 
-    video.addEventListener('ended', () => {
-      card.classList.remove('is-playing');
-    });
+    if (igBtn) {
+      igBtn.addEventListener('click', () => {
+        OmniTracker.sendEvent('reel_view_on_instagram', {
+          reel_title: title,
+          url: igBtn.getAttribute('href')
+        }, 'ViewContent');
+      });
+    }
   });
 }
 

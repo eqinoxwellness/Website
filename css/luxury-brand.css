@@ -1303,3 +1303,149 @@ p {
   padding-top: 1rem;
 }
 
+/* ==========================================
+   INSTAGRAM CLINICAL REELS GALLERY
+   ========================================== */
+.reel-filter-bar {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.reel-filter-btn {
+  background: #FFFFFF;
+  border: 1px solid var(--gold-border);
+  color: var(--text-heading);
+  padding: 0.45rem 1.1rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.reel-filter-btn:hover {
+  background: var(--bg-surface-tint);
+  border-color: var(--gold-primary);
+  color: var(--gold-deep);
+}
+
+.reel-filter-btn.is-active {
+  background: var(--gold-deep);
+  border-color: var(--gold-deep);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(163, 122, 42, 0.25);
+}
+
+.reel-card {
+  background: #FFFFFF;
+  border: 1px solid var(--gold-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.reel-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--gold-primary);
+}
+
+.reel-card.is-hidden {
+  display: none !important;
+}
+
+.reel-iframe-wrap {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  background: #150E07;
+  overflow: hidden;
+}
+
+.reel-iframe-wrap iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.reel-card-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.reel-category-chip {
+  align-self: flex-start;
+  background: var(--bg-surface-tint);
+  border: 1px solid var(--gold-border-subtle);
+  color: var(--gold-deep);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-pill);
+  margin-bottom: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.reel-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 0.4rem;
+  line-height: 1.35;
+}
+
+.reel-social-proof {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--gold-deep);
+  margin-bottom: 0.75rem;
+}
+
+.reel-caption-text {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  margin-bottom: 1.25rem;
+  flex: 1;
+}
+
+.reel-actions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+.btn-ig-view {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  background: #FAF7F2;
+  border: 1px solid var(--gold-border);
+  color: var(--text-heading);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 0.65rem;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-ig-view:hover {
+  background: #FFFFFF;
+  border-color: var(--gold-primary);
+  color: var(--gold-deep);
+}
+
