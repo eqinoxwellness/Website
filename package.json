@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "description": "Equinox Aesthetic & Wellness Centre Website",
   "scripts": {
+    "build": "node build.cjs",
     "dev": "npx serve .",
     "start": "npx serve ."
   }
