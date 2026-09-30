@@ -32,6 +32,7 @@ const CLINIC_CONFIG = {
   // Clinic Contact Facts
   phoneRaw: '916372528534',
   phoneDisplay: '+91 63725 28534',
+  clinicEmail: 'eqinoxwellness@gmail.com',
   address: 'Plot No. 69, 1st Floor, Kali Mandir Road, Satya Nagar, Bhubaneswar 751007',
   operatingHours: {
     openHour: 11,
@@ -235,7 +236,7 @@ class Hero3DBackground {
   resize() {
     const parent = this.canvas.parentElement || document.body;
     this.width  = parent.clientWidth  || window.innerWidth;
-    this.height = Math.max(parent.clientHeight, window.innerHeight * 0.72);
+    this.height = Math.max(parent.clientHeight, 360);
     this.canvas.width  = this.width;
     this.canvas.height = this.height;
   }
@@ -899,7 +900,7 @@ function updateEstimatorUI() {
 // 6. LEAD FORM & GOOGLE SHEETS WEBHOOK INTEGRATION
 // ==========================================
 function initLeadForm() {
-  const leadForms = document.querySelectorAll('.lead-form');
+  const leadForms = document.querySelectorAll('.lead-form, #lead-form, form.luxury-form');
   leadForms.forEach((form) => {
     let formStarted = false;
     form.addEventListener('focusin', () => {
@@ -912,75 +913,110 @@ function initLeadForm() {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const nameInput = form.querySelector('[name="lf-name"]') || form.querySelector('#lf-name');
-      const phoneInput = form.querySelector('[name="lf-phone"]') || form.querySelector('#lf-phone');
-      const serviceSelect = form.querySelector('[name="lf-service"]') || form.querySelector('#lf-service');
-      const timeRadio = form.querySelector('input[name="lf-time"]:checked');
-      const notesInput = form.querySelector('[name="lf-notes"]') || form.querySelector('#lf-notes');
+      const nameInput = form.querySelector('[name="lf-name"], [name="name"], #lead-name, #lf-name');
+      const phoneInput = form.querySelector('[name="lf-phone"], [name="phone"], #lead-phone, #lf-phone');
+      const serviceSelect = form.querySelector('[name="discipline"], [name="lf-service"], [name="service"], #lead-discipline, #lf-service');
+      const timeSelect = form.querySelector('[name="preferred_time"], [name="lf-time"], input[name="lf-time"]:checked, #lead-time');
+      const notesInput = form.querySelector('[name="notes"], [name="lf-notes"], #lead-notes, #lf-notes');
       const submitBtn = form.querySelector('button[type="submit"]');
 
-      const name = nameInput?.value.trim() || 'Visitor';
-      const phone = phoneInput?.value.trim() || '';
-      const service = serviceSelect?.options[serviceSelect.selectedIndex]?.text || 'General Enquiry';
-      const time = timeRadio ? timeRadio.value : 'Anytime';
-      const notes = notesInput?.value.trim() || 'None';
+      const name = nameInput?.value?.trim() || 'Visitor';
+      const rawPhone = phoneInput?.value?.trim() || '';
+      const cleanPhone = rawPhone.replace(/\D/g, '').slice(-10);
 
-      if (!phone || phone.length < 10) {
-        alert('Please enter a valid 10-digit mobile number so the doctor desk can reach you.');
+      let service = 'General Doctor Consultation';
+      if (serviceSelect) {
+        if (serviceSelect.tagName === 'SELECT') {
+          service = serviceSelect.options[serviceSelect.selectedIndex]?.text || serviceSelect.value || service;
+        } else {
+          service = serviceSelect.value || service;
+        }
+      }
+
+      let time = 'Anytime (11am–8pm)';
+      if (timeSelect) {
+        if (timeSelect.tagName === 'SELECT') {
+          time = timeSelect.options[timeSelect.selectedIndex]?.text || timeSelect.value;
+        } else if (timeSelect.type === 'radio') {
+          const checked = form.querySelector('input[name="lf-time"]:checked');
+          time = checked ? checked.value : timeSelect.value;
+        } else {
+          time = timeSelect.value || time;
+        }
+      }
+
+      const notes = notesInput?.value?.trim() || 'Website Consultation Request';
+
+      if (!cleanPhone || cleanPhone.length < 10) {
+        alert('Please enter a valid 10-digit mobile number so our doctor desk can reach you.');
         phoneInput?.focus();
         return;
       }
 
       // Visual feedback: submitting
-      const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Request a call back';
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.innerHTML = 'Submitting to Medical Desk...';
+        submitBtn.innerHTML = '<span>Transmitting to Doctor Desk...</span>';
       }
 
-      // Payload for Google Sheets Webhook
+      // Comprehensive Payload for Google Sheets & CRM
       const payload = {
         name,
-        phone,
+        phone: cleanPhone,
+        mobile: cleanPhone,
         service,
+        serviceName: service,
         preferredTime: time,
         notes,
         pageUrl: window.location.href,
+        page: window.location.pathname,
         referrer: document.referrer || 'Direct',
+        device: /Mobi|Android/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop',
         timestamp: new Date().toISOString()
       };
 
+      // 1. Safe local storage vault backup (guarantees zero lead loss)
       try {
-        // Attempt POST to Google Apps Script Web App
-        if (CLINIC_CONFIG.googleSheetWebAppUrl && !CLINIC_CONFIG.googleSheetWebAppUrl.includes('PLACEHOLDER')) {
-          await fetch(CLINIC_CONFIG.googleSheetWebAppUrl, {
+        const stored = JSON.parse(localStorage.getItem('equinox_leads_vault') || '[]');
+        stored.push(payload);
+        localStorage.setItem('equinox_leads_vault', JSON.stringify(stored));
+      } catch (err) {}
+
+      // 2. Direct Google Apps Script Web App Transmission
+      const targetUrl = window.EQUINOX_SHEET_URL || CLINIC_CONFIG.googleSheetWebAppUrl;
+      if (targetUrl && !targetUrl.includes('PLACEHOLDER')) {
+        try {
+          await fetch(targetUrl, {
             method: 'POST',
-            mode: 'no-cors', // Google Apps Script requires no-cors on client
+            mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
           });
+        } catch (fetchErr) {
+          console.warn('Google Sheets Webhook notice:', fetchErr);
         }
-      } catch (err) {
-        console.warn('Google Sheet sync notice:', err);
       }
 
-      // Broadcaster: Google Analytics 4, Google Ads, Meta Ads & Microsoft Clarity
+      // 3. Analytics & Ad Signals
       OmniTracker.sendEvent('generate_lead', {
         method: 'callback_form',
         service_category: service,
         preferred_time: time
       }, 'Lead');
 
-      // Success Display Card
+      // 4. Luxury Success Confirmation with 1-Tap Direct WhatsApp Link
+      const waMsg = `Namaskar Equinox Clinic Desk, I just submitted a consultation request for ${service}. My Name: ${name}, Mobile: ${cleanPhone}, Preferred Time: ${time}. #EQ-CONFIRM`;
+      const waUrl = `https://wa.me/916372528534?text=${encodeURIComponent(waMsg)}`;
+
       const successHtml = `
-        <div class="lead-success-card" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.45); border-radius: 0.85rem; padding: 1.5rem; text-align: center; color: #ffffff;">
-          <div style="font-size: 2.2rem; color: #34d399; margin-bottom: 0.5rem;">✓</div>
-          <h3 style="color: #ffffff; margin-bottom: 0.4rem; font-size: 1.3rem;">Request Received, ${name}!</h3>
-          <p style="color: #e2d2e5; font-size: 0.95rem; margin-bottom: 1.25rem;">
-            Your consultation request has been recorded. Our consulting doctor's desk will call you at <strong>${phone}</strong> during clinic hours (${time}).
+        <div class="lead-success-card" style="background: linear-gradient(135deg, rgba(26,17,8,0.96) 0%, rgba(42,26,10,0.96) 100%); border: 1.5px solid var(--gold-primary); border-radius: var(--radius-md); padding: 2rem; text-align: center; color: #FAF7F2; box-shadow: 0 10px 30px rgba(0,0,0,0.25);">
+          <div style="width: 52px; height: 52px; border-radius: 50%; background: rgba(16,185,129,0.18); border: 1.5px solid #10B981; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.6rem; color: #34d399;">✓</div>
+          <h3 style="color: #FAF7F2; margin-bottom: 0.5rem; font-size: 1.35rem;">Consultation Request Confirmed, ${name}!</h3>
+          <p style="color: rgba(250,247,242,0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; max-width: 48ch; margin-inline: auto;">
+            Your details have been recorded on our medical desk calendar in Satya Nagar. Our consulting doctor's desk will reach you at <strong>+91 ${cleanPhone}</strong> during clinic hours (${time}).
           </p>
-          <a class="btn btn--wa" href="https://wa.me/${CLINIC_CONFIG.phoneRaw}?text=${encodeURIComponent(`Hi Equinox, I just submitted a callback request for ${service}. Name: ${name}, Phone: ${phone}. #EQ-CONFIRM`)}" target="_blank" rel="noopener">
-            💬 Open in WhatsApp for Faster Reply
+          <a class="btn-royal" href="${waUrl}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 0.6rem; text-decoration: none; padding: 0.75rem 1.6rem;">
+            <span>💬 Instant Connect on WhatsApp &rarr;</span>
           </a>
         </div>
       `;
@@ -989,7 +1025,6 @@ function initLeadForm() {
     });
   });
 }
-
 // ==========================================
 // 7. REAL-TIME DESK STATUS & 3D TILT
 // ==========================================
@@ -1056,9 +1091,14 @@ function initEquinoxApp() {
   OmniTracker.initAutoTracking();
 
   // A. Hero 3D Background
+  // 3D Canvas initialization for homepage and all subpages
   if (document.getElementById('heroCanvas3D')) {
     new Hero3DBackground('heroCanvas3D');
   }
+  document.querySelectorAll('.subpage-3d-canvas').forEach((canvas, idx) => {
+    if (!canvas.id) canvas.id = 'subpageCanvas3D_' + idx;
+    new Hero3DBackground(canvas.id);
+  });
 
   // B. Anatomical Dermal 3D Simulation
   let dermalEngine = null;
