@@ -142,140 +142,429 @@
       </div>
     </section>
 
-    <!-- 3D ANATOMICAL LAB SECTION -->
-    <section class="section-wrap" style="padding-top: 1.5rem;">
+    <!-- SKIN DEPTH DIAGRAM — CSS-based, no canvas, always readable -->
+    <section class="section-wrap" style="padding-top: 1.5rem; padding-bottom: 2rem;" id="depth-lab">
       <div class="container">
-        <div class="luxury-3d-suite" id="dermal-3d-suite">
-          <div style="margin-bottom: 1.5rem;">
-            <div class="luxury-eyebrow">✦ Interactive Dermal Depth Simulation</div>
-            <h2 class="section-title">
-              3D Bio-Dermal Matrix &amp; <span class="gold-shimmer-text">Targeted Penetration Lab</span>
-            </h2>
-            <p style="color: var(--text-muted); max-width: 64ch;">
-              Select any modality card below to see the energy beam penetrate to its exact skin depth. Hover over a layer to read what lies there. Click <strong>Play Guided Simulation</strong> to step through the full clinical protocol automatically.
-            </p>
+
+        <div style="margin-bottom: 2.5rem; max-width: 700px;">
+          <div class="luxury-eyebrow">✦ Clinical Depth Reference</div>
+          <h2 class="section-title">Where Each Modality <span class="gold-shimmer-text">Works in Your Skin</span></h2>
+          <p style="color: var(--text-muted); font-size: 0.97rem; line-height: 1.65;">
+            Select any treatment below to see exactly which skin layer it targets and how deep it reaches. Understanding the depth helps explain why each protocol is prescribed for specific concerns.
+          </p>
+        </div>
+
+        <!-- TWO-COLUMN LAYOUT: Diagram left, Selector right -->
+        <div style="display: grid; grid-template-columns: 1fr; gap: 2.5rem; align-items: start;">
+
+          <!-- Skin Diagram -->
+          <div id="skinDiagram" style="
+            background: linear-gradient(135deg, #1A1108 0%, #211508 100%);
+            border-radius: 1.25rem;
+            border: 1px solid rgba(197,154,63,0.25);
+            overflow: hidden;
+            position: relative;
+          ">
+            <!-- Handpiece indicator (hidden by default, shown when step ≥ 2) -->
+            <div id="handpiece" style="
+              display: none;
+              position: absolute;
+              top: 0; left: 50%; transform: translateX(-50%);
+              width: 100%;
+              pointer-events: none;
+              z-index: 10;
+            ">
+              <div style="
+                margin: 0 auto;
+                width: 80px;
+                background: var(--beam-color, #F6D27A);
+                border-radius: 0 0 8px 8px;
+                text-align: center;
+                padding: 6px 0 4px;
+                font-size: 0.65rem;
+                font-weight: 800;
+                color: #1A1108;
+                letter-spacing: 0.05em;
+                box-shadow: 0 0 20px var(--beam-color, #F6D27A);
+              ">HANDPIECE</div>
+              <!-- Laser beam shaft -->
+              <div id="laserBeam" style="
+                margin: 0 auto;
+                width: 4px;
+                height: 0;
+                background: linear-gradient(to bottom, var(--beam-color, #F6D27A), transparent);
+                box-shadow: 0 0 14px var(--beam-color, #F6D27A);
+                transition: height 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+                border-radius: 2px;
+              "></div>
+              <!-- Impact ring -->
+              <div id="impactRing" style="
+                margin: 0 auto;
+                width: 0; height: 0;
+                border-radius: 50%;
+                background: transparent;
+                border: 2px solid var(--beam-color, #F6D27A);
+                opacity: 0;
+                box-shadow: 0 0 14px var(--beam-color, #F6D27A);
+                transition: width 0.5s ease, height 0.5s ease, opacity 0.5s ease;
+              "></div>
+            </div>
+
+            <!-- Skin Surface label -->
+            <div style="
+              padding: 0.75rem 1.5rem;
+              display: flex;
+              align-items: center;
+              gap: 0.75rem;
+              border-bottom: 1px dashed rgba(197,154,63,0.2);
+            ">
+              <div style="width: 8px; height: 8px; border-radius: 50%; background: #10B981; box-shadow: 0 0 6px rgba(16,185,129,0.8);"></div>
+              <span style="font-size: 0.75rem; font-weight: 700; color: rgba(250,247,242,0.5); letter-spacing: 0.1em; text-transform: uppercase;">Skin Surface — 0 mm</span>
+            </div>
+
+            <!-- Layer bands -->
+            <div class="skin-layer-band" id="layer-epidermis" data-layer="epidermis" style="
+              background: linear-gradient(90deg, rgba(247,231,198,0.15) 0%, rgba(247,231,198,0.08) 100%);
+              border-bottom: 1px solid rgba(232,201,122,0.25);
+              padding: 1rem 1.5rem;
+              display: flex;
+              align-items: center;
+              gap: 1.25rem;
+              cursor: default;
+              transition: background 0.25s ease;
+              position: relative;
+            ">
+              <div style="min-width: 72px; text-align: right;">
+                <div style="font-family: 'Courier New', monospace; font-size: 0.72rem; color: rgba(232,201,122,0.6); font-weight: 700;">0–0.1 mm</div>
+              </div>
+              <div style="width: 1px; height: 36px; background: rgba(232,201,122,0.3);"></div>
+              <div style="flex: 1;">
+                <div style="font-weight: 700; color: #F7E7C6; font-size: 0.9rem; margin-bottom: 0.15rem;">Epidermis</div>
+                <div style="font-size: 0.78rem; color: rgba(247,231,198,0.55); line-height: 1.4;">Melanin · Surface texture · Sunspots · Stratum corneum</div>
+              </div>
+              <div style="font-size: 1.1rem; opacity: 0.6;">☀️</div>
+            </div>
+
+            <div class="skin-layer-band" id="layer-papillary" data-layer="papillary" style="
+              background: linear-gradient(90deg, rgba(240,200,160,0.15) 0%, rgba(240,200,160,0.07) 100%);
+              border-bottom: 1px solid rgba(212,160,84,0.22);
+              padding: 1rem 1.5rem;
+              display: flex;
+              align-items: center;
+              gap: 1.25rem;
+              cursor: default;
+              transition: background 0.25s ease;
+              position: relative;
+            ">
+              <div style="min-width: 72px; text-align: right;">
+                <div style="font-family: 'Courier New', monospace; font-size: 0.72rem; color: rgba(212,160,84,0.6); font-weight: 700;">0.1–1 mm</div>
+              </div>
+              <div style="width: 1px; height: 36px; background: rgba(212,160,84,0.3);"></div>
+              <div style="flex: 1;">
+                <div style="font-weight: 700; color: #F0C8A0; font-size: 0.9rem; margin-bottom: 0.15rem;">Papillary Dermis</div>
+                <div style="font-size: 0.78rem; color: rgba(240,200,160,0.55); line-height: 1.4;">Fine collagen · Capillaries · Skin boosters (PDRN) work here</div>
+              </div>
+              <div style="font-size: 1.1rem; opacity: 0.6;">💧</div>
+            </div>
+
+            <div class="skin-layer-band" id="layer-reticular" data-layer="reticular" style="
+              background: linear-gradient(90deg, rgba(221,160,160,0.15) 0%, rgba(221,160,160,0.07) 100%);
+              border-bottom: 1px solid rgba(192,96,128,0.22);
+              padding: 1.4rem 1.5rem;
+              display: flex;
+              align-items: center;
+              gap: 1.25rem;
+              cursor: default;
+              transition: background 0.25s ease;
+              position: relative;
+            ">
+              <div style="min-width: 72px; text-align: right;">
+                <div style="font-family: 'Courier New', monospace; font-size: 0.72rem; color: rgba(192,96,128,0.6); font-weight: 700;">1–3 mm</div>
+              </div>
+              <div style="width: 1px; height: 44px; background: rgba(192,96,128,0.3);"></div>
+              <div style="flex: 1;">
+                <div style="font-weight: 700; color: #DDA0A0; font-size: 0.9rem; margin-bottom: 0.15rem;">Reticular Dermis</div>
+                <div style="font-size: 0.78rem; color: rgba(221,160,160,0.55); line-height: 1.4;">Structural collagen · Elastin · Acne scar tissue · MNRF targets here</div>
+              </div>
+              <div style="font-size: 1.1rem; opacity: 0.6;">🔬</div>
+            </div>
+
+            <div class="skin-layer-band" id="layer-follicular" data-layer="follicular" style="
+              background: linear-gradient(90deg, rgba(200,160,212,0.15) 0%, rgba(200,160,212,0.07) 100%);
+              border-bottom: 1px solid rgba(128,64,160,0.22);
+              padding: 1.4rem 1.5rem;
+              display: flex;
+              align-items: center;
+              gap: 1.25rem;
+              cursor: default;
+              transition: background 0.25s ease;
+              position: relative;
+            ">
+              <div style="min-width: 72px; text-align: right;">
+                <div style="font-family: 'Courier New', monospace; font-size: 0.72rem; color: rgba(128,64,160,0.6); font-weight: 700;">3–4.5 mm</div>
+              </div>
+              <div style="width: 1px; height: 44px; background: rgba(128,64,160,0.3);"></div>
+              <div style="flex: 1;">
+                <div style="font-weight: 700; color: #C8A0D4; font-size: 0.9rem; margin-bottom: 0.15rem;">Follicular Matrix</div>
+                <div style="font-size: 0.78rem; color: rgba(200,160,212,0.55); line-height: 1.4;">Hair follicle bulbs · Dermal papilla · GFC, PRP, Diode Laser work here</div>
+              </div>
+              <div style="font-size: 1.1rem; opacity: 0.6;">💜</div>
+            </div>
+
+            <div class="skin-layer-band" id="layer-subcutaneous" data-layer="subcutaneous" style="
+              background: linear-gradient(90deg, rgba(247,224,176,0.12) 0%, rgba(247,224,176,0.05) 100%);
+              padding: 1rem 1.5rem;
+              display: flex;
+              align-items: center;
+              gap: 1.25rem;
+              cursor: default;
+              transition: background 0.25s ease;
+            ">
+              <div style="min-width: 72px; text-align: right;">
+                <div style="font-family: 'Courier New', monospace; font-size: 0.72rem; color: rgba(200,168,80,0.5); font-weight: 700;">4.5+ mm</div>
+              </div>
+              <div style="width: 1px; height: 36px; background: rgba(200,168,80,0.2);"></div>
+              <div style="flex: 1;">
+                <div style="font-weight: 700; color: rgba(247,224,176,0.7); font-size: 0.9rem; margin-bottom: 0.15rem;">Subcutaneous Tissue</div>
+                <div style="font-size: 0.78rem; color: rgba(247,224,176,0.4); line-height: 1.4;">Fat · Deep vessels · Nerve plexus</div>
+              </div>
+              <div style="font-size: 1.1rem; opacity: 0.4;">⬇</div>
+            </div>
+
+            <!-- Active modality label bar at bottom -->
+            <div id="activeModalityBar" style="
+              padding: 0.85rem 1.5rem;
+              background: rgba(197,154,63,0.08);
+              border-top: 1px solid rgba(197,154,63,0.2);
+              display: flex;
+              align-items: center;
+              gap: 0.75rem;
+            ">
+              <span style="font-size: 0.75rem; font-weight: 700; color: rgba(197,154,63,0.7); text-transform: uppercase; letter-spacing: 0.06em;">Active Modality:</span>
+              <span id="activeModalityName" style="font-weight: 700; color: #F6D27A; font-size: 0.88rem;">Pico &amp; Q-Switched Laser</span>
+              <span style="margin-left: auto; font-family: monospace; font-size: 0.8rem; color: rgba(197,154,63,0.6);" id="activeDepthDisplay">Target: 1.5 mm</span>
+            </div>
           </div>
 
-          <!-- Guided Demo Stepper Bar -->
-          <div class="demo-stepper-bar">
-            <button type="button" class="btn-royal" id="playDemoBtn" style="padding: 0.45rem 1.15rem; font-size: 0.85rem;">
-              ▶ Play Guided Simulation
+          <!-- Step Explanation Box -->
+          <div id="stepExplain" style="
+            background: #FFFFFF;
+            border: 1px solid rgba(197,154,63,0.22);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 8px 24px rgba(140,100,40,0.07);
+          ">
+            <div style="font-size: 0.75rem; font-weight: 800; color: var(--gold-deep); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem;">Clinical Protocol</div>
+            <div id="demoStepText" style="font-size: 0.95rem; color: var(--text-body); line-height: 1.65;">
+              Select a treatment card below to see how it works, step by step.
+            </div>
+            <div style="display: flex; gap: 0.6rem; margin-top: 1rem; flex-wrap: wrap;">
+              <button type="button" class="demo-step-btn" data-step="1" style="font-size: 0.8rem; padding: 0.4rem 0.85rem;">① Diagnose</button>
+              <button type="button" class="demo-step-btn" data-step="2" style="font-size: 0.8rem; padding: 0.4rem 0.85rem;">② Treat</button>
+              <button type="button" class="demo-step-btn" data-step="3" style="font-size: 0.8rem; padding: 0.4rem 0.85rem;">③ Recover</button>
+            </div>
+            <!-- HUD data -->
+            <div style="margin-top: 1.25rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem;">
+              <div style="background: rgba(197,154,63,0.07); border: 1px solid rgba(197,154,63,0.18); border-radius: 8px; padding: 0.65rem 0.85rem;">
+                <div style="font-size: 0.68rem; font-weight: 800; color: var(--gold-deep); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">Penetration Depth</div>
+                <div id="hudDepthVal" style="font-size: 0.82rem; font-weight: 700; color: var(--text-heading);">1.50 mm (Papillary &amp; Reticular)</div>
+              </div>
+              <div style="background: rgba(197,154,63,0.07); border: 1px solid rgba(197,154,63,0.18); border-radius: 8px; padding: 0.65rem 0.85rem;">
+                <div style="font-size: 0.68rem; font-weight: 800; color: var(--gold-deep); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">Wavelength</div>
+                <div id="hudWaveVal" style="font-size: 0.82rem; font-weight: 700; color: var(--text-heading);">1064 nm Acoustic Shockwave</div>
+              </div>
+              <div style="background: rgba(197,154,63,0.07); border: 1px solid rgba(197,154,63,0.18); border-radius: 8px; padding: 0.65rem 0.85rem;">
+                <div style="font-size: 0.68rem; font-weight: 800; color: var(--gold-deep); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">Targets</div>
+                <div id="hudTargetVal" style="font-size: 0.82rem; font-weight: 700; color: var(--text-heading);">Melanosomes &amp; Pigment</div>
+              </div>
+              <div style="background: rgba(197,154,63,0.07); border: 1px solid rgba(197,154,63,0.18); border-radius: 8px; padding: 0.65rem 0.85rem;">
+                <div style="font-size: 0.68rem; font-weight: 800; color: var(--gold-deep); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">Recovery</div>
+                <div id="hudDownVal" style="font-size: 0.82rem; font-weight: 700; color: var(--text-heading);">Zero Social Downtime</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- MODALITY SELECTOR CARDS — large, clear, tappable -->
+        <div style="margin-top: 2.5rem;">
+          <div style="font-size: 0.8rem; font-weight: 700; color: var(--gold-deep); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 1.25rem; text-align: center;">✦ Select a treatment to visualise its depth in skin above</div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem;">
+
+            <!-- 01 -->
+            <button type="button" class="modality-card" data-mode="pico"
+              data-depth="1.50 mm (Papillary &amp; Reticular Dermis)"
+              data-wave="1064 nm / 532 nm Acoustic Shockwave"
+              data-target="Melanosomes, Melasma, Carbon Peel, Tattoo Ink"
+              data-down="Zero Social Downtime"
+              data-beam-color="#F6D27A"
+              data-target-layer="reticular"
+              data-beam-height="42%"
+              style="text-align: left; cursor: pointer; background: none; border: none; padding: 0; width: 100%;">
+              <div class="modality-vis-card" style="background:#fff; border: 2px solid rgba(197,154,63,0.2); border-radius: 1rem; padding: 1.25rem 1.5rem; transition: all 0.25s ease; display: flex; gap: 1rem; align-items: flex-start;">
+                <div style="font-size: 1.6rem; flex-shrink:0;">🔆</div>
+                <div>
+                  <div style="font-size: 0.7rem; font-weight: 800; color: var(--gold-deep); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.2rem;">Pigmentation · Tattoo</div>
+                  <div style="font-weight: 700; color: var(--text-heading); font-size: 1rem; margin-bottom: 0.3rem;">Pico &amp; Q-Switched Laser</div>
+                  <div style="font-size: 0.82rem; color: var(--text-muted);">Shatters melanin with acoustic shockwaves. Zero heat, zero downtime.</div>
+                  <div style="margin-top: 0.6rem; font-size: 0.75rem; font-weight: 700; color: rgba(197,154,63,0.8);">Reaches: Papillary–Reticular Dermis (1.5 mm)</div>
+                </div>
+              </div>
             </button>
-            <button type="button" class="demo-step-btn" data-step="1">Step 1: Diagnostic Mapping</button>
-            <button type="button" class="demo-step-btn" data-step="2">Step 2: Depth Penetration</button>
-            <button type="button" class="demo-step-btn" data-step="3">Step 3: Tissue Remodeling</button>
-            <div class="demo-step-live-box" id="demoStepText">Select a modality below</div>
-          </div>
 
-          <!-- Canvas Container (Warm Obsidian Chamber with 3D Depth Particles) -->
-          <div class="canvas-3d-container">
-            <canvas id="dermal3DCanvas" style="width: 100%; height: 380px; display: block;"></canvas>
-            <div class="canvas-badge">
-              <span class="pulse-dot"></span>
-              <span>Live Skin Cross-Section · Real mm Depth Scale</span>
-            </div>
-            <div class="canvas-controls-hint">
-              ✦ Hover over a layer to see what lies at that depth
-            </div>
-          </div>
+            <!-- 02 -->
+            <button type="button" class="modality-card" data-mode="mnrf"
+              data-depth="2.80 mm (Reticular Dermis Collagen Matrix)"
+              data-wave="1.0 MHz Fractional Multi-Needle RF"
+              data-target="Fibrotic Acne Scar Tissue &amp; Collagen Remodeling"
+              data-down="24–48 Hours Mild Erythema"
+              data-beam-color="#E5A65E"
+              data-target-layer="reticular"
+              data-beam-height="62%"
+              style="text-align: left; cursor: pointer; background: none; border: none; padding: 0; width: 100%;">
+              <div class="modality-vis-card" style="background:#fff; border: 2px solid rgba(197,154,63,0.2); border-radius: 1rem; padding: 1.25rem 1.5rem; transition: all 0.25s ease; display: flex; gap: 1rem; align-items: flex-start;">
+                <div style="font-size: 1.6rem; flex-shrink:0;">⚡</div>
+                <div>
+                  <div style="font-size: 0.7rem; font-weight: 800; color: var(--gold-deep); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.2rem;">Acne Scars · Tightening</div>
+                  <div style="font-weight: 700; color: var(--text-heading); font-size: 1rem; margin-bottom: 0.3rem;">Micro-Needle RF (MNRF)</div>
+                  <div style="font-size: 0.82rem; color: var(--text-muted);">Gold micro-needles deliver RF heat deep into scar tissue to remodel collagen.</div>
+                  <div style="margin-top: 0.6rem; font-size: 0.75rem; font-weight: 700; color: rgba(197,154,63,0.8);">Reaches: Reticular Dermis (2.8 mm)</div>
+                </div>
+              </div>
+            </button>
 
-          <!-- Modality Cards Selector Grid (Covering all Nishu Ma'am's modalities) -->
-          <div class="luxury-3d-grid">
-            <!-- 01: Pico Laser -->
-            <div class="modality-card is-active" data-mode="pico" data-depth="1.50 mm (Papillary &amp; Reticular Dermis)" data-wave="1064 nm / 532 nm (Acoustic Shockwave)" data-target="Melanosomes, Melasma, Carbon Peel, Tattoo Ink" data-down="Zero Social Downtime (Mild Erythema 1–2h)">
-              <div class="modality-card__badge">1.50 mm Depth</div>
-              <h3 style="font-size: 1.2rem; margin-bottom: 0.25rem;">Pico &amp; Q-Switched Laser</h3>
-              <div style="color: var(--gold-deep); font-size: 0.82rem; text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">Photomechanical Acoustic Pulse</div>
-              <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.85rem;">Ultra-short acoustic shockwaves pulverize stubborn pigment clusters without heat build-up. Used for melasma, carbon facial, and tattoo removal.</p>
-              <div style="font-size: 0.82rem; color: var(--text-subtle);"><strong>Sensation:</strong> Mild warm tingling</div>
-            </div>
+            <!-- 03 -->
+            <button type="button" class="modality-card" data-mode="laser-hair"
+              data-depth="4.20 mm (Scalp Micro-Vascular Bed)"
+              data-wave="650 nm Low-Level Photobiomodulation"
+              data-target="Follicular Dermal Papilla &amp; Scalp Micro-Circulation"
+              data-down="Zero Downtime"
+              data-beam-color="#9D65C9"
+              data-target-layer="follicular"
+              data-beam-height="85%"
+              style="text-align: left; cursor: pointer; background: none; border: none; padding: 0; width: 100%;">
+              <div class="modality-vis-card" style="background:#fff; border: 2px solid rgba(197,154,63,0.2); border-radius: 1rem; padding: 1.25rem 1.5rem; transition: all 0.25s ease; display: flex; gap: 1rem; align-items: flex-start;">
+                <div style="font-size: 1.6rem; flex-shrink:0;">💡</div>
+                <div>
+                  <div style="font-size: 0.7rem; font-weight: 800; color: var(--gold-deep); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.2rem;">Hair Fall · Scalp</div>
+                  <div style="font-weight: 700; color: var(--text-heading); font-size: 1rem; margin-bottom: 0.3rem;">Laser Hair Regrowth Machine</div>
+                  <div style="font-size: 0.82rem; color: var(--text-muted);">Boosts scalp micro-circulation and ATP in hair follicle cells for regrowth.</div>
+                  <div style="margin-top: 0.6rem; font-size: 0.75rem; font-weight: 700; color: rgba(197,154,63,0.8);">Reaches: Follicular Matrix (4.2 mm)</div>
+                </div>
+              </div>
+            </button>
 
-            <!-- 02: MNRF -->
-            <div class="modality-card" data-mode="mnrf" data-depth="2.80 mm (Reticular Dermis Collagen Matrix)" data-wave="1.0 MHz Fractional Multi-Needle RF" data-target="Fibrotic Acne Scar Tissue &amp; Collagen Remodeling" data-down="24 to 48 Hours Mild Erythema">
-              <div class="modality-card__badge">2.80 mm Depth</div>
-              <h3 style="font-size: 1.2rem; margin-bottom: 0.25rem;">Micro-Needle RF (MNRF)</h3>
-              <div style="color: var(--gold-deep); font-size: 0.82rem; text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">Fractional Radiofrequency</div>
-              <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.85rem;">Gold-insulated micro-needles deliver controlled RF thermal coagulation into deep scar tissue for skin tightening, anti-aging, and scar release.</p>
-              <div style="font-size: 0.82rem; color: var(--text-subtle);"><strong>Sensation:</strong> Warm prickly pressure</div>
-            </div>
+            <!-- 04 -->
+            <button type="button" class="modality-card" data-mode="gfc"
+              data-depth="4.20 mm (Follicular Dermal Papilla)"
+              data-wave="Autologous Growth Factors (PDGF, VEGF, EGF)"
+              data-target="Hair Follicle Stem Cells &amp; Dermal Papilla"
+              data-down="Zero Downtime"
+              data-beam-color="#70C5B0"
+              data-target-layer="follicular"
+              data-beam-height="88%"
+              style="text-align: left; cursor: pointer; background: none; border: none; padding: 0; width: 100%;">
+              <div class="modality-vis-card" style="background:#fff; border: 2px solid rgba(197,154,63,0.2); border-radius: 1rem; padding: 1.25rem 1.5rem; transition: all 0.25s ease; display: flex; gap: 1rem; align-items: flex-start;">
+                <div style="font-size: 1.6rem; flex-shrink:0;">🩸</div>
+                <div>
+                  <div style="font-size: 0.7rem; font-weight: 800; color: var(--gold-deep); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.2rem;">Hair Thinning · Regrowth</div>
+                  <div style="font-weight: 700; color: var(--text-heading); font-size: 1rem; margin-bottom: 0.3rem;">PRP &amp; Growth Factor (GFC)</div>
+                  <div style="font-size: 0.82rem; color: var(--text-muted);">Your own growth factors injected at the hair root to reactivate dormant follicles.</div>
+                  <div style="margin-top: 0.6rem; font-size: 0.75rem; font-weight: 700; color: rgba(197,154,63,0.8);">Reaches: Follicular Matrix (4.2 mm)</div>
+                </div>
+              </div>
+            </button>
 
-            <!-- 03: Laser Hair Regrowth Machine -->
-            <div class="modality-card" data-mode="laser-hair" data-depth="4.20 mm (Scalp Micro-Vascular Bed)" data-wave="650 nm Low-Level Photobiostimulation" data-target="Follicular Dermal Papilla &amp; Scalp Micro-Circulation" data-down="Zero Downtime">
-              <div class="modality-card__badge">4.20 mm Depth</div>
-              <h3 style="font-size: 1.2rem; margin-bottom: 0.25rem;">Laser Hair Regrowth Machine</h3>
-              <div style="color: var(--gold-deep); font-size: 0.82rem; text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">Photobiomodulation Trichology</div>
-              <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.85rem;">Improves micro-circulation of the scalp, boosts cellular ATP synthesis, and helps in hair fall control and robust follicular hair regrowth.</p>
-              <div style="font-size: 0.82rem; color: var(--text-subtle);"><strong>Sensation:</strong> Relaxing ambient warmth</div>
-            </div>
+            <!-- 05 -->
+            <button type="button" class="modality-card" data-mode="alsavique"
+              data-depth="3.50 mm (Perifollicular Vascular Zone)"
+              data-wave="Italian Biomimetic Peptide Complex"
+              data-target="Vascular Signalling &amp; Follicle Nutrition"
+              data-down="Zero Downtime"
+              data-beam-color="#A0D870"
+              data-target-layer="follicular"
+              data-beam-height="78%"
+              style="text-align: left; cursor: pointer; background: none; border: none; padding: 0; width: 100%;">
+              <div class="modality-vis-card" style="background:#fff; border: 2px solid rgba(197,154,63,0.2); border-radius: 1rem; padding: 1.25rem 1.5rem; transition: all 0.25s ease; display: flex; gap: 1rem; align-items: flex-start;">
+                <div style="font-size: 1.6rem; flex-shrink:0;">🇮🇹</div>
+                <div>
+                  <div style="font-size: 0.7rem; font-weight: 800; color: var(--gold-deep); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.2rem;">Hair Restoration · Italy</div>
+                  <div style="font-weight: 700; color: var(--text-heading); font-size: 1rem; margin-bottom: 0.3rem;">Alsavique Italian Hair Therapy</div>
+                  <div style="font-size: 0.82rem; color: var(--text-muted);">Italian peptide complex injected around the follicle to nourish depleted roots.</div>
+                  <div style="margin-top: 0.6rem; font-size: 0.75rem; font-weight: 700; color: rgba(197,154,63,0.8);">Reaches: Perifollicular Zone (3.5 mm)</div>
+                </div>
+              </div>
+            </button>
 
-            <!-- 04: PRP & GFC -->
-            <div class="modality-card" data-mode="gfc" data-depth="4.20 mm (Subcutaneous Follicular Matrix)" data-wave="Autologous Bio-Active Growth Factors (PDGF, VEGF)" data-target="Hair Follicle Stem Cells &amp; Dermal Papilla" data-down="Zero Downtime">
-              <div class="modality-card__badge">4.20 mm Depth</div>
-              <h3 style="font-size: 1.2rem; margin-bottom: 0.25rem;">PRP &amp; Growth Factor (GFC)</h3>
-              <div style="color: var(--gold-deep); font-size: 0.82rem; text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">Autologous Cellular Therapy</div>
-              <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.85rem;">High-purity autologous cellular concentrate micro-infused around thinning hair roots to prolong active anagen growth and reverse miniaturization.</p>
-              <div style="font-size: 0.82rem; color: var(--text-subtle);"><strong>Sensation:</strong> Superficial micro-taps</div>
-            </div>
+            <!-- 06 -->
+            <button type="button" class="modality-card" data-mode="pdrn"
+              data-depth="1.20 mm (Papillary &amp; Mid Dermis)"
+              data-wave="Salmon DNA Polynucleotides &amp; Skin Vector"
+              data-target="Fibroblast Activation &amp; Collagen Synthesis"
+              data-down="12–24 Hours Mild Dewiness"
+              data-beam-color="#60B8F0"
+              data-target-layer="papillary"
+              data-beam-height="32%"
+              style="text-align: left; cursor: pointer; background: none; border: none; padding: 0; width: 100%;">
+              <div class="modality-vis-card" style="background:#fff; border: 2px solid rgba(197,154,63,0.2); border-radius: 1rem; padding: 1.25rem 1.5rem; transition: all 0.25s ease; display: flex; gap: 1rem; align-items: flex-start;">
+                <div style="font-size: 1.6rem; flex-shrink:0;">💧</div>
+                <div>
+                  <div style="font-size: 0.7rem; font-weight: 800; color: var(--gold-deep); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.2rem;">Glow · Hydration · Boosters</div>
+                  <div style="font-weight: 700; color: var(--text-heading); font-size: 1rem; margin-bottom: 0.3rem;">PDRN &amp; Skin Boosters</div>
+                  <div style="font-size: 0.82rem; color: var(--text-muted);">Salmon DNA injected into the dermis to activate collagen and skin hydration.</div>
+                  <div style="margin-top: 0.6rem; font-size: 0.75rem; font-weight: 700; color: rgba(197,154,63,0.8);">Reaches: Papillary Dermis (1.2 mm)</div>
+                </div>
+              </div>
+            </button>
 
-            <!-- 05: Alsavique Italian Hair Restoration -->
-            <div class="modality-card" data-mode="alsavique" data-depth="3.50 mm (Perifollicular Vascular Zone)" data-wave="Imported Italian Biomimetic Peptide Complex" data-target="Vascular Signaling &amp; Cellular Follicle Nutrition" data-down="Zero Downtime">
-              <div class="modality-card__badge">3.50 mm Depth</div>
-              <h3 style="font-size: 1.2rem; margin-bottom: 0.25rem;">Alsavique Italian Hair Therapy</h3>
-              <div style="color: var(--gold-deep); font-size: 0.82rem; text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">Imported Italian Trichology</div>
-              <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.85rem;">Advanced hair restoration therapy directly from Italy, combining biomimetic peptides, oligo-elements, and vascular revitalizers to nourish weakened roots.</p>
-              <div style="font-size: 0.82rem; color: var(--text-subtle);"><strong>Sensation:</strong> Refreshing scalp infusion</div>
-            </div>
+            <!-- 07 -->
+            <button type="button" class="modality-card" data-mode="diode"
+              data-depth="4.00 mm (Follicular Bulbar Melanin)"
+              data-wave="808 nm Diode with Sapphire Cooling"
+              data-target="Follicular Melanin &amp; Germ Cells"
+              data-down="Zero Social Downtime"
+              data-beam-color="#FF8888"
+              data-target-layer="follicular"
+              data-beam-height="83%"
+              style="text-align: left; cursor: pointer; background: none; border: none; padding: 0; width: 100%;">
+              <div class="modality-vis-card" style="background:#fff; border: 2px solid rgba(197,154,63,0.2); border-radius: 1rem; padding: 1.25rem 1.5rem; transition: all 0.25s ease; display: flex; gap: 1rem; align-items: flex-start;">
+                <div style="font-size: 1.6rem; flex-shrink:0;">🔴</div>
+                <div>
+                  <div style="font-size: 0.7rem; font-weight: 800; color: var(--gold-deep); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.2rem;">Laser Hair Removal</div>
+                  <div style="font-weight: 700; color: var(--text-heading); font-size: 1rem; margin-bottom: 0.3rem;">Diode Laser Hair Reduction</div>
+                  <div style="font-size: 0.82rem; color: var(--text-muted);">808nm beam destroys hair follicle root with contact cooling. Safe on all skin types.</div>
+                  <div style="margin-top: 0.6rem; font-size: 0.75rem; font-weight: 700; color: rgba(197,154,63,0.8);">Reaches: Follicular Matrix (4.0 mm)</div>
+                </div>
+              </div>
+            </button>
 
-            <!-- 06: PDRN & Skin Boosters -->
-            <div class="modality-card" data-mode="pdrn" data-depth="1.20 mm (Papillary &amp; Mid Dermis)" data-wave="Salmon DNA Polynucleotides &amp; Skin Vector" data-target="Fibroblast Activation &amp; Extracellular Matrix" data-down="12 to 24 Hours Mild Dewiness">
-              <div class="modality-card__badge">1.20 mm Depth</div>
-              <h3 style="font-size: 1.2rem; margin-bottom: 0.25rem;">PDRN &amp; Skin Boosters</h3>
-              <div style="color: var(--gold-deep); font-size: 0.82rem; text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">Biocellular Vector Remodeling</div>
-              <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.85rem;">Salmon DNA polynucleotides and Skin Vector therapy micro-placed into the dermis to stimulate natural collagen synthesis, hydration, and dermal density.</p>
-              <div style="font-size: 0.82rem; color: var(--text-subtle);"><strong>Sensation:</strong> Superficial micro-droplets</div>
-            </div>
+            <!-- 08 -->
+            <button type="button" class="modality-card" data-mode="hydra"
+              data-depth="0.25 mm (Stratum Corneum &amp; Epidermis)"
+              data-wave="Vortex Vacuum Extraction + Serum Infusion"
+              data-target="Blackheads, Dead Skin, Pore Congestion"
+              data-down="Instant Radiance, Zero Downtime"
+              data-beam-color="#38C4E8"
+              data-target-layer="epidermis"
+              data-beam-height="8%"
+              style="text-align: left; cursor: pointer; background: none; border: none; padding: 0; width: 100%;">
+              <div class="modality-vis-card" style="background:#fff; border: 2px solid rgba(197,154,63,0.2); border-radius: 1rem; padding: 1.25rem 1.5rem; transition: all 0.25s ease; display: flex; gap: 1rem; align-items: flex-start;">
+                <div style="font-size: 1.6rem; flex-shrink:0;">✨</div>
+                <div>
+                  <div style="font-size: 0.7rem; font-weight: 800; color: var(--gold-deep); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.2rem;">Glow · Cleansing</div>
+                  <div style="font-weight: 700; color: var(--text-heading); font-size: 1rem; margin-bottom: 0.3rem;">Advanced HydraFacial</div>
+                  <div style="font-size: 0.82rem; color: var(--text-muted);">Vortex suction clears pores while serum infusion hydrates and brightens instantly.</div>
+                  <div style="margin-top: 0.6rem; font-size: 0.75rem; font-weight: 700; color: rgba(197,154,63,0.8);">Works at: Epidermis (0.25 mm)</div>
+                </div>
+              </div>
+            </button>
 
-            <!-- 07: Diode Laser Hair Reduction -->
-            <div class="modality-card" data-mode="diode" data-depth="4.00 mm (Follicular Bulbar Melanin)" data-wave="808 nm Laser with Active Sapphire Cooling" data-target="Follicular Germ Cells &amp; Bulbar Pigment" data-down="Zero Social Downtime">
-              <div class="modality-card__badge">4.00 mm Depth</div>
-              <h3 style="font-size: 1.2rem; margin-bottom: 0.25rem;">Diode Laser Hair Reduction</h3>
-              <div style="color: var(--gold-deep); font-size: 0.82rem; text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">808nm Gold Standard Laser</div>
-              <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.85rem;">High-fluence 808nm diode beam targeting hair follicle melanin while sapphire chill tip maintains epidermal comfort. Safe for Indian skin phototypes.</p>
-              <div style="font-size: 0.82rem; color: var(--text-subtle);"><strong>Sensation:</strong> Chilled contact with gentle prickle</div>
-            </div>
-
-            <!-- 08: Advanced HydraFacial -->
-            <div class="modality-card" data-mode="hydra" data-depth="0.25 mm (Stratum Corneum &amp; Epidermis)" data-wave="Vortex Fluid Vacuum Micro-Extraction &amp; Infusion" data-target="Sebaceous Follicles, Blackheads, Dead Keratin" data-down="Instant Radiance, Zero Downtime">
-              <div class="modality-card__badge">0.25 mm Depth</div>
-              <h3 style="font-size: 1.2rem; margin-bottom: 0.25rem;">Advanced HydraFacial</h3>
-              <div style="color: var(--gold-deep); font-size: 0.82rem; text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">Medical-Grade Hydro-Dermabrasion</div>
-              <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.85rem;">Vortex pore extraction with salicylic, glycolic, hyaluronic acid, and peptide serums to cleanse congestion and nourish epidermal barrier.</p>
-              <div style="font-size: 0.82rem; color: var(--text-subtle);"><strong>Sensation:</strong> Cool hydrating suction</div>
-            </div>
-          </div>
-
-          <!-- Live Clinical Telemetry HUD -->
-          <div class="luxury-3d-hud">
-            <div class="hud-box">
-              <span class="hud-box__label">Target Penetration</span>
-              <span class="hud-box__val" id="hudDepthVal">1.50 mm (Papillary &amp; Reticular)</span>
-            </div>
-            <div class="hud-box">
-              <span class="hud-box__label">Wavelength / Field</span>
-              <span class="hud-box__val" id="hudWaveVal">1064 nm Acoustic Shockwave</span>
-            </div>
-            <div class="hud-box">
-              <span class="hud-box__label">Histological Target</span>
-              <span class="hud-box__val" id="hudTargetVal">Dermal Melanosomes &amp; Pigment</span>
-            </div>
-            <div class="hud-box">
-              <span class="hud-box__label">Typical Recovery</span>
-              <span class="hud-box__val" id="hudDownVal">Zero Social Downtime</span>
-            </div>
           </div>
         </div>
       </div>
     </section>
+
+
 
     <!-- DETAILED CLINICAL SPECIFICATIONS & FULL PORTFOLIO -->
     <section class="section-wrap section-surface">

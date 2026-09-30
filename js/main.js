@@ -1210,6 +1210,162 @@ function initEquinoxApp() {
   updateClinicTelemetry();
   init3DTilt();
 
+  // F.1 SKIN DEPTH DIAGRAM — CSS diagram modality selector
+  (function initSkinDiagram() {
+    const modalityCards = document.querySelectorAll('[data-target-layer]');
+    if (!modalityCards.length) return;
+
+    const layers = {
+      epidermis:    document.getElementById('layer-epidermis'),
+      papillary:    document.getElementById('layer-papillary'),
+      reticular:    document.getElementById('layer-reticular'),
+      follicular:   document.getElementById('layer-follicular'),
+      subcutaneous: document.getElementById('layer-subcutaneous'),
+    };
+
+    const nameEl      = document.getElementById('activeModalityName');
+    const depthEl     = document.getElementById('activeDepthDisplay');
+    const hudDepth    = document.getElementById('hudDepthVal');
+    const hudWave     = document.getElementById('hudWaveVal');
+    const hudTarget   = document.getElementById('hudTargetVal');
+    const hudDown     = document.getElementById('hudDownVal');
+    const stepText    = document.getElementById('demoStepText');
+    const laserBeam   = document.getElementById('laserBeam');
+    const handpiece   = document.getElementById('handpiece');
+    const impactRing  = document.getElementById('impactRing');
+
+    const layerOrder = ['epidermis','papillary','reticular','follicular','subcutaneous'];
+
+    function clearHighlights() {
+      layerOrder.forEach((k) => {
+        if (layers[k]) layers[k].classList.remove('is-highlighted');
+      });
+    }
+
+    function fireLaserBeam(targetLayer, beamColor, beamHeight) {
+      if (!handpiece || !laserBeam) return;
+
+      // Set beam colour via CSS custom property
+      handpiece.style.setProperty('--beam-color', beamColor);
+      handpiece.style.display = 'block';
+
+      // Reset beam
+      laserBeam.style.height = '0';
+      if (impactRing) {
+        impactRing.style.width = '0';
+        impactRing.style.height = '0';
+        impactRing.style.opacity = '0';
+        impactRing.style.setProperty('--beam-color', beamColor);
+      }
+
+      // Animate beam growing downward
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          laserBeam.style.height = beamHeight;
+
+          // After beam lands, show impact ring
+          setTimeout(() => {
+            if (impactRing) {
+              impactRing.style.width = '24px';
+              impactRing.style.height = '24px';
+              impactRing.style.opacity = '1';
+            }
+          }, 1200);
+        }, 50);
+      });
+    }
+
+    function selectModality(card) {
+      // Remove active from all
+      modalityCards.forEach((c) => c.classList.remove('is-active'));
+      card.classList.add('is-active');
+
+      const targetLayer  = card.dataset.targetLayer;
+      const beamColor    = card.dataset.beamColor || '#F6D27A';
+      const beamHeight   = card.dataset.beamHeight || '50%';
+      const modalityName = card.querySelector('[style*="font-weight: 700; color: var(--text-heading)"]')?.textContent
+                          || card.dataset.mode;
+      const depth  = card.dataset.depth || '';
+      const wave   = card.dataset.wave  || '';
+      const target = card.dataset.target || '';
+      const down   = card.dataset.down  || '';
+
+      // Update diagram top bar
+      if (nameEl) nameEl.textContent = modalityName;
+      if (depthEl) depthEl.textContent = 'Target: ' + (depth.split(' ')[0] || '');
+
+      // Update HUD boxes
+      if (hudDepth)  hudDepth.textContent  = depth;
+      if (hudWave)   hudWave.textContent   = wave;
+      if (hudTarget) hudTarget.textContent = target;
+      if (hudDown)   hudDown.textContent   = down;
+
+      // Update step text
+      if (stepText) {
+        stepText.innerHTML = `<strong style="color:var(--gold-deep)">Step 1 — Diagnose:</strong> Physician maps your concern area and selects appropriate parameters.<br><br>
+          <strong style="color:var(--gold-deep)">Step 2 — Treat:</strong> ${wave} is applied, reaching <strong>${depth}</strong> in the skin.<br><br>
+          <strong style="color:var(--gold-deep)">Step 3 — Recover:</strong> ${down}.`;
+      }
+
+      // Highlight layers up to and including the target layer
+      clearHighlights();
+      let found = false;
+      layerOrder.forEach((k) => {
+        if (!found && layers[k]) {
+          layers[k].classList.add('is-highlighted');
+          if (k === targetLayer) found = true;
+        }
+      });
+
+      // Fire the animated beam
+      fireLaserBeam(targetLayer, beamColor, beamHeight);
+
+      // Scroll diagram into view smoothly on mobile
+      const diagram = document.getElementById('skinDiagram');
+      if (diagram && window.innerWidth < 960) {
+        diagram.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    // Attach listeners
+    modalityCards.forEach((card) => {
+      card.addEventListener('click', () => selectModality(card));
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectModality(card);
+        }
+      });
+    });
+
+    // Auto-select first card on load
+    if (modalityCards.length) {
+      setTimeout(() => selectModality(modalityCards[0]), 400);
+    }
+
+    // Demo step buttons
+    const stepBtns = document.querySelectorAll('.demo-step-btn');
+    stepBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const activeCard = document.querySelector('.modality-card.is-active');
+        if (!activeCard) return;
+        const step = parseInt(btn.dataset.step);
+        const depth  = activeCard.dataset.depth  || '';
+        const wave   = activeCard.dataset.wave   || '';
+        const down   = activeCard.dataset.down   || '';
+        const steps = [
+          `<strong style="color:var(--gold-deep)">Step 1 — Diagnosis &amp; Mapping:</strong> The physician examines your skin phototype, photos the concern area, and calibrates the ${wave} parameters to your individual skin characteristics.`,
+          `<strong style="color:var(--gold-deep)">Step 2 — Treatment at ${depth}:</strong> The handpiece is placed on the skin. Energy penetrates precisely to the target layer. You may feel mild warmth or pressure depending on the modality.`,
+          `<strong style="color:var(--gold-deep)">Step 3 — Recovery &amp; Aftercare:</strong> ${down}. Clinic staff guide you through post-treatment care instructions before you leave.`
+        ];
+        if (stepText && steps[step - 1]) stepText.innerHTML = steps[step - 1];
+        stepBtns.forEach((b) => b.style.fontWeight = '600');
+        btn.style.fontWeight = '800';
+      });
+    });
+  })();
+
+
   // G. Cookie Consent
   const consentBanner = document.getElementById('consent');
   if (consentBanner) {
@@ -1223,6 +1379,60 @@ function initEquinoxApp() {
     consentBanner.querySelector('[data-consent-action="all"]')?.addEventListener('click', () => closeConsent('all'));
     consentBanner.querySelector('[data-consent-action="none"]')?.addEventListener('click', () => closeConsent('necessary'));
   }
+
+  // H. SCROLL-REVEAL (IntersectionObserver — no library)
+  if ('IntersectionObserver' in window) {
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('[data-reveal]').forEach((el) => {
+      revealObserver.observe(el);
+    });
+  } else {
+    // Fallback: reveal immediately for old browsers
+    document.querySelectorAll('[data-reveal]').forEach((el) => {
+      el.classList.add('is-revealed');
+    });
+  }
+
+  // I. HEADER SCROLL STATE (add .is-scrolled after hero)
+  const siteHeader = document.querySelector('.site-header');
+  if (siteHeader) {
+    const onScroll = () => {
+      siteHeader.classList.toggle('is-scrolled', window.scrollY > 60);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  // J. ACTIVE NAV LINK HIGHLIGHTING
+  const currentPath = window.location.pathname.replace(/\/$/, '') || '/';
+  document.querySelectorAll('.header-nav a').forEach((link) => {
+    const linkPath = new URL(link.href, window.location.origin).pathname.replace(/\/$/, '') || '/';
+    if (linkPath === currentPath) {
+      link.classList.add('is-active');
+      link.setAttribute('aria-current', 'page');
+    }
+  });
+
+  // K. SERVICE CARD TILT — subtle 3D perspective on hover for featured cards
+  document.querySelectorAll('.featured-service-card, .service-luxury-card').forEach((card) => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      card.style.transform = `translateY(-8px) rotateX(${y * -4}deg) rotateY(${x * 4}deg) scale(1.015)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
 }
 
 if (document.readyState === 'loading') {

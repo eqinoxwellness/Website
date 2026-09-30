@@ -155,71 +155,110 @@
   </div>
 
   <main id="main">
-    <!-- 1. HERO SECTION (WARM CHAMPAGNE IVORY & 3D INTERACTIVE GOLD PARTICLES) -->
-    <section class="section-wrap hero-luxury-wrap" style="padding-top: clamp(3rem, 5vw, 5rem); padding-bottom: clamp(3.5rem, 6vw, 6rem);">
+    <!-- 1. HERO SECTION — Premium split layout with 3D canvas + visual panel -->
+    <section class="section-wrap hero-luxury-wrap" style="padding-top: clamp(4rem, 7vw, 7rem); padding-bottom: clamp(4rem, 7vw, 7rem);">
       <canvas id="heroCanvas3D" class="hero-3d-canvas"></canvas>
       <div class="container hero-luxury-content">
-        <div style="display: grid; grid-template-columns: 1fr; gap: 2.5rem; align-items: center;">
-          <div style="max-width: 920px; margin-inline: auto; text-align: center;">
-            <div class="hero-stat-badge">
+        <div class="hero-split-grid">
+
+          <!-- LEFT: Headline + CTAs -->
+          <div class="hero-left-col">
+            <div class="hero-stat-badge" data-reveal data-reveal-delay="1">
               <span style="color: var(--gold-deep); font-size: 1rem;">✦</span>
-              <span style="font-size: 0.84rem; font-weight: 700; color: #2D2721; letter-spacing: 0.04em; text-transform: uppercase;">14 Years Clinical Experience in Homeopathy &amp; Cosmetology</span>
+              <span style="font-size: 0.84rem; font-weight: 700; color: #2D2721; letter-spacing: 0.04em; text-transform: uppercase;">14 Years · Homeopathy &amp; Cosmetology</span>
             </div>
-            <h1 class="section-title" style="margin-bottom: 1.25rem;">
-              Doctor-Led Precision Aesthetics &amp; <span class="gold-shimmer-text">Restorative Wellness</span>
+
+            <h1 class="section-title" style="margin-bottom: 1.25rem; text-align: left;" data-reveal data-reveal-delay="2">
+              Doctor-Led Skin, Hair &amp; <span class="gold-shimmer-text">Wellness Care</span>
             </h1>
-            <p class="section-lead" style="max-width: 66ch;">
-              Welcome to Equinox Aesthetic &amp; Wellness Centre in Satya Nagar, Bhubaneswar. We bring together physician-supervised clinical cosmetology, advanced laser modalities, and constitutional wellness—delivering honest assessments and scientific protocols without commercial pressure.
+
+            <p class="section-lead" style="margin-inline: 0; text-align: left; font-size: 1.05rem;" data-reveal data-reveal-delay="3">
+              Physician-supervised clinical cosmetology, advanced laser modalities, and constitutional wellness at Satya Nagar, Bhubaneswar — honest assessments, no commercial pressure.
             </p>
 
-            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;">
+            <!-- Trust Chips -->
+            <div style="display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 2rem;" data-reveal data-reveal-delay="4">
+              <span style="background: rgba(197,154,63,0.1); border: 1px solid rgba(197,154,63,0.28); color: var(--gold-deep); padding: 0.3rem 0.85rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;">🔬 Pico Laser</span>
+              <span style="background: rgba(197,154,63,0.1); border: 1px solid rgba(197,154,63,0.28); color: var(--gold-deep); padding: 0.3rem 0.85rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;">⚡ MNRF RF</span>
+              <span style="background: rgba(197,154,63,0.1); border: 1px solid rgba(197,154,63,0.28); color: var(--gold-deep); padding: 0.3rem 0.85rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;">💆 GFC · PRP</span>
+              <span style="background: rgba(197,154,63,0.1); border: 1px solid rgba(197,154,63,0.28); color: var(--gold-deep); padding: 0.3rem 0.85rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;">🇮🇹 Alsavique Italy</span>
+              <span style="background: rgba(197,154,63,0.1); border: 1px solid rgba(197,154,63,0.28); color: var(--gold-deep); padding: 0.3rem 0.85rem; border-radius: 999px; font-size: 0.82rem; font-weight: 700;">💧 Diode Laser</span>
+            </div>
+
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;" data-reveal data-reveal-delay="5">
               <a class="btn-royal" href="https://wa.me/916372528534?text=Hi%20Equinox%2C%20I%20would%20like%20to%20schedule%20a%20consultation.%20%23EQ-HERO" target="_blank" rel="noopener">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.48 15.04L2.2 21.8l4.9-1.3A9.9 9.9 0 1 0 12.04 2Zm0 18.1a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-2.9.77.78-2.83-.2-.3a8.2 8.2 0 1 1 6.8 3.7Zm4.5-6.14c-.25-.12-1.46-.72-1.69-.8-.23-.08-.39-.12-.55.12-.16.25-.63.8-.78.97-.14.16-.29.18-.53.06a6.7 6.7 0 0 1-3.34-2.92c-.25-.43.25-.4.72-1.34.08-.16.04-.3-.02-.42l-.75-1.8c-.2-.47-.4-.4-.55-.41h-.47a.9.9 0 0 0-.65.3 2.73 2.73 0 0 0-.85 2.03 4.74 4.74 0 0 0 1 2.52 10.86 10.86 0 0 0 4.16 3.67c1.55.67 2.16.73 2.93.61.47-.07 1.46-.6 1.66-1.17.2-.58.2-1.07.14-1.17-.06-.1-.22-.16-.47-.28Z"/></svg>
                 <span>Consult on WhatsApp</span>
               </a>
-              <a class="btn-outline-gold" href="#concern-navigator">
-                <span>✦ Explore Interactive Modalities</span>
+              <a class="btn-outline-gold" href="#services">
+                <span>✦ View All Services</span>
               </a>
             </div>
-          </div>
-        </div>
 
-        <!-- CLINIC TRUST PILLARS STRIP -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-top: 3.5rem;">
-          <div style="background: rgba(255, 255, 255, 0.92); border: 1px solid var(--gold-border-subtle); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-sm); display: flex; align-items: flex-start; gap: 1rem; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);">
-            <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(197, 154, 63, 0.12); display: flex; align-items: center; justify-content: center; color: var(--gold-deep); font-size: 1.2rem; flex-shrink: 0;">✦</div>
-            <div>
-              <strong style="display: block; font-size: 1rem; color: var(--text-primary); margin-bottom: 0.25rem;">14 Years Clinical Rigour</strong>
-              <span style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">Dual-trained expertise in constitutional homeopathy and advanced clinical cosmetology.</span>
+            <!-- Location + Hours pill -->
+            <div style="margin-top: 2rem; display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;" data-reveal data-reveal-delay="6">
+              <span style="font-size: 0.82rem; color: var(--text-muted);">📍 Satya Nagar, Bhubaneswar</span>
+              <span style="width: 4px; height: 4px; border-radius: 50%; background: var(--gold-border); flex-shrink: 0;"></span>
+              <span style="font-size: 0.82rem; color: var(--text-muted);">⏰ Mon–Sat, 11am–8pm</span>
+              <span style="width: 4px; height: 4px; border-radius: 50%; background: var(--gold-border); flex-shrink: 0;"></span>
+              <a href="tel:+916372528534" style="font-size: 0.82rem; font-weight: 700; color: var(--gold-deep);">+91 63725 28534</a>
             </div>
           </div>
 
-          <div style="background: rgba(255, 255, 255, 0.92); border: 1px solid var(--gold-border-subtle); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-sm); display: flex; align-items: flex-start; gap: 1rem; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);">
-            <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(197, 154, 63, 0.12); display: flex; align-items: center; justify-content: center; color: var(--gold-deep); font-size: 1.2rem; flex-shrink: 0;">🔬</div>
-            <div>
-              <strong style="display: block; font-size: 1rem; color: var(--text-primary); margin-bottom: 0.25rem;">Advanced Modalities</strong>
-              <span style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">Pico Laser, MNRF, Diode Hair Reduction, PDRN cellular therapy, and Italian Alsavique trichology.</span>
+          <!-- RIGHT: Logo visual panel with floating badges -->
+          <div class="hero-right-col" data-reveal="right" data-reveal-delay="3">
+            <div class="hero-visual-panel">
+              <div class="hero-logo-glow-ring"></div>
+
+              <!-- Central logo circle -->
+              <div class="hero-logo-frame">
+                <img src="/brand/equinox-luxury-logo.jpg" alt="Equinox Aesthetic &amp; Wellness Centre — Doctor-Led Clinic Bhubaneswar" width="230" height="230">
+              </div>
+
+              <!-- Floating credential badges -->
+              <div class="hero-badge-ring" aria-hidden="true">
+                <div class="hero-float-badge">
+                  <span class="badge-dot"></span>
+                  <span>14 Yrs Experience</span>
+                </div>
+                <div class="hero-float-badge">
+                  <span>🏥 Doctor-Led</span>
+                </div>
+                <div class="hero-float-badge">
+                  <span class="badge-dot"></span>
+                  <span>Open Today</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div style="background: rgba(255, 255, 255, 0.92); border: 1px solid var(--gold-border-subtle); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-sm); display: flex; align-items: flex-start; gap: 1rem; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);">
-            <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(197, 154, 63, 0.12); display: flex; align-items: center; justify-content: center; color: var(--gold-deep); font-size: 1.2rem; flex-shrink: 0;">🌿</div>
-            <div>
-              <strong style="display: block; font-size: 1rem; color: var(--text-primary); margin-bottom: 0.25rem;">Whole-Person Care</strong>
-              <span style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">Confidential Mental Health and Child Counselling provided in an unhurried, private suite.</span>
-            </div>
-          </div>
-
-          <div style="background: rgba(255, 255, 255, 0.92); border: 1px solid var(--gold-border-subtle); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: var(--shadow-sm); display: flex; align-items: flex-start; gap: 1rem; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);">
-            <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(197, 154, 63, 0.12); display: flex; align-items: center; justify-content: center; color: var(--gold-deep); font-size: 1.2rem; flex-shrink: 0;">📍</div>
-            <div>
-              <strong style="display: block; font-size: 1rem; color: var(--text-primary); margin-bottom: 0.25rem;">Satya Nagar Suite</strong>
-              <span style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">Plot 69, Kali Mandir Road, Bhubaneswar. Easily reached from Saheed Nagar, Janpath, &amp; Vani Vihar.</span>
-            </div>
-          </div>
         </div>
       </div>
     </section>
+
+    <!-- STATS STRIP -->
+    <div class="stats-strip">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-item" data-reveal data-reveal-delay="1">
+            <div class="stat-number">14+</div>
+            <div class="stat-label">Years Experience</div>
+          </div>
+          <div class="stat-item" data-reveal data-reveal-delay="2">
+            <div class="stat-number">8+</div>
+            <div class="stat-label">Laser Modalities</div>
+          </div>
+          <div class="stat-item" data-reveal data-reveal-delay="3">
+            <div class="stat-number">₹500</div>
+            <div class="stat-label">Consultation Fee</div>
+          </div>
+          <div class="stat-item" data-reveal data-reveal-delay="4">
+            <div class="stat-number">6</div>
+            <div class="stat-label">Days a Week</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- 1.1 INTERACTIVE CLINICAL CONCERN & MODALITY MATCHER -->
     <section class="section-wrap concern-matcher-section" id="concern-navigator">
@@ -1056,20 +1095,18 @@
     </div>
   </footer>
 
-  <!-- FLOATING CONCIERGE PILL -->
-  <aside class="floating-concierge" aria-label="Quick Clinical Concierge">
-    <a href="https://wa.me/916372528534?text=Hi%20Equinox%2C%20I%20would%20like%20to%20inquire%20about%20a%20consultation.%20%23EQ-CONCIERGE" target="_blank" rel="noopener" class="concierge-pill" aria-label="Chat with Clinical Concierge on WhatsApp">
-      <div class="concierge-icon-circle">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
-          <path d="M12.04 2a9.9 9.9 0 0 0-8.48 15.04L2.2 21.8l4.9-1.3A9.9 9.9 0 1 0 12.04 2Zm0 18.1a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-2.9.77.78-2.83-.2-.3a8.2 8.2 0 1 1 6.8 3.7Zm4.5-6.14c-.25-.12-1.46-.72-1.69-.8-.23-.08-.39-.12-.55.12-.16.25-.63.8-.78.97-.14.16-.29.18-.53.06a6.7 6.7 0 0 1-3.34-2.92c-.25-.43.25-.4.72-1.34.08-.16.04-.3-.02-.42l-.75-1.8c-.2-.47-.4-.4-.55-.41h-.47a.9.9 0 0 0-.65.3 2.73 2.73 0 0 0-.85 2.03 4.74 4.74 0 0 0 1 2.52 10.86 10.86 0 0 0 4.16 3.67c1.55.67 2.16.73 2.93.61.47-.07 1.46-.6 1.66-1.17.2-.58.2-1.07.14-1.17-.06-.1-.22-.16-.47-.28Z"/>
-        </svg>
-      </div>
-      <div class="concierge-text-block">
-        <span class="concierge-title">Clinic Concierge</span>
-        <span class="concierge-sub">Chat on WhatsApp · 11am–8pm</span>
-      </div>
+  <!-- FLOATING WHATSAPP CONCIERGE -->
+  <div class="floating-concierge" aria-label="WhatsApp Consultation">
+    <div class="floating-wa-label" aria-hidden="true">Chat · 11am–8pm</div>
+    <a href="https://wa.me/916372528534?text=Hi%20Equinox%2C%20I%20would%20like%20to%20inquire%20about%20a%20consultation.%20%23EQ-CONCIERGE"
+       target="_blank" rel="noopener"
+       class="floating-wa-btn"
+       aria-label="Chat with Equinox on WhatsApp">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12.04 2a9.9 9.9 0 0 0-8.48 15.04L2.2 21.8l4.9-1.3A9.9 9.9 0 1 0 12.04 2Zm0 18.1a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-2.9.77.78-2.83-.2-.3a8.2 8.2 0 1 1 6.8 3.7Zm4.5-6.14c-.25-.12-1.46-.72-1.69-.8-.23-.08-.39-.12-.55.12-.16.25-.63.8-.78.97-.14.16-.29.18-.53.06a6.7 6.7 0 0 1-3.34-2.92c-.25-.43.25-.4.72-1.34.08-.16.04-.3-.02-.42l-.75-1.8c-.2-.47-.4-.4-.55-.41h-.47a.9.9 0 0 0-.65.3 2.73 2.73 0 0 0-.85 2.03 4.74 4.74 0 0 0 1 2.52 10.86 10.86 0 0 0 4.16 3.67c1.55.67 2.16.73 2.93.61.47-.07 1.46-.6 1.66-1.17.2-.58.2-1.07.14-1.17-.06-.1-.22-.16-.47-.28Z"/>
+      </svg>
     </a>
-  </aside>
+  </div>
 
   <!-- GLOBAL SCRIPT -->
   <script src="/js/main.js"></script>
