@@ -2001,7 +2001,6 @@ p {
 
 .concern-pill-btn {
   position: relative;
-  overflow: hidden;
 }
 
 .concern-pill-btn:hover::after {
@@ -2358,7 +2357,7 @@ p {
 }
 
 /* ==========================================================================
-   EQUINOX — MOBILE FIX + SKIN DIAGRAM + INTERACTIVITY POLISH
+   EQUINOX ï¿½ MOBILE FIX + SKIN DIAGRAM + INTERACTIVITY POLISH
    ========================================================================== */
 
 .section-wrap, .hero-luxury-wrap, .stats-strip, .concern-matcher-section { max-width: 100vw; }
@@ -2402,3 +2401,31 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--gold-primary); 
 .card-link-arrow::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 0; height: 1.5px; background: var(--gold-deep); transition: width 0.3s ease; }
 .card-link-arrow:hover::after { width: 100%; }
 [id] { scroll-margin-top: 5.5rem; }
+
+/* ==========================================================================
+   CONCERN PILL MOBILE FIX ï¿½ pills must never shrink in horizontal scroll row
+   ========================================================================== */
+.concern-pill-btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+  min-width: max-content;
+}
+
+.concern-nav-pills {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Concern nav pills — mobile padding so pills don't flush the screen edge */
+@media (max-width: 59.9em) {
+  .concern-matcher-box {
+    padding-inline: 0.85rem;
+  }
+  .concern-nav-pills {
+    padding-bottom: 0.65rem;
+    gap: 0.5rem;
+  }
+  .concern-pill-btn {
+    padding: 0.55rem 1rem;
+    font-size: 0.82rem;
+  }
+}
