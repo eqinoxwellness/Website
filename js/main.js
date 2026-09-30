@@ -1,9 +1,173 @@
 /**
  * Equinox Aesthetic & Wellness Centre — Ultra-Luxury Vanilla JS Engine
- * 100% Pure Client-Side JavaScript (Zero Dependencies, Zero Frameworks)
+ * Features:
+ * 1. 60 FPS Interactive 3D Hero Canvas Background (Golden Constellation & Bio-Wave Field)
+ * 2. 60 FPS Interactive 3D Dermal Matrix & Precision Laser Visualizer
+ * 3. Interactive Protocol & Consultation Cost Estimator
+ * 4. Interactive Concern Finder
+ * 5. Real-Time Clinic Desk Operating Telemetry
+ * 6. 3D Card Hover Perspective Tilt & Micro-Animations
  */
 
-// 1. 60 FPS HTML5 Canvas 3D Bio-Laser & Dermal Matrix Engine
+// ==========================================
+// 1. 60 FPS INTERACTIVE 3D HERO CANVAS BACKGROUND
+// ==========================================
+class Hero3DBackground {
+  constructor(canvasId) {
+    this.canvas = document.getElementById(canvasId);
+    if (!this.canvas) return;
+    this.ctx = this.canvas.getContext('2d');
+    if (!this.ctx) return;
+
+    this.particles = [];
+    this.numParticles = 75;
+    this.mouseX = 0;
+    this.mouseY = 0;
+    this.targetMouseX = 0;
+    this.targetMouseY = 0;
+    this.time = 0;
+
+    this.resize();
+    this.initParticles();
+    this.attachEvents();
+    this.animate();
+  }
+
+  resize() {
+    const parent = this.canvas.parentElement || document.body;
+    this.width = parent.clientWidth || window.innerWidth;
+    this.height = parent.clientHeight || window.innerHeight;
+    this.canvas.width = this.width;
+    this.canvas.height = this.height;
+  }
+
+  initParticles() {
+    this.particles = [];
+    for (let i = 0; i < this.numParticles; i++) {
+      this.particles.push({
+        x: (Math.random() - 0.5) * this.width * 1.4,
+        y: (Math.random() - 0.5) * this.height * 1.4,
+        z: Math.random() * 800 + 100,
+        baseSize: Math.random() * 2.8 + 1.2,
+        speedZ: Math.random() * 0.4 + 0.2,
+        pulseOffset: Math.random() * Math.PI * 2,
+        colorType: Math.random() > 0.4 ? 'gold' : 'amethyst'
+      });
+    }
+  }
+
+  attachEvents() {
+    window.addEventListener('resize', () => {
+      this.resize();
+      this.initParticles();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      const rect = this.canvas.getBoundingClientRect();
+      this.targetMouseX = (e.clientX - rect.left - rect.width / 2) * 0.08;
+      this.targetMouseY = (e.clientY - rect.top - rect.height / 2) * 0.08;
+    });
+
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        const rect = this.canvas.getBoundingClientRect();
+        this.targetMouseX = (touch.clientX - rect.left - rect.width / 2) * 0.05;
+        this.targetMouseY = (touch.clientY - rect.top - rect.height / 2) * 0.05;
+      }
+    }, { passive: true });
+  }
+
+  animate() {
+    this.time += 0.015;
+    // Smooth lerp mouse
+    this.mouseX += (this.targetMouseX - this.mouseX) * 0.05;
+    this.mouseY += (this.targetMouseY - this.mouseY) * 0.05;
+
+    this.ctx.clearRect(0, 0, this.width, this.height);
+
+    const cx = this.width / 2 + this.mouseX;
+    const cy = this.height / 2 + this.mouseY;
+    const fov = 400;
+
+    // Projected particle list
+    const projected = [];
+
+    for (let p of this.particles) {
+      // Move slightly forward
+      p.z -= p.speedZ;
+      if (p.z <= 20) p.z = 800;
+
+      // Subtle float wave
+      const waveY = Math.sin(this.time + p.pulseOffset) * 15;
+      const waveX = Math.cos(this.time * 0.7 + p.pulseOffset) * 15;
+
+      const scale = fov / (fov + p.z);
+      const px = cx + (p.x + waveX) * scale;
+      const py = cy + (p.y + waveY) * scale;
+
+      projected.push({
+        px,
+        py,
+        scale,
+        z: p.z,
+        size: p.baseSize * scale * (1 + Math.sin(this.time * 2 + p.pulseOffset) * 0.25),
+        colorType: p.colorType,
+        alpha: Math.min(1, Math.max(0.15, (1 - p.z / 800) * 1.2))
+      });
+    }
+
+    // Sort by depth
+    projected.sort((a, b) => b.z - a.z);
+
+    // Connect close neighbors with luminous gold threads
+    this.ctx.lineWidth = 0.6;
+    for (let i = 0; i < projected.length; i++) {
+      for (let j = i + 1; j < projected.length; j++) {
+        const dx = projected[i].px - projected[j].px;
+        const dy = projected[i].py - projected[j].py;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < 110) {
+          const lineAlpha = (1 - dist / 110) * 0.25 * Math.min(projected[i].alpha, projected[j].alpha);
+          this.ctx.strokeStyle = `rgba(242, 199, 102, ${lineAlpha})`;
+          this.ctx.beginPath();
+          this.ctx.moveTo(projected[i].px, projected[i].py);
+          this.ctx.lineTo(projected[j].px, projected[j].py);
+          this.ctx.stroke();
+        }
+      }
+    }
+
+    // Draw glowing spheres
+    for (let p of projected) {
+      if (p.px < -20 || p.px > this.width + 20 || p.py < -20 || p.py > this.height + 20) continue;
+
+      this.ctx.save();
+      this.ctx.beginPath();
+      this.ctx.arc(p.px, p.py, Math.max(1, p.size), 0, Math.PI * 2);
+
+      if (p.colorType === 'gold') {
+        this.ctx.fillStyle = '#f2c766';
+        this.ctx.shadowColor = '#f2c766';
+      } else {
+        this.ctx.fillStyle = '#d88b48';
+        this.ctx.shadowColor = '#d88b48';
+      }
+
+      this.ctx.shadowBlur = 10 * p.scale;
+      this.ctx.globalAlpha = p.alpha;
+      this.ctx.fill();
+      this.ctx.restore();
+    }
+
+    requestAnimationFrame(() => this.animate());
+  }
+}
+
+// ==========================================
+// 2. 60 FPS INTERACTIVE 3D DERMAL MATRIX & LASER ENGINE
+// ==========================================
 class Dermal3DEngine {
   constructor(canvasId, hudIds = {}) {
     this.canvas = document.getElementById(canvasId);
@@ -29,7 +193,7 @@ class Dermal3DEngine {
   initDimensions() {
     const parent = this.canvas.parentElement;
     this.width = parent?.clientWidth && parent.clientWidth > 0 ? parent.clientWidth : 800;
-    this.height = parent?.clientHeight && parent.clientHeight > 0 ? parent.clientHeight : 320;
+    this.height = parent?.clientHeight && parent.clientHeight > 0 ? parent.clientHeight : 340;
     this.canvas.width = this.width;
     this.canvas.height = this.height;
   }
@@ -163,16 +327,16 @@ class Dermal3DEngine {
   draw() {
     this.ctx.clearRect(0, 0, this.width, this.height);
 
-    // Subtle dark gradient background
+    // Deep luxury plum vignette background
     const bgGrad = this.ctx.createLinearGradient(0, 0, 0, this.height);
     bgGrad.addColorStop(0, '#150820');
     bgGrad.addColorStop(1, '#0c0412');
     this.ctx.fillStyle = bgGrad;
     this.ctx.fillRect(0, 0, this.width, this.height);
 
-    // Layer grid lines
+    // Grid wireframes for 4 distinct dermal layers
     const layerColors = ['#f2c766', '#d88b48', '#b54e7d', '#6e2b8c'];
-    this.ctx.lineWidth = 1;
+    this.ctx.lineWidth = 0.9;
 
     for (let l = 0; l < 4; l++) {
       const yL = (l - 1.5) * 58;
@@ -181,7 +345,7 @@ class Dermal3DEngine {
       const corner3 = this.project(230, yL, 230);
       const corner4 = this.project(-230, yL, 230);
 
-      this.ctx.strokeStyle = `${layerColors[l]}26`;
+      this.ctx.strokeStyle = `${layerColors[l]}33`;
       this.ctx.beginPath();
       this.ctx.moveTo(corner1.x, corner1.y);
       this.ctx.lineTo(corner2.x, corner2.y);
@@ -212,38 +376,91 @@ class Dermal3DEngine {
     }
     this.ctx.globalAlpha = 1;
 
-    // Active Laser / RF Beam Visualization
-    const beamYOffset = Math.sin(this.beamProgress) * 45;
-    const origin = this.project(0, -140, 0);
-    const target = this.project(0, -20 + beamYOffset, 0);
+    // Specialized Modality Firing Simulation
+    const cx = this.width / 2;
+    const cy = this.height / 2;
 
-    const beamGrad = this.ctx.createLinearGradient(origin.x, origin.y, target.x, target.y);
-    beamGrad.addColorStop(0, '#ffffff');
-    beamGrad.addColorStop(0.5, '#f2c766');
-    beamGrad.addColorStop(1, '#ff3366');
+    if (this.currentMode === 'pico') {
+      // Focused 1064nm Pico Acoustic Shockwave Beam
+      const beamYOffset = Math.sin(this.beamProgress) * 40;
+      const origin = this.project(0, -140, 0);
+      const target = this.project(0, -15 + beamYOffset, 0);
 
-    this.ctx.beginPath();
-    this.ctx.moveTo(origin.x, origin.y);
-    this.ctx.lineTo(target.x, target.y);
-    this.ctx.strokeStyle = beamGrad;
-    this.ctx.lineWidth = 3.5;
-    this.ctx.shadowColor = '#f2c766';
-    this.ctx.shadowBlur = 18;
-    this.ctx.stroke();
-    this.ctx.shadowBlur = 0;
+      const beamGrad = this.ctx.createLinearGradient(origin.x, origin.y, target.x, target.y);
+      beamGrad.addColorStop(0, '#ffffff');
+      beamGrad.addColorStop(0.5, '#f2c766');
+      beamGrad.addColorStop(1, '#ff3366');
 
-    // Focal spot glow
-    this.ctx.beginPath();
-    this.ctx.arc(target.x, target.y, 6.5, 0, Math.PI * 2);
-    this.ctx.fillStyle = '#ffffff';
-    this.ctx.shadowColor = '#f2c766';
-    this.ctx.shadowBlur = 24;
-    this.ctx.fill();
-    this.ctx.shadowBlur = 0;
+      this.ctx.beginPath();
+      this.ctx.moveTo(origin.x, origin.y);
+      this.ctx.lineTo(target.x, target.y);
+      this.ctx.strokeStyle = beamGrad;
+      this.ctx.lineWidth = 4;
+      this.ctx.shadowColor = '#f2c766';
+      this.ctx.shadowBlur = 20;
+      this.ctx.stroke();
+      this.ctx.shadowBlur = 0;
+
+      // Focal spot acoustic bloom
+      this.ctx.beginPath();
+      this.ctx.arc(target.x, target.y, 7, 0, Math.PI * 2);
+      this.ctx.fillStyle = '#ffffff';
+      this.ctx.shadowColor = '#f2c766';
+      this.ctx.shadowBlur = 25;
+      this.ctx.fill();
+      this.ctx.shadowBlur = 0;
+    } else if (this.currentMode === 'mnrf') {
+      // 1MHz RF Thermal Electro-Matrix
+      const origin = this.project(0, 0, 0);
+      const rfRadius = (Math.sin(this.beamProgress) * 0.5 + 0.5) * 110 + 20;
+
+      this.ctx.save();
+      this.ctx.strokeStyle = '#d88b48';
+      this.ctx.lineWidth = 2.5;
+      this.ctx.shadowColor = '#d88b48';
+      this.ctx.shadowBlur = 16;
+      this.ctx.beginPath();
+      this.ctx.arc(origin.x, origin.y + 10, rfRadius, 0, Math.PI * 2);
+      this.ctx.stroke();
+      this.ctx.restore();
+    } else if (this.currentMode === 'hydra') {
+      // Vortex Hydro-Extraction Spiral
+      this.ctx.save();
+      this.ctx.strokeStyle = '#38bdf8';
+      this.ctx.lineWidth = 2.5;
+      this.ctx.shadowColor = '#38bdf8';
+      this.ctx.shadowBlur = 14;
+      this.ctx.beginPath();
+      for (let a = 0; a < Math.PI * 4; a += 0.2) {
+        const r = a * 8 * (Math.sin(this.beamProgress) * 0.5 + 0.5);
+        const x = cx + Math.cos(a + this.beamProgress * 4) * r;
+        const y = cy - 30 + Math.sin(a + this.beamProgress * 4) * r * 0.5;
+        if (a === 0) this.ctx.moveTo(x, y);
+        else this.ctx.lineTo(x, y);
+      }
+      this.ctx.stroke();
+      this.ctx.restore();
+    } else if (this.currentMode === 'prp') {
+      // Autologous GFC Biostimulation Clusters
+      this.ctx.save();
+      this.ctx.fillStyle = '#b54e7d';
+      this.ctx.shadowColor = '#b54e7d';
+      this.ctx.shadowBlur = 15;
+      for (let i = 0; i < 8; i++) {
+        const py = cy + Math.sin(this.beamProgress * Math.PI * 2 + i) * 55 + 20;
+        const px = cx + Math.cos(this.beamProgress * Math.PI * 2 + i) * 75;
+        this.ctx.beginPath();
+        this.ctx.arc(px, py, 5, 0, Math.PI * 2);
+        this.ctx.fill();
+      }
+      this.ctx.restore();
+    }
   }
 }
 
-// 2. Modality & Clinic Status Store
+// ==========================================
+// 3. STORE & INTERACTIVE ESTIMATOR CONTROLLER
+// ==========================================
 const store = {
   getClinicStatus() {
     const now = new Date();
@@ -256,50 +473,49 @@ const store = {
     const closeMin = 20 * 60;
 
     if (day === 5) {
-      return { isOpen: false, statusText: 'Closed Today (Friday)', pulseColor: '#f85149' };
+      return { isOpen: false, statusText: 'Closed Today (Friday) · Resumes Sat 11 AM', pulseColor: '#f85149' };
     }
     if (totalMin >= openMin && totalMin < closeMin) {
-      return { isOpen: true, statusText: 'Open Now · Till 8:00 PM', pulseColor: '#10b981' };
+      return { isOpen: true, statusText: 'Open Now · Desk Active Till 8:00 PM', pulseColor: '#10b981' };
     }
     if (totalMin < openMin) {
-      return { isOpen: false, statusText: 'Opens Today at 11:00 AM', pulseColor: '#f2c766' };
+      return { isOpen: false, statusText: 'Opens Today at 11:00 AM · Booking Open', pulseColor: '#f2c766' };
     }
-    return { isOpen: false, statusText: 'Closed for Today · Opens 11 AM', pulseColor: '#f2c766' };
+    return { isOpen: false, statusText: 'Closed for Tonight · Re-opens 11 AM', pulseColor: '#f2c766' };
   },
 
   modalities: [
     {
       mode: 'pico',
-      depth: '1.50 mm',
+      depth: '1.50 mm (Reticular Dermis)',
       wave: '1064nm Pico Pulse',
       target: 'Melanin clusters & pigmentation',
       down: '12–24 hours (Mild flush)'
     },
     {
       mode: 'mnrf',
-      depth: '2.80 mm',
+      depth: '2.80 mm (Deep Collagen Matrix)',
       wave: '1MHz RF Matrix',
       target: 'Fibroblast stimulation & scar remodeling',
       down: '2–3 days (Micro-crusting)'
     },
     {
       mode: 'hydra',
-      depth: '0.40 mm',
-      wave: 'Vortex Nutrient Infusion',
-      target: 'Pore clearance & barrier hydration',
-      down: 'Zero (Immediate Radiance)'
+      depth: '0.25 mm (Stratum Corneum)',
+      wave: 'Vortex Infusion 40kPa',
+      target: 'Sebum extraction & antioxidant infusion',
+      down: 'Zero downtime'
     },
     {
-      mode: 'gfc',
-      depth: '3.20 mm',
-      wave: 'Autologous Growth Factor',
-      target: 'Follicular bulb biostimulation',
-      down: '24 hours'
+      mode: 'prp',
+      depth: '4.20 mm (Follicular Matrix)',
+      wave: 'Biostimulation Factor',
+      target: 'Autologous growth factors & vascular support',
+      down: '24 hours (Mild scalp tenderness)'
     }
   ]
 };
 
-// 3. Interactive Protocol & Cost Estimator Data
 const CONCERNS_DATA = {
   acne: {
     title: 'Acne & Acne Scar Protocol',
@@ -348,15 +564,15 @@ function updateEstimatorUI() {
   const titleEl = document.querySelector('.results-header h4');
   const badgeEl = document.querySelector('.results-badge');
   const modalitiesList = document.querySelector('.results-grid ul');
-  const cadenceEl = document.querySelector('.results-grid .small');
-  const noteEl = document.querySelectorAll('.results-grid .small')[1];
+  const cadenceEl = document.querySelector('.cadence-val');
+  const noteEl = document.querySelector('.diagnostic-note-val');
   const waBtn = document.querySelector('.results-footer a.btn');
 
   if (titleEl) titleEl.textContent = data.title;
   if (badgeEl) badgeEl.textContent = data.sessions[currentEstimatorSeverity] || '4 – 6 Sessions';
 
   if (modalitiesList) {
-    modalitiesList.innerHTML = data.modalities.map(m => `<li>✦ ${m}</li>`).join('');
+    modalitiesList.innerHTML = data.modalities.map((m) => `<li>✦ ${m}</li>`).join('');
   }
   if (cadenceEl) cadenceEl.textContent = data.interval;
   if (noteEl) noteEl.textContent = data.note;
@@ -369,38 +585,44 @@ function updateEstimatorUI() {
   }
 }
 
-// 4. Initialize Everything on DOM Load
-function initEquinox() {
-  // A. Initialize 3D Engine
-  const engine = new Dermal3DEngine('dermal3DCanvas', {
-    depthVal: 'hudDepthVal',
-    waveVal: 'hudWaveVal',
-    targetVal: 'hudTargetVal',
-    downVal: 'hudDownVal',
-  });
+// ==========================================
+// 4. MAIN INITIALIZATION
+// ==========================================
+function initEquinoxApp() {
+  // A. Initialize Hero 3D Background
+  if (document.getElementById('heroCanvas3D')) {
+    new Hero3DBackground('heroCanvas3D');
+  }
 
-  // B. Modality Card Selectors
-  const cards = document.querySelectorAll('.modality-card');
-  cards.forEach((card) => {
-    card.addEventListener('click', () => {
-      cards.forEach((c) => c.classList.remove('is-active'));
-      card.classList.add('is-active');
+  // B. Initialize Dermal 3D Simulation
+  if (document.getElementById('dermal3DCanvas')) {
+    const engine = new Dermal3DEngine('dermal3DCanvas', {
+      depthVal: 'hudDepthVal',
+      waveVal: 'hudWaveVal',
+      targetVal: 'hudTargetVal',
+      downVal: 'hudDownVal',
+    });
 
-      const modeKey = card.getAttribute('data-mode') || 'pico';
-      const meta = store.modalities.find((m) => m.mode === modeKey) || {};
+    const cards = document.querySelectorAll('.modality-card');
+    cards.forEach((card) => {
+      card.addEventListener('click', () => {
+        cards.forEach((c) => c.classList.remove('is-active'));
+        card.classList.add('is-active');
 
-      if (engine) {
+        const modeKey = card.getAttribute('data-mode') || 'pico';
+        const meta = store.modalities.find((m) => m.mode === modeKey) || {};
+
         engine.setMode(modeKey, {
           depth: card.getAttribute('data-depth') || meta.depth,
           wave: card.getAttribute('data-wave') || meta.wave,
           target: card.getAttribute('data-target') || meta.target,
           down: card.getAttribute('data-down') || meta.down,
         });
-      }
+      });
     });
-  });
+  }
 
-  // C. Dynamic Desk Status
+  // C. Update Real-Time Desk Status
   const statusBadge = document.querySelector('.clinic-status-badge');
   const statusText = document.querySelector('.status-text');
   const statusPulse = document.querySelector('.status-pulse');
@@ -410,15 +632,15 @@ function initEquinox() {
     if (statusPulse) statusPulse.style.background = status.pulseColor;
   }
 
-  // D. 3D Tilt Cards
+  // D. 3D Tilt Card Effects
   document.querySelectorAll('.card-3d-wrap').forEach((wrap) => {
     const card = wrap.querySelector('.card-3d-body') || wrap;
     wrap.addEventListener('mousemove', (e) => {
       const rect = wrap.getBoundingClientRect();
       const x = e.clientX - rect.left - rect.width / 2;
       const y = e.clientY - rect.top - rect.height / 2;
-      const tiltX = (y / (rect.height / 2)) * -7;
-      const tiltY = (x / (rect.width / 2)) * 7;
+      const tiltX = (y / (rect.height / 2)) * -8;
+      const tiltY = (x / (rect.width / 2)) * 8;
       card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(1.02, 1.02, 1.02)`;
     });
 
@@ -432,7 +654,7 @@ function initEquinox() {
   const tabButtons = document.querySelectorAll('.estimator-tab');
   tabButtons.forEach((tab, idx) => {
     tab.addEventListener('click', () => {
-      tabButtons.forEach(t => {
+      tabButtons.forEach((t) => {
         t.classList.remove('is-active');
         t.setAttribute('aria-selected', 'false');
       });
@@ -443,30 +665,27 @@ function initEquinox() {
     });
   });
 
-  // F. Estimator Severity Buttons
+  // F. Estimator Severity Selectors
   const severityKeys = ['mild', 'moderate', 'extensive'];
   const sevButtons = document.querySelectorAll('.severity-btn');
   sevButtons.forEach((btn, idx) => {
     btn.addEventListener('click', () => {
-      sevButtons.forEach(b => b.classList.remove('is-selected'));
+      sevButtons.forEach((b) => b.classList.remove('is-selected'));
       btn.classList.add('is-selected');
       currentEstimatorSeverity = severityKeys[idx] || 'moderate';
       updateEstimatorUI();
     });
   });
 
-  // G. Concern Finder Chip Handling
+  // G. Concern Finder Chips
   const concernRadios = document.querySelectorAll('.finder input[type="radio"]');
-  concernRadios.forEach(radio => {
+  concernRadios.forEach((radio) => {
     radio.addEventListener('change', () => {
-      const val = radio.value;
-      const targetUrl = `/${val}/`;
-      // Smooth redirect or quick highlight
-      window.location.href = targetUrl;
+      window.location.href = `/${radio.value}/`;
     });
   });
 
-  // H. Lead Form Forwarding to WhatsApp
+  // H. Lead Form WhatsApp Submission
   const leadForm = document.querySelector('.lead-form');
   if (leadForm) {
     leadForm.addEventListener('submit', (e) => {
@@ -485,21 +704,19 @@ function initEquinox() {
     });
   }
 
-  // I. Cookie Consent Handling
+  // I. Cookie Consent
   const consentBanner = document.getElementById('consent');
   if (consentBanner) {
     if (localStorage.getItem('eqx_consent')) {
       consentBanner.style.display = 'none';
     }
-    const allowBtn = consentBanner.querySelector('[data-consent-action="all"]');
-    const noneBtn = consentBanner.querySelector('[data-consent-action="none"]');
-    const saveBtn = consentBanner.querySelector('[data-consent-action="save"]');
-
     const closeConsent = (val) => {
       localStorage.setItem('eqx_consent', val);
       consentBanner.style.display = 'none';
     };
-
+    const allowBtn = consentBanner.querySelector('[data-consent-action="all"]');
+    const noneBtn = consentBanner.querySelector('[data-consent-action="none"]');
+    const saveBtn = consentBanner.querySelector('[data-consent-action="save"]');
     if (allowBtn) allowBtn.addEventListener('click', () => closeConsent('all'));
     if (noneBtn) noneBtn.addEventListener('click', () => closeConsent('necessary'));
     if (saveBtn) saveBtn.addEventListener('click', () => closeConsent('custom'));
@@ -507,7 +724,7 @@ function initEquinox() {
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initEquinox);
+  document.addEventListener('DOMContentLoaded', initEquinoxApp);
 } else {
-  initEquinox();
+  initEquinoxApp();
 }
