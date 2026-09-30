@@ -21,7 +21,7 @@ const CLINIC_CONFIG = {
   gscVerificationToken: 'GSC_EQUINOX_VERIFICATION_TOKEN',
 
   // Microsoft Clarity Project ID
-  clarityProjectId: 'CLARITY_EQUINOX_ID',
+  clarityProjectId: 'yqf2bebv9r',
 
   // Meta Pixel ID (Facebook & Instagram Ads)
   metaPixelId: '1326462718420658',
