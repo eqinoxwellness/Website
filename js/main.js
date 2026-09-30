@@ -14,17 +14,19 @@
 // 1. GLOBAL CLINIC CONFIGURATION
 // ==========================================
 const CLINIC_CONFIG = {
-  // Google Analytics 4 (Replace with your Measurement ID e.g., 'G-XXXXXXXXXX')
-  ga4MeasurementId: 'G-EQUINOX2026',
+  // Google Analytics 4 Measurement ID
+  ga4MeasurementId: 'G-27X1PGSVG6',
 
   // Google Search Console Verification Token
   gscVerificationToken: 'GSC_EQUINOX_VERIFICATION_TOKEN',
 
-  // Microsoft Clarity Project ID (Replace with your Clarity ID e.g., 'abcdef1234')
+  // Microsoft Clarity Project ID
   clarityProjectId: 'CLARITY_EQUINOX_ID',
 
+  // Meta Pixel ID (Facebook & Instagram Ads)
+  metaPixelId: '1326462718420658',
+
   // Google Apps Script Web App URL for Google Sheets lead recording
-  // (Paste your deployed Google Apps Script /exec URL here)
   googleSheetWebAppUrl: 'https://script.google.com/macros/s/AKfycbw_PLACEHOLDER_EQUINOX_SHEET/exec',
 
   // Clinic Contact Facts
@@ -35,6 +37,174 @@ const CLINIC_CONFIG = {
     openHour: 11,
     closeHour: 20,
     closedDays: [5], // 5 = Friday
+  }
+};
+
+// ==========================================
+// 1.1 OMNI-TRACKING TELEMETRY (GOOGLE ADS, META ADS, GA4 & CLARITY)
+// ==========================================
+const OmniTracker = {
+  // Capture URL parameters for Google Ads (gclid) and Meta Ads (fbclid, utm_*)
+  initAttribution() {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const trackingKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid', 'gad_source', 'gbraid', 'wbraid'];
+      const attribution = JSON.parse(sessionStorage.getItem('eqx_ad_attribution') || '{}');
+      let changed = false;
+
+      trackingKeys.forEach((key) => {
+        const val = urlParams.get(key);
+        if (val) {
+          attribution[key] = val;
+          changed = true;
+        }
+      });
+
+      if (!attribution.firstLanding) {
+        attribution.firstLanding = window.location.pathname;
+        attribution.firstReferrer = document.referrer || 'Direct';
+        attribution.landingTime = new Date().toISOString();
+        changed = true;
+      }
+
+      if (changed) {
+        sessionStorage.setItem('eqx_ad_attribution', JSON.stringify(attribution));
+      }
+    } catch (e) {
+      // Storage unavailable or disabled
+    }
+  },
+
+  getAttribution() {
+    try {
+      return JSON.parse(sessionStorage.getItem('eqx_ad_attribution') || '{}');
+    } catch {
+      return {};
+    }
+  },
+
+  // Centralized Event Broadcaster
+  sendEvent(eventName, params = {}, metaStandardEvent = null) {
+    const attr = this.getAttribution();
+    const eventPayload = {
+      ...params,
+      ...attr,
+      page_title: document.title,
+      page_location: window.location.href,
+      page_path: window.location.pathname,
+      screen_resolution: `${window.innerWidth}x${window.innerHeight}`,
+      timestamp: new Date().toISOString()
+    };
+
+    // 1. Google Analytics 4 & Google Ads Conversion Tracking
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', eventName, eventPayload);
+    }
+
+    // 2. Meta Ads Pixel (Facebook & Instagram Ads)
+    if (typeof window.fbq === 'function') {
+      // Compliance with Indian Healthcare Advertising & Meta Healthcare Policy:
+      // Send clean action & placement identifiers without clinical condition strings
+      const metaPayload = {
+        content_name: params.button_text || params.item_name || eventName,
+        placement: params.placement || 'general',
+        lead_channel: params.method || params.channel || 'web'
+      };
+      if (metaStandardEvent) {
+        window.fbq('track', metaStandardEvent, metaPayload);
+      } else {
+        window.fbq('trackCustom', eventName, metaPayload);
+      }
+    }
+
+    // 3. Microsoft Clarity (Session Recordings, Heatmaps & Replays)
+    if (typeof window.clarity === 'function') {
+      window.clarity('event', eventName);
+    }
+  },
+
+  // Automate interaction listeners across the page
+  initAutoTracking() {
+    this.initAttribution();
+
+    // A. WhatsApp Lead Clicks Tracking
+    document.addEventListener('click', (e) => {
+      const waLink = e.target.closest('a[href*="wa.me"], a[href*="whatsapp.com"]');
+      if (waLink) {
+        const placement = waLink.closest('.floating-concierge') ? 'floating_concierge'
+          : waLink.closest('.site-header') ? 'header'
+          : waLink.closest('.hero-actions') ? 'hero'
+          : waLink.closest('.lead-success-card') ? 'lead_success_card'
+          : waLink.closest('.treatment-hero') ? 'treatment_hero'
+          : waLink.closest('footer') ? 'footer'
+          : 'content_cta';
+
+        OmniTracker.sendEvent('generate_lead', {
+          method: 'whatsapp',
+          placement: placement,
+          button_text: (waLink.textContent || '').trim().slice(0, 45)
+        }, 'Lead');
+
+        OmniTracker.sendEvent('contact', {
+          channel: 'whatsapp',
+          placement: placement
+        }, 'Contact');
+      }
+
+      // B. Direct Phone Call Clicks
+      const telLink = e.target.closest('a[href^="tel:"]');
+      if (telLink) {
+        OmniTracker.sendEvent('contact', {
+          method: 'phone_call',
+          phone_number: '+916372528534',
+          placement: telLink.closest('.site-header') ? 'header' : 'body'
+        }, 'Contact');
+      }
+
+      // C. Google Maps Directions
+      const mapsLink = e.target.closest('a[href*="google.com/maps"], a[href*="maps.app.goo.gl"]');
+      if (mapsLink) {
+        OmniTracker.sendEvent('find_location', {
+          clinic: 'Satya Nagar Clinic'
+        }, 'FindLocation');
+      }
+    });
+
+    // D. Scroll Depth Telemetry (25%, 50%, 75%, 90%)
+    const scrollMilestones = [25, 50, 75, 90];
+    const reachedDepths = new Set();
+    let scrollTimer = null;
+    window.addEventListener('scroll', () => {
+      if (scrollTimer) return;
+      scrollTimer = setTimeout(() => {
+        scrollTimer = null;
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        if (docHeight <= 0) return;
+        const currentPercent = Math.round((scrollTop / docHeight) * 100);
+
+        scrollMilestones.forEach((milestone) => {
+          if (currentPercent >= milestone && !reachedDepths.has(milestone)) {
+            reachedDepths.add(milestone);
+            OmniTracker.sendEvent('scroll_depth', {
+              percent: milestone,
+              milestone: `${milestone}%`
+            });
+          }
+        });
+      }, 100);
+    }, { passive: true });
+
+    // E. Engagement & Dwell Time Milestones (30s, 60s, 120s, 300s)
+    const dwellMilestones = [30, 60, 120, 300];
+    dwellMilestones.forEach((sec) => {
+      setTimeout(() => {
+        OmniTracker.sendEvent('dwell_time', {
+          duration_seconds: sec,
+          milestone: `${sec}s`
+        });
+      }, sec * 1000);
+    });
   }
 };
 
@@ -551,6 +721,9 @@ function initInstagramReels() {
         });
         video.play().then(() => {
           card.classList.add('is-playing');
+          OmniTracker.sendEvent('video_play', {
+            video_title: card.querySelector('.reel-title')?.textContent?.trim() || 'Clinical Video Reel'
+          }, 'ViewContent');
         }).catch(() => {});
       } else {
         video.pause();
@@ -652,6 +825,14 @@ function updateEstimatorUI() {
 function initLeadForm() {
   const leadForms = document.querySelectorAll('.lead-form');
   leadForms.forEach((form) => {
+    let formStarted = false;
+    form.addEventListener('focusin', () => {
+      if (!formStarted) {
+        formStarted = true;
+        OmniTracker.sendEvent('form_start', { form_name: 'consultation_callback' }, 'InitiateCheckout');
+      }
+    });
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -707,13 +888,12 @@ function initLeadForm() {
         console.warn('Google Sheet sync notice:', err);
       }
 
-      // Google Analytics Event
-      if (typeof window.gtag === 'function') {
-        window.gtag('event', 'lead_form_submitted', {
-          event_category: 'Lead',
-          event_label: service
-        });
-      }
+      // Broadcaster: Google Analytics 4, Google Ads, Meta Ads & Microsoft Clarity
+      OmniTracker.sendEvent('generate_lead', {
+        method: 'callback_form',
+        service_category: service,
+        preferred_time: time
+      }, 'Lead');
 
       // Success Display Card
       const successHtml = `
@@ -796,6 +976,9 @@ function init3DTilt() {
 // 8. MASTER INITIALIZATION
 // ==========================================
 function initEquinoxApp() {
+  // 0. Auto-Tracking & Attribution Engine (Google Ads, Meta Ads, GA4, Clarity)
+  OmniTracker.initAutoTracking();
+
   // A. Hero 3D Background
   if (document.getElementById('heroCanvas3D')) {
     new Hero3DBackground('heroCanvas3D');
@@ -819,6 +1002,13 @@ function initEquinoxApp() {
         card.classList.add('is-active');
 
         const modeKey = card.getAttribute('data-mode') || 'pico';
+        const modeTitle = card.querySelector('.modality-title')?.textContent?.trim() || modeKey;
+
+        OmniTracker.sendEvent('select_content', {
+          content_type: 'laser_modality',
+          item_name: modeTitle
+        }, 'ViewContent');
+
         dermalEngine.setMode(modeKey, {
           depth: card.getAttribute('data-depth'),
           wave: card.getAttribute('data-wave'),
@@ -833,6 +1023,7 @@ function initEquinoxApp() {
     if (playDemoBtn) {
       playDemoBtn.addEventListener('click', () => {
         dermalEngine.playDemo();
+        OmniTracker.sendEvent('clinical_demo_interaction', { action: 'toggle_demo' });
       });
     }
 
@@ -842,6 +1033,7 @@ function initEquinoxApp() {
       btn.addEventListener('click', () => {
         const stepNum = parseInt(btn.getAttribute('data-step') || '1', 10);
         dermalEngine.setStep(stepNum);
+        OmniTracker.sendEvent('clinical_demo_step', { step: stepNum });
       });
     });
   }
@@ -862,6 +1054,10 @@ function initEquinoxApp() {
       tab.setAttribute('aria-selected', 'true');
       currentEstimatorConcern = concernKeys[idx] || 'acne';
       updateEstimatorUI();
+
+      OmniTracker.sendEvent('customize_protocol', {
+        concern: currentEstimatorConcern
+      }, 'CustomizeProduct');
     });
   });
 
@@ -874,6 +1070,10 @@ function initEquinoxApp() {
       btn.classList.add('is-selected');
       currentEstimatorSeverity = severityKeys[idx] || 'moderate';
       updateEstimatorUI();
+
+      OmniTracker.sendEvent('customize_severity', {
+        severity: currentEstimatorSeverity
+      }, 'CustomizeProduct');
     });
   });
 
@@ -881,6 +1081,10 @@ function initEquinoxApp() {
   const concernRadios = document.querySelectorAll('.finder input[type="radio"]');
   concernRadios.forEach((radio) => {
     radio.addEventListener('change', () => {
+      OmniTracker.sendEvent('select_content', {
+        content_type: 'concern_navigation',
+        item_name: radio.value
+      });
       window.location.href = `/${radio.value}/`;
     });
   });
